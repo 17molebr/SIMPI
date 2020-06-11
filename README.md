@@ -1,2 +1,3 @@
-# SIMPI
-Simple advanced math parallelization interface in C++
+### SIMPI
+Simple advanced math parallelization interface in C++ 
+
