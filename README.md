@@ -10,7 +10,7 @@ SIMPI is a new simple way of executing complex math operations such as matrix in
 * simpi.cpp
 
 ## The User File
-The user.cpp file is the file in which the user needs to change to run math calculations. 
+The user.cpp file is the file in which a user needs to change to run math calculations. 
 
 ## The MPI File
 The mpi.cpp file is the file that will run the user file for each process, additionly it is the file that is actully run by a user.
@@ -26,4 +26,4 @@ cd ../SIMPI
 make 
 ./mpi user 2
 ```
-where the number after user is a integer indicating how many processes use.
+where the number after user is a integer indicating how many processes shall be used.
