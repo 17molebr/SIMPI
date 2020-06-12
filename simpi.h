@@ -68,6 +68,23 @@ class vector  // similar stuff for vector
   double& get(int pos) { return arr[pos]; }
   void print();
   vector(int a);
+  friend int operator*(vector &lhs, vector &rhs);
+  simpi *get_simpi() { return mysimpi; }
+   vector &scalar_vector_mult(int other);
+  vector &add( vector other);
+  vector &subtract(vector other);
+  int multiply(vector other);
+  bool vector_is_equal(vector other);
+  friend std::ostream &operator<<(std::ostream &out, const vector &m);
+  friend int operator*(vector &lhs, vector &rhs);
+  friend vector &operator*(int lhs, vector &rhs);
+	friend vector &operator*(vector &lhs, int rhs);
+	friend vector &operator+(vector &lhs, vector &rhs);
+	friend void operator+=(vector &lhs, vector &rhs);
+	friend void operator*=(vector &lhs, int rhs);
+	friend void operator-=(vector &lhs, vector &rhs);
+	friend vector &operator-(vector &lhs, vector &rhs);
+	friend bool operator==(vector &lhs, vector &rhs);
   ~vector();
 };
 
@@ -100,4 +117,21 @@ class matrix  // similar stuff for vector
   bool isDiagonallyDominant();
   friend std::ostream& operator<<(std::ostream& out, const matrix& m);
   double& get(int x, int y) { return arr[x + y * xdim]; }
+  friend std::ostream &operator<<(std::ostream &out, const matrix &m);
+	friend matrix &operator*(matrix &lhs, matrix &rhs);
+	friend matrix &operator*(int lhs, matrix &rhs);
+	friend matrix &operator*(matrix &lhs, int rhs);
+	friend void operator*=(matrix &lhs, matrix &rhs);
+	friend void operator*=(matrix &lhs, int rhs);	
+	friend matrix &operator+(matrix &lhs, matrix &rhs);	
+	friend void operator+=(matrix &lhs, matrix &rhs);	
+	friend void operator-=(matrix &lhs, matrix &rhs);	
+	friend matrix &operator-(matrix &lhs, matrix &rhs);	
+	friend bool operator==(matrix &lhs, matrix &rhs);	
+  matrix &multiply(matrix other);
+  matrix &add(matrix other);
+  matrix &scalar_matrix_mult( int other);
+  matrix &subtract(matrix other);
+  matrix &transpose();
+  bool matrix_is_equal(matrix other);
 };
