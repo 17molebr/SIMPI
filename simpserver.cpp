@@ -63,12 +63,13 @@ int main(int argc, char const *argv[])
             char user[100];
             strcpy(user, "user");
             std::string worker_count_str = std::to_string(numprocess);
-            //char * args[] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
-            if(fork()==0){
-            std::cout << progname << "\n";
-            std::cout << user << "\n";
-            std::cout << numprocess << "\n";
-            execv(progname, (char* []){progname, const_cast<char*>(user), const_cast<char*>(worker_count_str.c_str()), NULL});
+            char * args[4] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
+            if(fork()==0)
+            {
+                std::cout << progname << "\n";
+                std::cout << user << "\n";
+                std::cout << numprocess << "\n";
+                execv(progname, args);
             }
 
             close(new_socket);
