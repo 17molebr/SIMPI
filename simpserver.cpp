@@ -49,27 +49,29 @@ int main(int argc, char const *argv[])
             perror("listen"); 
             exit(EXIT_FAILURE); 
         } 
-        if ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
-                           (socklen_t*)&addrlen))<0) 
-        { 
-            perror("accept"); 
-            exit(EXIT_FAILURE); 
-        } 
-        valread = read( new_socket , &numprocess, sizeof(int)); 
-        printf("%d", numprocess);
-        printf("\n");
-        char progname[100];
-        strcpy(progname, "mpi");
-        char user[100];
-        strcpy(user, "user");
-        std::string worker_count_str = std::to_string(numprocess);
-       // std::string worker_count_str = std::to_string(numprocess);
-        //char * args[] = {prognam, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
-        if(fork()==0){
-           std::cout << progname << "\n";
-           std::cout << user << "\n";
-           std::cout << numprocess << "\n";
-           execv(progname, (char* []){progname, user, const_cast<char*>(worker_count_str.c_str()), NULL});
+        while((new_socket = accept(server_fd, (struct sockaddr *)&address,  
+                           (socklen_t*)&addrlen))>0){ 
+            /*{ 
+                perror("accept"); 
+                exit(EXIT_FAILURE); 
+            } */
+            valread = read( new_socket , &numprocess, sizeof(int)); 
+            printf("%d", numprocess);
+            printf("\n");
+            char progname[100];
+            strcpy(progname, "mpi");
+            char user[100];
+            strcpy(user, "user");
+            std::string worker_count_str = std::to_string(numprocess);
+            //char * args[] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
+            if(fork()==0){
+            std::cout << progname << "\n";
+            std::cout << user << "\n";
+            std::cout << numprocess << "\n";
+            execv(progname, (char* []){progname, const_cast<char*>(user), const_cast<char*>(worker_count_str.c_str()), NULL});
+            }
+
+            close(new_socket);
         }
         
     //} 
