@@ -8,6 +8,11 @@
    
 int main(int argc, char *argv[]) 
 { 
+    if (argc != 2) {
+        printf("Usage: ./client <num workers>\n");
+        exit(2);
+    }
+
     int sock = 0, valread; 
     struct sockaddr_in serv_addr; 
     char *num = argv[1];
