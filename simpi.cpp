@@ -1771,7 +1771,6 @@ double *eigenvalue(matrix Anaught,int par_id, int par_count){
 #include <math.h>
 #include <cmath>
 #include <time.h>
-#include "solveSystem.cpp"
 #include <string.h>
 
 /*
