@@ -8,7 +8,7 @@
 #include <array>
 #define PORT 8080 
 
-void run_simpi(int numprocess);  
+//void run_simpi(int numprocess);  
 
 int main(int argc, char *argv[]) 
 { 
@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
     struct sockaddr_in serv_addr; 
     char *num = argv[1];
     int numprocess = atoi(num);
-    if(numprocess <= 4){
+/*     if(numprocess <= 4){
         run_simpi(numprocess);
         exit(0); 
-    }
+    } */
     int fullWorkstations;
     int remainderCores; 
     if(numprocess % 4 == 0){
@@ -35,21 +35,23 @@ int main(int argc, char *argv[])
         fullWorkstations = numprocess/4;
         remainderCores = numprocess%4;
     }
-    char server_ips[2][30] = {"127.0.0.1","10.0.0.1"}; 
+    char server_ips[2][30] = {"10.0.1.6", "10.0.1.4"}; 
     int buffer[1024] = {0}; 
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-    { 
-        printf("\n Socket creation error \n"); 
-        return -1; 
-    } 
     
-    serv_addr.sin_family = AF_INET; 
-    serv_addr.sin_port = htons(PORT); 
     
     //Local Workstaion simpi run
-    run_simpi(4); 
+    //run_simpi(4); 
     int fullrun = 4;
     for(int i; i < fullWorkstations; i++){   
+    
+        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+        { 
+            printf("\n Socket creation error \n"); 
+            return -1; 
+        } 
+        
+        serv_addr.sin_family = AF_INET; 
+        serv_addr.sin_port = htons(PORT); 
         // Convert IPv4 and IPv6 addresses from text to binary form 
 
         if(inet_pton(AF_INET, server_ips[i], &serv_addr.sin_addr)<=0)  
@@ -70,6 +72,8 @@ int main(int argc, char *argv[])
             send(sock , &fullrun, sizeof(fullrun), 0 ); 
             printf("Nums sent\n");
         }
+
+        close(sock);
        
     } 
      
