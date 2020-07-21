@@ -28,11 +28,11 @@ int main(int argc, char *argv[])
     int fullWorkstations;
     int remainderCores; 
     if(numprocess % 4 == 0){
-        fullWorkstations = numprocess/4;
+        fullWorkstations = numprocess/4 -1;
         remainderCores = 0;
     }
     else{
-        fullWorkstations = numprocess/4 + 1;
+        fullWorkstations = numprocess/4;
         remainderCores = numprocess%4;
     }
     char server_ips[2][30] = {"127.0.0.1","10.0.0.1"}; 
@@ -45,8 +45,11 @@ int main(int argc, char *argv[])
     
     serv_addr.sin_family = AF_INET; 
     serv_addr.sin_port = htons(PORT); 
-    /*
-    for(int i; i < fullWorkstations; i ++){   
+    
+    //Local Workstaion simpi run
+    run_simpi(4); 
+    int fullrun = 4;
+    for(int i; i < fullWorkstations; i++){   
         // Convert IPv4 and IPv6 addresses from text to binary form 
 
         if(inet_pton(AF_INET, server_ips[i], &serv_addr.sin_addr)<=0)  
@@ -60,11 +63,16 @@ int main(int argc, char *argv[])
             printf("\nConnection Failed \n"); 
             return -1; 
         } 
-        if(i == fullWorkstations -1){};
-        send(sock , &fullWorkstations , sizeof(numother), 0 ); 
-        printf("Nums sent\n"); 
+        if(i == fullWorkstations -1 && remainderCores != 0){
+            send(sock , &remainderCores, sizeof(remainderCores), 0 ); 
+            printf("Nums sent\n");
+        }else{
+            send(sock , &fullrun, sizeof(fullrun), 0 ); 
+            printf("Nums sent\n");
+        }
+       
     } 
-    */  
+     
     return 0;
 } 
 
@@ -77,10 +85,10 @@ void run_simpi(int numprocess){
     char * args[4] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
     if(fork()==0)
         {
-        std::cout << progname << "\n";
-        std::cout << user << "\n";
-        std::cout << numprocess << "\n";
-        execv(progname, args);
+            std::cout << progname << "\n";
+            std::cout << user << "\n";
+            std::cout << numprocess << "\n";
+            execv(progname, args);
         }
     return;
 }
