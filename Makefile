@@ -4,7 +4,7 @@ LINKFLAGS = -lrt
 # if mac use this LINFLAGS
 # LINKFLAGS =
 
-all : mpi user client server ipreader
+all : mpi user client server
 clean : 
 	rm -f user mpi /dev/shm/simpi_shared_mem
 simpi : simpi.cpp simpi.h
