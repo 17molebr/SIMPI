@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
         remainderCores = numprocess%4;
     }
     char server_ips[2][30] = {"10.0.1.6", "10.0.1.4"}; 
+    int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
     
     
@@ -67,9 +68,11 @@ int main(int argc, char *argv[])
         } 
         if(i == fullWorkstations -1 && remainderCores != 0){
             send(sock , &remainderCores, sizeof(remainderCores), 0 ); 
+            send(sock, &numMachines, sizeof(numMachines), 0);
             printf("Nums sent\n");
         }else{
-            send(sock , &fullrun, sizeof(fullrun), 0 ); 
+            send(sock , &fullrun, sizeof(fullrun), 0 );
+            send(sock, &numMachines, sizeof(numMachines), 0);
             printf("Nums sent\n");
         }
 
