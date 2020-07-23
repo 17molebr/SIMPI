@@ -15,7 +15,7 @@
 int main(int argc, char* argv[])
 {
   if (argc != 3) {
-    printf("Usage: ./prog2 prog1 <num workers>");
+    printf("Usage: ./prog2 prog1 <num workers>\n");
     exit(2);
   }
 
