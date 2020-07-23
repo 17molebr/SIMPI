@@ -20,7 +20,8 @@ int main(int argc, char* argv[])
   signal(SIGSEGV, segfault_printer);
   par_id = atoi(argv[1]);
   int num_workers = atoi(argv[2]);
-  SIMPI_INIT(par_id, num_workers);
+  int num_workstations = atoi(argv[3]);
+  SIMPI_INIT(par_id, num_workers, num_workstations);
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   vector D(10);

@@ -3,9 +3,9 @@
 static simpi* main_simpi;
 
 // simpi init function
-void SIMPI_INIT(int par_id, size_t synch_size)
+void SIMPI_INIT(int par_id, size_t synch_size, int workstations)
 {
-  main_simpi = new simpi(par_id, synch_size);
+  main_simpi = new simpi(par_id, synch_size, workstations);
 }
 // simpi synch
 void SIMPI_SYNCH()
@@ -20,10 +20,11 @@ void SIMPI_FINALIZE()
 }
 
 /******************Simpi Functions*************************/
-simpi::simpi(int _id, int _num_workers)
+simpi::simpi(int _id, int _num_workers, int _num_workstaions)
 {
   id = _id;
   num_workers = _num_workers;
+  num_workstations = _num_workstaions;
   size_t synchObjectSize =
       sizeof(synch_object) + sizeof(int) * (num_workers + 1);
   int fd = shm_open(SYNCH_OBJECT_MEM_NAME, O_RDWR, 0777);
