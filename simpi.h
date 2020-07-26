@@ -37,6 +37,7 @@ class simpi {
   ~simpi();
   int get_id() { return id; }
   int get_num_workers() { return num_workers; }
+  int get_num_workstations() {return num_workstations;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
