@@ -17,6 +17,7 @@ void segfault_printer(int dummy)
 
 int main(int argc, char* argv[])
 {
+  printf("user starting...\n");
   signal(SIGSEGV, segfault_printer);
   par_id = atoi(argv[1]);
   int num_workers = atoi(argv[2]);
