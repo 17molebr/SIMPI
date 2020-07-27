@@ -35,7 +35,8 @@ int main(int argc, char *argv[])
         fullWorkstations = numprocess/4;
         remainderCores = numprocess%4;
     }
-    char server_ips[8][30] = {"192.168.168.17:22",
+    char server_ips[9][30] = {"192.168.168.13:22",
+                              "192.168.168.17:22",
                               "192.168.168.26:22",
                               "192.168.168.6:22",
                               "192.168.168.60:22",
