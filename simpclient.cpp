@@ -35,7 +35,14 @@ int main(int argc, char *argv[])
         fullWorkstations = numprocess/4;
         remainderCores = numprocess%4;
     }
-    char server_ips[2][30] = {"10.0.1.6", "10.0.1.4"}; 
+    char server_ips[2][30] = {"192.168.168.17:22",
+                              "192.168.168.26:22",
+                              "192.168.168.6:22",
+                              "192.168.168.60:22",
+                              "192.168.168.61:22",
+                              "192.168.168.66:22",
+                              "192.168.168.67:22",
+                              "192.168.168.89:22"}; 
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
     
