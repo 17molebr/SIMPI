@@ -97,7 +97,7 @@ void run_simpi(int numprocess){
     char user[100];
     strcpy(user, "user");
     std::string worker_count_str = std::to_string(numprocess);
-    char machines[1];
+    char machines[10];
     strcpy(machines, "4");
     char * args[5] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), machines, NULL};
     if(fork()==0)
