@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
   std::cout << A;
   
   std::cout << B;
-  C= A * C;
+  C= A * B;
   std::cout << C;
   
 
