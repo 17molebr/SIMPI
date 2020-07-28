@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
             printf("\n Socket creation error \n"); 
             return -1; 
         } 
+    
         
         serv_addr.sin_family = AF_INET; 
         serv_addr.sin_port = htons(PORT); 
@@ -97,7 +98,9 @@ void run_simpi(int numprocess){
     char user[100];
     strcpy(user, "user");
     std::string worker_count_str = std::to_string(numprocess);
-    char * args[4] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), NULL};
+    char* machines[1];
+    strcpy(machines, "4");
+    char * args[5] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), machines, NULL};
     if(fork()==0)
         {
             std::cout << progname << "\n";
