@@ -50,8 +50,8 @@ int main(int argc, char const *argv[])
             perror("listen"); 
             exit(EXIT_FAILURE); 
         } 
-        while((new_socket = accept(server_fd, (struct sockaddr *)&address,  
-                           (socklen_t*)&addrlen))>0){ 
+        ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
+                           (socklen_t*)&addrlen))>0);
             /*{ 
                 perror("accept"); 
                 exit(EXIT_FAILURE); 
@@ -79,4 +79,3 @@ int main(int argc, char const *argv[])
         }
         
     //} 
-} 
