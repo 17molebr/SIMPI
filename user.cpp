@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
   int num_workstations = atoi(argv[3]);
   SIMPI_INIT(par_id, num_workers, num_workstations);
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
+  matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   vector D(10);
   SIMPI_SYNCH();
@@ -33,12 +34,20 @@ int main(int argc, char* argv[])
       A.get(x, y) = rand()%10 + 1;
     }
   }
+  for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
+    for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
+      B.get(x, y) = rand()%10 + 1;
+    }
+  }
   SIMPI_SYNCH();
 
-  A.inverse(&C);
+  
   std::cout << A;
   
+  std::cout << B;
+  C= A * C;
   std::cout << C;
+  
 
   //C= A.inverse();
 
