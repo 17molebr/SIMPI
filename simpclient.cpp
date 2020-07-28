@@ -8,7 +8,7 @@
 #include <array>
 #define PORT 8080 
 
-//void run_simpi(int numprocess);  
+void run_simpi(int numprocess);  
 
 int main(int argc, char *argv[]) 
 { 
@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
     struct sockaddr_in serv_addr; 
     char *num = argv[1];
     int numprocess = atoi(num);
-/*     if(numprocess <= 4){
+    if(numprocess <= 4){
         run_simpi(numprocess);
         exit(0); 
-    } */
+    }
     int fullWorkstations;
     int remainderCores; 
     if(numprocess % 4 == 0){
@@ -35,8 +35,7 @@ int main(int argc, char *argv[])
         fullWorkstations = numprocess/4;
         remainderCores = numprocess%4;
     }
-    char server_ips[9][30] = {"192.168.168.13",
-                              "192.168.168.17",
+    char server_ips[8][30] = {"192.168.168.17",
                               "192.168.168.26",
                               "192.168.168.6",
                               "192.168.168.60",
@@ -49,7 +48,7 @@ int main(int argc, char *argv[])
     
     
     //Local Workstaion simpi run
-    //run_simpi(4); 
+    run_simpi(4); 
     int fullrun = 4;
     for(int i; i < fullWorkstations; i++){   
     
