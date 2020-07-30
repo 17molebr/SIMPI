@@ -18,6 +18,7 @@ int main(int argc, char const *argv[])
         int addrlen = sizeof(address); 
         int numprocess = 0;
         int nummachines = 0;
+        int workstationid = 0;
         
            
         // Creating socket file descriptor 
@@ -58,6 +59,7 @@ int main(int argc, char const *argv[])
             } */
             read( new_socket , &numprocess, sizeof(int)); 
             read( new_socket , &nummachines, sizeof(int)); 
+            read( new_socket, &workstationid, sizeof(int));
             printf("%d", numprocess);
             printf("\n");
             char progname[100];
@@ -66,7 +68,8 @@ int main(int argc, char const *argv[])
             strcpy(user, "user");
             std::string worker_count_str = std::to_string(numprocess);
             std::string machine_count_str = std::to_string(nummachines);
-            char * args[5] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), const_cast<char*>(machine_count_str.c_str()), NULL};
+            std::string workstation_id_str = std::to_string(workstationid);
+            char * args[6] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), const_cast<char*>(machine_count_str.c_str()), const_cast<char*>(workstation_id_str.c_str()),  NULL};
             if(fork()==0)
             {
                 std::cout << progname << "\n";

@@ -22,7 +22,8 @@ int main(int argc, char* argv[])
   par_id = atoi(argv[1]);
   int num_workers = atoi(argv[2]);
   int num_workstations = atoi(argv[3]);
-  SIMPI_INIT(par_id, num_workers, num_workstations);
+  int workstationid = atoi(argv[4]);
+  SIMPI_INIT(par_id, num_workers, num_workstations, workstationid);
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);

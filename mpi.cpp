@@ -14,8 +14,8 @@
 
 int main(int argc, char* argv[])
 {
-  if (argc != 4) {
-    printf("Usage: ./prog2 prog1 <num workers> <num machines>\n");
+  if (argc != 5) {
+    printf("Usage: ./prog2 prog1 <num workers> <num machines> <workstaion id>\n");
     exit(2);
   }
 
@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
 
   int numWorkers = atoi(argv[2]);
   int numMachines = atoi(argv[3]);
+  int workstationid = atoi(argv[4]);
   // create shared mem for workers
   size_t synchObjectSize =
       sizeof(synch_object) + sizeof(int) * (numWorkers + 1);
@@ -51,8 +52,9 @@ int main(int argc, char* argv[])
     std::string worker_count_str = std::to_string(numWorkers);
     std::string machine_count_str = std::to_string(numMachines);
     std::string worker_id_str = std::to_string(i);
+    std::string workstation_id_str = std::to_string(workstationid);
     char* args[] = {progname, const_cast<char*>(worker_id_str.c_str()),
-                    const_cast<char*>(worker_count_str.c_str()), const_cast<char*>(machine_count_str.c_str()), NULL};
+                    const_cast<char*>(worker_count_str.c_str()), const_cast<char*>(machine_count_str.c_str()), const_cast<char*>(workstation_id_str.c_str()),  NULL};
     if (fork() == 0) {
       execv(progname, args);
     }

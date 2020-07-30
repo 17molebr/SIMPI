@@ -3,9 +3,9 @@
 static simpi* main_simpi;
 
 // simpi init function
-void SIMPI_INIT(int par_id, size_t synch_size, int workstations)
+void SIMPI_INIT(int par_id, size_t synch_size, int workstations, int workstationid)
 {
-  main_simpi = new simpi(par_id, synch_size, workstations);
+  main_simpi = new simpi(par_id, synch_size, workstations, workstationid);
 }
 // simpi synch
 void SIMPI_SYNCH()
@@ -20,11 +20,12 @@ void SIMPI_FINALIZE()
 }
 
 /******************Simpi Functions*************************/
-simpi::simpi(int _id, int _num_workers, int _num_workstaions)
+simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_id)
 {
   id = _id;
   num_workers = _num_workers;
   num_workstations = _num_workstaions;
+  workstationid = _workstation_id;
   size_t synchObjectSize =
       sizeof(synch_object) + sizeof(int) * (num_workers + 1);
   int fd = shm_open(SYNCH_OBJECT_MEM_NAME, O_RDWR, 0777);
@@ -858,6 +859,9 @@ matrix &matrix::multiply(matrix other)
   matrix *result = new matrix(xdim, other.get_y());
   int number_of_processes = main_simpi->get_synch_info()->par_count;
   int parId = main_simpi->get_id();
+  int workstationid = main_simpi -> get_workstation_id();
+  parId = workstationid *4 + parId;
+  if (parId <= other.get_y()){
   if (number_of_processes > other.get_y())
   {
     number_of_processes = other.get_y();
@@ -911,6 +915,7 @@ matrix &matrix::multiply(matrix other)
   }
   main_simpi->synch();
   return *result;
+}
 }
 
 /*

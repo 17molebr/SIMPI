@@ -27,17 +27,18 @@ typedef struct synch_object {
 } synch_object;
 
 // static methods
-void SIMPI_INIT(int par_id, size_t synch_size, int num_workstations);
+void SIMPI_INIT(int par_id, size_t synch_size, int num_workstations, int _workstation_id);
 void SIMPI_SYNCH();
 void SIMPI_FINALIZE();
 
 class simpi {
  public:
-  simpi(int _id, int _num_workers, int _num_workstatons);
+  simpi(int _id, int _num_workers, int _num_workstatons, int _workstation_id);
   ~simpi();
   int get_id() { return id; }
   int get_num_workers() { return num_workers; }
   int get_num_workstations() {return num_workstations;}
+  int get_workstation_id() {return workstationid;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
@@ -50,6 +51,7 @@ class simpi {
   int num_workers;
   int shm_fd;
   int num_workstations;
+  int workstationid;
   synch_object* synch_info;
   std::map<std::string, matrix_metadata> matrix_info;
   std::string sync_shared_mem_name;
