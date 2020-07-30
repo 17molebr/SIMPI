@@ -2,7 +2,7 @@
 Simple advanced math parallelization interface in C++ designed for linux. 
 
 ## Overview
-SIMPI is a new simple way of executing complex math operations such as matrix inversion or equation solving quickly with the help of parallelization. This is accomplished by having the mpi program calling the user program n-times. In the example of matrix multiplication with two 10x10 matrices, then the mpi program could call the user program up to 10 times and have each instance of user calculating one row of the multiplication. This allows matrices to be multiplied around 10x faster. This is especially true if SIMPI is implemented on a "super computer" and has accsess to a large number of cores. 
+SIMPI is a new simple way of executing complex math operations such as matrix inversion or equation solving quickly with the help of parallelization. This is accomplished by having the mpi program calling the user program n-times. In the example of matrix multiplication with two 10x10 matrices, the mpi program could call the user program up to 10 times and have each instance of user calculating one row of the multiplication. This allows matrices to be multiplied roughly 10x faster. This is especially true if SIMPI is implemented on a "supercomputer" and has accsess to a large number of cores. 
 
 ## Main Files 
 * user.cpp
