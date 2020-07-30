@@ -861,7 +861,7 @@ matrix &matrix::multiply(matrix other)
   int parId = main_simpi->get_id();
   int workstationid = main_simpi -> get_workstation_id();
   parId = workstationid *4 + parId;
-	printf("WORKSTATION ID = %d\n", wokstationid);
+	printf("WORKSTATION ID = %d\n", workstationid);
 	printf("parID ID = %d\n", parId);
   if (parId <= other.get_y()){
   if (number_of_processes > other.get_y())
