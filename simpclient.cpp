@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     //Local Workstaion simpi run
     //run_simpi(4); 
     int fullrun = 4;
-    for(int i; i < fullWorkstations; i++){   
+    for(int i=0; i < fullWorkstations; i++){   
     
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
         { 
@@ -77,12 +77,12 @@ int main(int argc, char *argv[])
         if(i == fullWorkstations -1 && remainderCores != 0){
             send(sock , &remainderCores, sizeof(remainderCores), 0 ); 
             send(sock, &numMachines, sizeof(numMachines), 0);
-            //send(sock, &i, sizeof(i), 0);
+            send(sock, &i, sizeof(i), 0);
             printf("Nums sent\n");
         }else{
             send(sock , &fullrun, sizeof(fullrun), 0 );
             send(sock, &numMachines, sizeof(numMachines), 0);
-            //send(sock, &i, sizeof(i), 0);
+            send(sock, &i, sizeof(i), 0);
             printf("Nums sent\n");
         }
 
