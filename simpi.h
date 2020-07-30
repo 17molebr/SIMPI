@@ -10,7 +10,11 @@
 #include <map>
 #include <string>
 #include <vector>
-
+#include <sys/socket.h> 
+#include <netinet/in.h> 
+#include <stdlib.h> 
+#include <stdio.h>
+#define PORT 8080 
 #define SYNCH_OBJECT_MEM_NAME "/simpi_shared_mem"
 #define UNIQUE_ID_SIZE 23
 typedef struct matrix_metadata {

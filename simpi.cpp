@@ -164,6 +164,78 @@ std::string simpi::get_shared_mem_name()
   std::string name = "simpi_" + std::to_string(micro);
   return name;
 }
+
+//struct to store info on if each machine is done; to be stored on ID 0
+struct status 
+{
+  int workingMachines;
+  int statusArray[1000];
+};
+ 
+//struct to send part of an array that is completed from "clients" to ID 0
+struct data_info
+{
+  int start;
+  int end;
+  double* arr;
+};
+
+void SIMPI_DISTRIBUTE(matrix m){
+  int num_workstaions = main_simpi->get_num_workstations();
+  if(main_simpi -> get_workstation_id() == 0){
+    matrix *result = new matrix(m.get_x(), m.get_y());
+    //copy data from start to end of workstation 0 work
+    
+    //create server connection
+    int completed = 0;
+    while(true){
+      struct data_info info;
+      int server_fd, new_socket, valread; 
+      struct sockaddr_in address; 
+      int opt = 1; 
+      int addrlen = sizeof(address); 
+      if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
+        { 
+            perror("socket failed"); 
+            exit(EXIT_FAILURE); 
+        } 
+      address.sin_family = AF_INET; 
+      address.sin_addr.s_addr = INADDR_ANY; 
+      address.sin_port = htons( PORT ); 
+           
+      // Forcefully attaching socket to the port 8080 
+      if (bind(server_fd, (struct sockaddr *)&address,sizeof(address))<0) 
+        { 
+            perror("bind failed"); 
+            exit(EXIT_FAILURE); 
+        } 
+      if (listen(server_fd, 3) < 0) 
+        { 
+            perror("listen"); 
+            exit(EXIT_FAILURE); 
+        } 
+      ((new_socket = accept(server_fd, (struct sockaddr *)&address,(socklen_t*)&addrlen))>0);
+      read(new_socket, &info, sizeof(info));
+      //copy data given by struct into result
+      completed += 1; 
+
+
+      if(completed == num_workstaions){
+        break;
+      }
+    }
+    
+  }
+  else{
+    //client
+     
+  }
+    
+
+}
+
+
+
 /******************Matrix Functions*************************/
 matrix::matrix(int x, int y)  // constructor
 {
