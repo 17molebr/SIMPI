@@ -59,7 +59,7 @@ int main(int argc, char const *argv[])
             } */
             read( new_socket , &numprocess, sizeof(int)); 
             read( new_socket , &nummachines, sizeof(int)); 
-            read( new_socket, &workstationid, sizeof(int));
+            //read( new_socket, &workstationid, sizeof(int));
             printf("%d", numprocess);
             printf("\n");
             char progname[100];
