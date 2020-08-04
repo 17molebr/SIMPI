@@ -21,10 +21,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in serv_addr; 
     char *num = argv[1];
     int numprocess = atoi(num);
-    if(numprocess <= 4){
-        run_simpi(numprocess);
-        exit(0); 
-    }
+    
     int fullWorkstations;
     int remainderCores; 
     if(numprocess % 4 == 0){
@@ -45,7 +42,10 @@ int main(int argc, char *argv[])
                               "192.168.168.89"};
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
-    
+    if(numprocess <= 4){
+        run_simpi(numprocess, numMachines);
+        exit(0); 
+    }
     
     //Local Workstaion simpi run
     run_simpi(4, numMachines); 
