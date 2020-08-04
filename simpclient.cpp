@@ -8,7 +8,7 @@
 #include <array>
 #define PORT 8080 
 
-void run_simpi(int numprocess);  
+void run_simpi(int numprocess, int numMachines);  
 
 int main(int argc, char *argv[]) 
 { 
