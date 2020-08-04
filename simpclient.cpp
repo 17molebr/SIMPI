@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     
     
     //Local Workstaion simpi run
-    run_simpi(4); 
+    run_simpi(4, numMachines); 
     int fullrun = 4;
     for(int i=0; i < fullWorkstations; i++){   
     
@@ -95,17 +95,18 @@ int main(int argc, char *argv[])
     return 0;
 } 
 
-void run_simpi(int numprocess){
+void run_simpi(int numprocess, int numMachines){
     char progname[100];
     strcpy(progname, "mpi");
     char user[100];
     strcpy(user, "user");
     std::string worker_count_str = std::to_string(numprocess);
-    char machines[10];
+    std::string machines = std::to_string(numMachines);
+    // char machines[10];
     char workstation_id[10];
-    strcpy(machines, "1");
+    
     strcpy(workstation_id, "0");
-    char * args[6] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), machines, workstation_id, NULL};
+    char * args[6] = {progname, user,  const_cast<char*>(worker_count_str.c_str()), const_cast<char*>(machines.c_str()), workstation_id, NULL};
     if(fork()==0)
         {
             std::cout << progname << "\n";
