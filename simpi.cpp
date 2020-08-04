@@ -947,7 +947,7 @@ matrix &matrix::multiply(matrix other)
   int Brow = other.get_x();
   int Bcol = other.get_y();
   int rpp = Bcol / number_of_processes;
-  int start = rpp * main_simpi->get_id();
+  int start = rpp * parId;
   int end = start + rpp;
   if (Arow % number_of_processes != 0)
   {
