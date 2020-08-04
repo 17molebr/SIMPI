@@ -35,7 +35,7 @@ typedef struct synch_object {
 void SIMPI_INIT(int par_id, size_t synch_size, int num_workstations, int _workstation_id);
 void SIMPI_SYNCH();
 void SIMPI_FINALIZE();
-matrix SIMPI_DISTRIBUTE(matrix m);
+
 
 class simpi {
  public:
@@ -47,8 +47,8 @@ class simpi {
   int get_workstation_id() {return workstationid;}
   int get_start() {return start;}
   int get_end() {return end;}
-  int set_start(int start_) {start = start_;}
-  int set_end(int end_) {end = end_;}
+  void set_start(int start_) {start = start_;}
+  void set_end(int end_) {end = end_;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
@@ -153,3 +153,5 @@ class matrix  // similar stuff for vector
   double *eigenvalue(matrix Anaught,int par_id, int par_count);
   void eigenvector(matrix A, double *V, int par_id, int par_count);
 };
+
+matrix SIMPI_DISTRIBUTE(matrix m);

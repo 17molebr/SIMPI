@@ -266,7 +266,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
       if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
       { 
           printf("\n Socket creation error \n"); 
-          return; 
+          return result; 
       } 
     
         
@@ -277,13 +277,13 @@ matrix SIMPI_DISTRIBUTE(matrix m)
       if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
       { 
           printf("\nInvalid address/ Address not supported \n"); 
-          return; 
+          return result; 
       } 
         
       if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
       { 
         printf("\nConnection Failed \n"); 
-          return; 
+          return result; 
       }
 
       send(sock, &info, sizeof(info), 0);
