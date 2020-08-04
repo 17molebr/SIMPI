@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <arpa/inet.h> 
 
 #include <iomanip>
 #include <iostream>
@@ -34,6 +35,7 @@ typedef struct synch_object {
 void SIMPI_INIT(int par_id, size_t synch_size, int num_workstations, int _workstation_id);
 void SIMPI_SYNCH();
 void SIMPI_FINALIZE();
+matrix SIMPI_DISTRIBUTE(matrix m);
 
 class simpi {
  public:
@@ -43,6 +45,10 @@ class simpi {
   int get_num_workers() { return num_workers; }
   int get_num_workstations() {return num_workstations;}
   int get_workstation_id() {return workstationid;}
+  int get_start() {return start;}
+  int get_end() {return end;}
+  int set_start(int start_) {start = start_;}
+  int set_end(int end_) {end = end_;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
@@ -56,6 +62,8 @@ class simpi {
   int shm_fd;
   int num_workstations;
   int workstationid;
+  int start;
+  int end;
   synch_object* synch_info;
   std::map<std::string, matrix_metadata> matrix_info;
   std::string sync_shared_mem_name;
