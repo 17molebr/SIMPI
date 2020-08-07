@@ -225,9 +225,9 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             }
             address.sin_family = AF_INET;
             address.sin_addr.s_addr = INADDR_ANY;
-            address.sin_port = htons(PORT);
+            address.sin_port = htons(8888);
 
-            // Forcefully attaching socket to the port 8080
+            // Forcefully attaching socket to the port 8888
             if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
             {
                 perror("bind failed");
@@ -278,7 +278,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
     
         
       serv_addr.sin_family = AF_INET; 
-      serv_addr.sin_port = htons(PORT); 
+      serv_addr.sin_port = htons(8888); 
       // Convert IPv4 and IPv6 addresses from text to binary form 
 
       if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
