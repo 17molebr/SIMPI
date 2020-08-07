@@ -236,10 +236,10 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             listen(server_fd, 5);
             while(1){
             new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
-            read(new_socket, &info, sizeof(info));
             //copy data given by struct into result
             int pid = fork();
             if(pid == 0){
+              read(new_socket, &info, sizeof(info));
               for (int i = info.start; i < info.end; i++){
                 for (int j = 0; j < m.get_x(); j++)
                 {
