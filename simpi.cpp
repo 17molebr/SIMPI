@@ -233,20 +233,22 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                 perror("bind failed");
                 exit(EXIT_FAILURE);
             }
-            if (listen(server_fd, 3) < 0)
-            {
-                perror("listen");
-                exit(EXIT_FAILURE);
-            }
-            while((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) > 0){
+            listen(server_fd, 5);
+            while(1){
+            new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
             read(new_socket, &info, sizeof(info));
             //copy data given by struct into result
-            for (int i = info.start; i < info.end; i++)
-            {
+            int pid = fork();
+            if(pid == 0){
+              for (int i = info.start; i < info.end; i++){
                 for (int j = 0; j < m.get_x(); j++)
                 {
                     result.set(i * m.get_x() + j, m.arr[i]);
                 }
+              }
+            }
+            else{
+              close(new_socket);
             }
             completed += 1;
 
@@ -256,7 +258,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             }
             }
 
-            //close(new_socket);
+            
         
     }
     else
