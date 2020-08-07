@@ -246,13 +246,14 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                     result.set(i * m.get_x() + j, m.arr[i]);
                 }
               }
+              close(new_socket);
             }
             else{
               close(new_socket);
             }
             completed += 1;
 
-            if (completed == num_workstaions)
+            if (completed == num_workstaions-1)
             {
                 break;
             }
