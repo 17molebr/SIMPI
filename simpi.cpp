@@ -196,6 +196,7 @@ struct data_info
 
 matrix SIMPI_DISTRIBUTE(matrix m)
 {
+  if(main_simpi->get_id() == 0){
     int num_workstaions = main_simpi->get_num_workstations();
     matrix result(m.get_x(), m.get_y());
     if (main_simpi->get_workstation_id() == 0)
@@ -293,6 +294,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
 
     }
     return result; 
+  }
 }
 
 /******************Matrix Functions*************************/
