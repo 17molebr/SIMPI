@@ -212,7 +212,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
         //create server connection
         int completed = 0;
         
-        
+            printf("here1");
             struct data_info info;
             int server_fd, new_socket, valread;
             struct sockaddr_in address;
@@ -234,6 +234,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                 exit(EXIT_FAILURE);
             }
             listen(server_fd, 5);
+            printf("here2");
             while(1){
             new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
             //copy data given by struct into result
@@ -255,7 +256,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
 
             if (completed == num_workstaions-1)
             {
-                break;
+              break;
             }
             }
 
