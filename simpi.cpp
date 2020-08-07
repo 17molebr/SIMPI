@@ -245,11 +245,11 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                       result.set(i * m.get_x() + j, m.arr[i]);
                   }
                 }
-                close(new_socket);
+                //close(new_socket);
                 exit(0);
               }
               else{
-                close(new_socket);
+                //close(new_socket);
               }
               completed += 1;
 
