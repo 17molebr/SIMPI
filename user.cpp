@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   std::cout << B;
   C= A * B;
   std::cout << C;
-  //C = SIMPI_DISTRIBUTE(C);
+  C = SIMPI_DISTRIBUTE(C);
   std::cout << C;
   //C= A.inverse();
 
