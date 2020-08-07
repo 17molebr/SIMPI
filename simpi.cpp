@@ -256,7 +256,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             }
             }
 
-            close(new_socket);
+            //close(new_socket);
         
     }
     else
