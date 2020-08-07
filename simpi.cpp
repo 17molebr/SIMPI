@@ -211,8 +211,6 @@ matrix SIMPI_DISTRIBUTE(matrix m)
         }
         //create server connection
         int completed = 0;
-        
-            printf("here1");
             struct data_info info;
             int server_fd, new_socket, valread;
             struct sockaddr_in address;
@@ -233,35 +231,32 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                 perror("bind failed");
                 exit(EXIT_FAILURE);
             }
+            //listen for max num of clients 
             listen(server_fd, 5);
-            printf("here2");
             while(1){
-            new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
-            //copy data given by struct into result
-            int pid = fork();
-            if(pid == 0){
-              read(new_socket, &info, sizeof(info));
-              for (int i = info.start; i < info.end; i++){
-                for (int j = 0; j < m.get_x(); j++)
-                {
-                    result.set(i * m.get_x() + j, m.arr[i]);
+              new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+              //copy data given by struct into result
+              int pid = fork();
+              if(pid == 0){
+                read(new_socket, &info, sizeof(info));
+                for (int i = info.start; i < info.end; i++){
+                  for (int j = 0; j < m.get_x(); j++)
+                  {
+                      result.set(i * m.get_x() + j, m.arr[i]);
+                  }
                 }
+                close(new_socket);
               }
-              close(new_socket);
-            }
-            else{
-              close(new_socket);
-            }
-            completed += 1;
+              else{
+                close(new_socket);
+              }
+              completed += 1;
 
-            if (completed == num_workstaions-1)
-            {
-              break;
-            }
-            }
-
-            
-        
+              if (completed == num_workstaions-1)
+              {
+                break;
+              }
+            }  
     }
     else
     {
