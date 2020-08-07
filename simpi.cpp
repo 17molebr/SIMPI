@@ -291,7 +291,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
       }
 
       send(sock, &info, sizeof(info), 0);
-      close(sock);
+      //close(sock);
     }
     return result; 
   }
