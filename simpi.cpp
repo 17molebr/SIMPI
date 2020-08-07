@@ -202,6 +202,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
     if (main_simpi->get_workstation_id() == 0)
     {
         //copy data from start to end of workstation 0 work
+        
         for (int i = main_simpi->get_start(); i < main_simpi->get_end(); i++)
         {
             for (int j = 0; j < m.get_x(); j++)
@@ -209,6 +210,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                 result.set(i * m.get_x() + j, m.arr[i]);
             }
         }
+        
         //create server connection
         int completed = 0;
             struct data_info info;
@@ -239,17 +241,19 @@ matrix SIMPI_DISTRIBUTE(matrix m)
               int pid = fork();
               if(pid == 0){
                 read(new_socket, &info, sizeof(info));
+                
                 for (int i = info.start; i < info.end; i++){
                   for (int j = 0; j < m.get_x(); j++)
                   {
                       result.set(i * m.get_x() + j, m.arr[i]);
                   }
                 }
-                //close(new_socket);
+                
+                close(new_socket);
                 exit(0);
               }
               else{
-                //close(new_socket);
+                close(new_socket);
               }
               completed += 1;
 
@@ -291,7 +295,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
       }
 
       send(sock, &info, sizeof(info), 0);
-      //close(sock);
+      close(sock);
     }
     return result; 
   }
