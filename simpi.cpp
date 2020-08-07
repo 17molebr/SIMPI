@@ -210,8 +210,8 @@ matrix SIMPI_DISTRIBUTE(matrix m)
         }
         //create server connection
         int completed = 0;
-        while (true)
-        {
+        
+        
             struct data_info info;
             int server_fd, new_socket, valread;
             struct sockaddr_in address;
@@ -237,7 +237,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
                 perror("listen");
                 exit(EXIT_FAILURE);
             }
-            ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) > 0);
+            while((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) > 0){
             read(new_socket, &info, sizeof(info));
             //copy data given by struct into result
             for (int i = info.start; i < info.end; i++)
@@ -253,9 +253,10 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             {
                 break;
             }
+            }
 
             close(new_socket);
-        }
+        
     }
     else
     {
