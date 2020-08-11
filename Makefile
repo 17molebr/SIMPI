@@ -1,5 +1,5 @@
 CC = g++ 
-CFLAGS = -Wall -g -std=c++11
+CFLAGS = -Wall -g -std=c++11 -pthread
 LINKFLAGS = -lrt
 # if mac use this LINFLAGS
 # LINKFLAGS =
