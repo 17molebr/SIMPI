@@ -217,12 +217,12 @@ class ClientHandler{
     }
 };
 
-matrix SIMPI_DISTRIBUTE(matrix m)
+matrix &matrix::SIMPI_DISTRIBUTE()
 {
   if(main_simpi->get_id() == 0){
     std::cout << main_simpi->get_id();
     int num_workstaions = main_simpi->get_num_workstations();
-    matrix result(m.get_x(), m.get_y());
+    matrix result(get_x(), get_y());
     std::cout << main_simpi->get_workstation_id();
     if (main_simpi->get_workstation_id() == 0)
     {
@@ -230,9 +230,9 @@ matrix SIMPI_DISTRIBUTE(matrix m)
         
         for (int i = main_simpi->get_start(); i < main_simpi->get_end(); i++)
         {
-            for (int j = 0; j < m.get_x(); j++)
+            for (int j = 0; j < get_x(); j++)
             {
-                result.set(i * m.get_x() + j, m.arr[i]);
+                result.set(i * get_x() + j, arr[i]);
             }
         }
         
@@ -264,7 +264,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             while(1){
               new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
               //copy data given by struct into result
-              threads.emplace_back(new std::thread((ClientHandler()), new_socket, &result, &m));
+              threads.emplace_back(new std::thread((ClientHandler()), new_socket, &result, this));
             }   
     }
     else
@@ -272,7 +272,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
       int sock = 0, valread; 
       struct sockaddr_in serv_addr; 
       struct data_info info;
-      info.arr = m.arr;
+      info.arr = arr;
       info.start = main_simpi->get_start();
       info.end = main_simpi->get_end();
       if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 

@@ -155,6 +155,6 @@ class matrix  // similar stuff for vector
   bool matrix_is_equal(matrix other);
   double *eigenvalue(matrix Anaught,int par_id, int par_count);
   void eigenvector(matrix A, double *V, int par_id, int par_count);
+  matrix &SIMPI_DISTRIBUTE();
 };
 
-matrix SIMPI_DISTRIBUTE(matrix m);

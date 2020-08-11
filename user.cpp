@@ -48,20 +48,11 @@ int main(int argc, char* argv[])
   std::cout << B;
   C= A * B;
   std::cout << C;
-  /*
-  SIMPI_SYNCH();
-  std::exception_ptr p;
-  try{
-    SIMPI_DISTRIBUTE(C);
-  }catch(const std::exception& e){
-    p = std::current_exception();
-    std::cout << "exception" << e.what();
-  }
-  
+  C = C.SIMPI_DISTRIBUTE();
   std::cout << C;
   //C= A.inverse();
 
   //std::cout << C; 
   //SIMPI_FINALIZE();
-  */
+  
 }
