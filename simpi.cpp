@@ -222,6 +222,7 @@ matrix SIMPI_DISTRIBUTE(matrix m)
   if(main_simpi->get_id() == 0){
     int num_workstaions = main_simpi->get_num_workstations();
     matrix result(m.get_x(), m.get_y());
+    std::cout << main_simpi->get_workstation_id();
     if (main_simpi->get_workstation_id() == 0)
     {
         //copy data from start to end of workstation 0 work
