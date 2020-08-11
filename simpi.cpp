@@ -218,11 +218,10 @@ class ClientHandler{
 };
 
 matrix &matrix::SIMPI_DISTRIBUTE()
-{
+{ matrix result(get_x(), get_y());
   if(main_simpi->get_id() == 0){
     std::cout << main_simpi->get_id();
     int num_workstaions = main_simpi->get_num_workstations();
-    matrix result(get_x(), get_y());
     std::cout << main_simpi->get_workstation_id();
     if (main_simpi->get_workstation_id() == 0)
     {
@@ -301,8 +300,10 @@ matrix &matrix::SIMPI_DISTRIBUTE()
       send(sock, &info, sizeof(info), 0);
       close(sock);
     }
-    return result; 
+    
   }
+  main_simpi->synch();
+  return result;
 }
 
 /******************Matrix Functions*************************/
