@@ -194,6 +194,29 @@ struct data_info
     double *arr;
 };
 
+class ClientHandler{
+  public:
+    void operator()(int s, matrix * mx, matrix * m){
+      int result;
+      try{
+        do{
+        struct data_info info;
+        result = read(s, &info, sizeof(info));
+        if(result > 0){
+           for (int i = info.start; i < info.end; i++){
+              for (int j = 0; j < m->get_x(); j++)
+              {
+                mx->set(i * m->get_y() + j, m->arr[i]);
+              }
+            }
+        }
+        }while(result > 0);
+        
+      }catch(...){}
+
+    }
+};
+
 matrix SIMPI_DISTRIBUTE(matrix m)
 {
   if(main_simpi->get_id() == 0){
@@ -235,33 +258,12 @@ matrix SIMPI_DISTRIBUTE(matrix m)
             }
             //listen for max num of clients 
             listen(server_fd, 5);
+            std::vector<std::unique_ptr<std::thread>> threads;
             while(1){
               new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
               //copy data given by struct into result
-              int pid = fork();
-              if(pid == 0){
-                read(new_socket, &info, sizeof(info));
-                
-                for (int i = info.start; i < info.end; i++){
-                  for (int j = 0; j < m.get_x(); j++)
-                  {
-                      result.set(i * m.get_x() + j, m.arr[i]);
-                  }
-                }
-                
-                close(new_socket);
-                exit(0);
-              }
-              else{
-                close(new_socket);
-              }
-              completed += 1;
-
-              if (completed == num_workstaions-1)
-              {
-                break;
-              }
-            }  
+              threads.emplace_back(new std::thread((ClientHandler()), new_socket, &result, &m));
+            }   
     }
     else
     {
