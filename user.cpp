@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
   std::cout << B;
   C= A * B;
   std::cout << C;
-  SIMPI_DISTRIBUTE(C);
   SIMPI_SYNCH();
+  SIMPI_DISTRIBUTE(C);
   std::cout << C;
   //C= A.inverse();
 
