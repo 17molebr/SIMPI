@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
   std::cout << B;
   C= A * B;
   std::cout << C;
+  /*
   SIMPI_SYNCH();
   std::exception_ptr p;
   try{
@@ -62,4 +63,5 @@ int main(int argc, char* argv[])
 
   //std::cout << C; 
   //SIMPI_FINALIZE();
+  */
 }
