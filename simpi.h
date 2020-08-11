@@ -5,7 +5,9 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <arpa/inet.h> 
-#include <thread> 
+#include <thread>
+#include <exception>      // std::exception_ptr, std::current_exception, std::rethrow_exception
+#include <stdexcept>
 
 #include <iomanip>
 #include <iostream>
