@@ -43,6 +43,63 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         perror("Unable to mmap synch_info: ");
         exit(1);
     }
+    if(workstationid == 0 && id == 0){
+        struct data_info info;
+        int server_fd, valread;
+        struct sockaddr_in address;
+        int opt = 1;
+        int addrlen = sizeof(address);
+        if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+        {
+          perror("socket failed");
+          exit(EXIT_FAILURE);
+        }
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_port = htons(8888);
+
+        // Forcefully attaching socket to the port 8888
+        if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
+        {
+          perror("bind failed");
+          exit(EXIT_FAILURE);
+        }
+        //listen for max num of clients 
+        listen(server_fd, 5);
+        std::vector<std::unique_ptr<std::thread>> threads;
+        while(1){
+          simpi_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+          //copy data given by struct into result
+          threads.emplace_back(new std::thread((ClientHandler()), simpi_socket));
+        }   
+    }else if(id == 0 && workstationid != 0){
+      int valread; 
+      struct sockaddr_in serv_addr; 
+      if ((simpi_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+      { 
+          printf("\n Socket creation error \n"); 
+      } 
+    
+        
+      serv_addr.sin_family = AF_INET; 
+      serv_addr.sin_port = htons(8888); 
+      // Convert IPv4 and IPv6 addresses from text to binary form 
+
+      if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
+      { 
+          printf("\nInvalid address/ Address not supported \n"); 
+          
+      } 
+        
+      if (connect(simpi_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+      { 
+        printf("\nConnection Failed \n"); 
+         
+      }
+
+    }else if(workstationid == 0){
+      exit(0);
+    }
 }
 simpi::~simpi()
 {
@@ -78,6 +135,8 @@ void simpi::synch()
         }
     }
 }
+
+
 
 std::pair<std::string, double *> simpi::create_matrix(int x, int y)
 {
@@ -196,20 +255,25 @@ struct data_info
 
 class ClientHandler{
   public:
-    void operator()(int s, matrix * mx, matrix * m){
+    void operator()(int s){
       int result;
       try{
         do{
         struct data_info info;
         result = read(s, &info, sizeof(info));
         if(result > 0){
+          std::cout << info.arr;
+          /*
            for (int i = info.start; i < info.end; i++){
               for (int j = 0; j < m->get_x(); j++)
               {
                 mx->set(i * m->get_y() + j, m->arr[i]);
               }
-            }
+            */
+        }else{
+          std::cout << "CONNECTION LOST!" << std::endl;
         }
+
         }while(result > 0);
         
       }catch(...){}
@@ -219,6 +283,7 @@ class ClientHandler{
 
 matrix &matrix::SIMPI_DISTRIBUTE()
 { matrix result(get_x(), get_y());
+ /*
   if(main_simpi->get_id() == 0){
     std::cout << main_simpi->get_id();
     int num_workstaions = main_simpi->get_num_workstations();
@@ -236,73 +301,23 @@ matrix &matrix::SIMPI_DISTRIBUTE()
         }
         
         //create server connection
-        int completed = 0;
-            struct data_info info;
-            int server_fd, new_socket, valread;
-            struct sockaddr_in address;
-            int opt = 1;
-            int addrlen = sizeof(address);
-            if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-            {
-                perror("socket failed");
-                exit(EXIT_FAILURE);
-            }
-            address.sin_family = AF_INET;
-            address.sin_addr.s_addr = INADDR_ANY;
-            address.sin_port = htons(8888);
-
-            // Forcefully attaching socket to the port 8888
-            if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
-            {
-                perror("bind failed");
-                exit(EXIT_FAILURE);
-            }
-            //listen for max num of clients 
-            listen(server_fd, 5);
-            std::vector<std::unique_ptr<std::thread>> threads;
-            while(1){
-              new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
-              //copy data given by struct into result
-              threads.emplace_back(new std::thread((ClientHandler()), new_socket, &result, this));
-            }   
     }
     else
     {
-      int sock = 0, valread; 
-      struct sockaddr_in serv_addr; 
-      struct data_info info;
-      info.arr = arr;
-      info.start = main_simpi->get_start();
-      info.end = main_simpi->get_end();
-      if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-      { 
-          printf("\n Socket creation error \n"); 
-          return result; 
-      } 
-    
-        
-      serv_addr.sin_family = AF_INET; 
-      serv_addr.sin_port = htons(8888); 
-      // Convert IPv4 and IPv6 addresses from text to binary form 
-
-      if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
-      { 
-          printf("\nInvalid address/ Address not supported \n"); 
-          return result; 
-      } 
-        
-      if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
-      { 
-        printf("\nConnection Failed \n"); 
-          return result; 
-      }
-
-      send(sock, &info, sizeof(info), 0);
-      close(sock);
+      int i;
     }
     
   }
   main_simpi->synch();
+  return result;
+  */
+  struct data_info info;
+  info.arr = arr;
+  info.start = main_simpi->get_start();
+  info.end = main_simpi->get_end();
+  if(main_simpi->get_workstation_id != 0){
+    send(main_simpi->get_socket(), &info, sizeof(info), 0);
+  }
   return result;
 }
 

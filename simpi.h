@@ -50,6 +50,7 @@ class simpi {
   int get_workstation_id() {return workstationid;}
   int get_start() {return start;}
   int get_end() {return end;}
+  int get_socket() {return simpi_socket;}
   void set_start(int start_) {start = start_;}
   void set_end(int end_) {end = end_;}
   synch_object* get_synch_info() { return synch_info; }
@@ -67,6 +68,7 @@ class simpi {
   int workstationid;
   int start;
   int end;
+  int simpi_socket;
   synch_object* synch_info;
   std::map<std::string, matrix_metadata> matrix_info;
   std::string sync_shared_mem_name;
