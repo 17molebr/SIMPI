@@ -105,7 +105,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
           //copy data given by struct into result
           threads.emplace_back(new std::thread((ClientHandler()), simpi_socket));
         }   
-    }else if(id == 0 && workstationid != 0){
+    }else if(id %4 == 0 && workstationid != 0){
       int valread; 
       struct sockaddr_in serv_addr; 
       if ((simpi_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
