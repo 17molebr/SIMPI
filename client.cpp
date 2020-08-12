@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <array>
+#include <signal.h>
 #define PORT 8080 
 
 int main(){
