@@ -35,9 +35,7 @@ class ClientHandler{
         struct data_info info;
         result = read(s, &info, sizeof(info));
         if(result > 0){
-          for(int i; i < 100; i++){
-            std::cout << info.arr[i];
-          }
+          std::cout << info.arr;
           /*
            for (int i = info.start; i < info.end; i++){
               for (int j = 0; j < m->get_x(); j++)
