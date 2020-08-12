@@ -47,11 +47,10 @@ class ClientHandler{
           std::cout << "CONNECTION LOST!" << std::endl;
         }
 
-        
-        
-      }
+        }while(result < 0);
+      }catch(...){}
 
-    }catch(...){}
+    }
 };
 
 /******************Simpi Functions*************************/
