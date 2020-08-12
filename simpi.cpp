@@ -19,6 +19,40 @@ void SIMPI_FINALIZE()
     delete main_simpi;
 }
 
+struct data_info
+{
+    int start;
+    int end;
+    double *arr;
+};
+
+class ClientHandler{
+  public:
+    void operator()(int s){
+      int result;
+      try{
+        do{
+        struct data_info info;
+        result = read(s, &info, sizeof(info));
+        if(result > 0){
+          std::cout << info.arr;
+          /*
+           for (int i = info.start; i < info.end; i++){
+              for (int j = 0; j < m->get_x(); j++)
+              {
+                mx->set(i * m->get_y() + j, m->arr[i]);
+              }
+            */
+        }else{
+          std::cout << "CONNECTION LOST!" << std::endl;
+        }
+
+        }while(result > 0);
+        
+      }catch(...){}
+
+    }
+};
 
 /******************Simpi Functions*************************/
 simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_id)
@@ -246,40 +280,6 @@ struct status
 };
 
 //struct to send part of an array that is completed from "clients" to ID 0
-struct data_info
-{
-    int start;
-    int end;
-    double *arr;
-};
-
-class ClientHandler{
-  public:
-    void operator()(int s){
-      int result;
-      try{
-        do{
-        struct data_info info;
-        result = read(s, &info, sizeof(info));
-        if(result > 0){
-          std::cout << info.arr;
-          /*
-           for (int i = info.start; i < info.end; i++){
-              for (int j = 0; j < m->get_x(); j++)
-              {
-                mx->set(i * m->get_y() + j, m->arr[i]);
-              }
-            */
-        }else{
-          std::cout << "CONNECTION LOST!" << std::endl;
-        }
-
-        }while(result > 0);
-        
-      }catch(...){}
-
-    }
-};
 
 matrix &matrix::SIMPI_DISTRIBUTE()
 { matrix result(get_x(), get_y());
