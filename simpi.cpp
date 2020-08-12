@@ -34,6 +34,7 @@ class ClientHandler{
         do{
         struct data_info info;
         result = read(s, &info, sizeof(info));
+        std::cout << s; 
         if(result > 0){
           std::cout << info.arr;
           /*
