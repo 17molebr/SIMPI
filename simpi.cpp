@@ -315,7 +315,7 @@ matrix &matrix::SIMPI_DISTRIBUTE()
   info.arr = arr;
   info.start = main_simpi->get_start();
   info.end = main_simpi->get_end();
-  if(main_simpi->get_workstation_id != 0){
+  if(main_simpi->get_workstation_id() != 0){
     send(main_simpi->get_socket(), &info, sizeof(info), 0);
   }
   return result;
