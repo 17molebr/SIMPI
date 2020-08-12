@@ -9,7 +9,7 @@
 #include <netdb.h>
 #include <thread>
 #include <sys/ioctl.h>
-int make_sock(const char *servspec);
+#include <signal.h>
 void accept_loop(const char *servspec);
 void new_connection (int sock);
 bool isclosed(int sock);
