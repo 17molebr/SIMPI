@@ -36,6 +36,7 @@ class ClientHandler{
         result = read(s, &info, sizeof(info));
         if(result > 0){
           std::cout << info.arr;
+          return;
           /*
            for (int i = info.start; i < info.end; i++){
               for (int j = 0; j < m->get_x(); j++)
