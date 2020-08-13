@@ -13,6 +13,8 @@
 #include <arpa/inet.h> 
 #include <string.h> 
 
+void new_connection (int sock); 
+
 class server {
     public:
         const char *port= ":8080";
@@ -47,16 +49,7 @@ class server {
             return sock;
         }
 
-        void new_connection (int sock) {
-            ssize_t r;
-            while (!isclosed(sock)) {
-                r = send(sock, ".\n", 2, 0);
-                if (r < 0) break;
-                sleep(1);
-            }
-            close(sock);
-        }
-
+      
         void accept_loop(const char *servspec){
             int sock = make_sock(servspec);
 
@@ -81,6 +74,15 @@ class server {
         }
         
 };
+void new_connection (int sock) {
+     ssize_t r;
+     while (!isclosed(sock)) {
+        r = send(sock, ".\n", 2, 0);
+        if (r < 0) break;
+            sleep(1);
+        }
+        close(sock);
+}
 
 int main(int argc, char *argv[]){
     server s;
