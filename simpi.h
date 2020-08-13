@@ -8,7 +8,8 @@
 #include <thread>
 #include <exception>      // std::exception_ptr, std::current_exception, std::rethrow_exception
 #include <stdexcept>
-
+#include <array>
+#include <sys/ioctl.h>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -18,9 +19,14 @@
 #include <netinet/in.h> 
 #include <stdlib.h> 
 #include <stdio.h>
+#include <netdb.h>
 #define PORT 8080 
 #define SYNCH_OBJECT_MEM_NAME "/simpi_shared_mem"
 #define UNIQUE_ID_SIZE 23
+
+
+
+
 typedef struct matrix_metadata {
   char unique_id[UNIQUE_ID_SIZE];
   int file_descriptor;
@@ -160,3 +166,38 @@ class matrix  // similar stuff for vector
   matrix &SIMPI_DISTRIBUTE();
 };
 
+class client{
+    public:
+        int port = 8080;
+        int sock = 0;
+    int setup_client(){
+        int valread; 
+        struct sockaddr_in serv_addr;  
+        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+            { 
+                printf("\n Socket creation error \n"); 
+                return 0; 
+            }          
+        serv_addr.sin_family = AF_INET; 
+        serv_addr.sin_port = htons(port);
+
+        if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
+        { 
+            printf("\nInvalid address/ Address not supported \n"); 
+            return 0; 
+        }
+        if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+            { 
+                printf("\nConnection Failed \n"); 
+                return 0; 
+            } 
+    }
+
+    void run_client(){
+        char array[2]; 
+        int r = read(sock, &array, 2);
+        std::cout << array; 
+        close(sock);
+    }
+
+};

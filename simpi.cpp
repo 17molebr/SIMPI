@@ -26,6 +26,78 @@ struct data_info
     double *arr;
 };
 
+class server;
+void new_connection(int sock, server s);
+
+class server {
+    public:
+        const char *port= ":8080";
+        int make_sock(const char *servspec){
+            const int one = 1;
+            struct addrinfo hints = {};
+            struct addrinfo *res = 0, *ai = 0, *ai4 = 0;
+            char *node = strdup(servspec);
+            char *service = strrchr(node, ':');
+            int sock;
+
+            hints.ai_family = PF_UNSPEC;
+            hints.ai_socktype = SOCK_STREAM;
+            hints.ai_flags = AI_PASSIVE;
+
+            *service++ = '\0';
+            getaddrinfo(*node ? node : "0::0", service, &hints, &res);
+            free(node);
+
+            for (ai = res; ai; ai = ai->ai_next) {
+                if (ai->ai_family == PF_INET6) break;
+                else if (ai->ai_family == PF_INET) ai4 = ai;
+            }
+            ai = ai ? ai : ai4;
+
+            sock = socket(ai->ai_family, SOCK_STREAM, 0);
+            setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+            bind(sock, ai->ai_addr, ai->ai_addrlen);
+            listen(sock, 256);
+            freeaddrinfo(res);
+
+            return sock;
+        }
+
+        void accept_loop(const char *servspec, server s){
+            int sock = make_sock(servspec);
+
+            for (;;) {
+                int new_sock = accept(sock, 0, 0);
+                std::thread t(new_connection, new_sock, s);
+                t.detach();
+            }
+        }
+
+        bool isclosed(int sock) {
+            fd_set rfd;
+            FD_ZERO(&rfd);
+            FD_SET(sock, &rfd);
+            timeval tv = { 0 };
+            select(sock+1, &rfd, 0, 0, &tv);
+            if (!FD_ISSET(sock, &rfd))
+                return false;
+            int n = 0;
+            ioctl(sock, FIONREAD, &n);
+            return n == 0;
+        }
+        
+};
+
+void new_connection(int sock, server s) {
+    ssize_t r;
+    while (!s.isclosed(sock)) {
+        r = send(sock, ".\n", 2, 0);
+        if (r < 0) 
+            break;
+        sleep(1);
+    }
+    close(sock);
+}
 
 /******************Simpi Functions*************************/
 simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_id)
@@ -189,54 +261,6 @@ std::string simpi::get_shared_mem_name()
     return name;
 }
 
-//struct to store info on if each machine is done; to be stored on ID 0
-struct status
-{
-    int workingMachines;
-    int statusArray[1000];
-};
-
-//struct to send part of an array that is completed from "clients" to ID 0
-
-matrix &matrix::SIMPI_DISTRIBUTE()
-{ matrix result(get_x(), get_y());
- /*
-  if(main_simpi->get_id() == 0){
-    std::cout << main_simpi->get_id();
-    int num_workstaions = main_simpi->get_num_workstations();
-    std::cout << main_simpi->get_workstation_id();
-    if (main_simpi->get_workstation_id() == 0)
-    {
-        //copy data from start to end of workstation 0 work
-        
-        for (int i = main_simpi->get_start(); i < main_simpi->get_end(); i++)
-        {
-            for (int j = 0; j < get_x(); j++)
-            {
-                result.set(i * get_x() + j, arr[i]);
-            }
-        }
-        
-        //create server connection
-    }
-    else
-    {
-      int i;
-    }
-    
-  }
-  main_simpi->synch();
-  return result;
-  */
-  struct data_info info;
-  info.arr = arr;
-  info.start = main_simpi->get_start();
-  info.end = main_simpi->get_end();
-  if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() %4 == 0){
-    send(main_simpi->get_socket(), &info, sizeof(info), 0);
-  }
-  return result;
-}
 
 /******************Matrix Functions*************************/
 matrix::matrix(int x, int y) // constructor
