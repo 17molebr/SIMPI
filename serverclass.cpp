@@ -74,7 +74,7 @@ class server {
         }
         
 };
-void new_connection (int sock) {
+void server::new_connection(int sock) {
      ssize_t r;
      while (!isclosed(sock)) {
         r = send(sock, ".\n", 2, 0);
