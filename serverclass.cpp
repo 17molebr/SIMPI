@@ -19,7 +19,16 @@ struct threadargs
     server *s;
 };
 
-
+void new_connection(threadargs args) {
+    ssize_t r;
+    while (!args.s->isclosed(args.sock)) {
+        r = send(args.sock, ".\n", 2, 0);
+        if (r < 0) 
+            break;
+        sleep(1);
+    }
+    close(args.sock);
+}
 class server {
     public:
         const char *port= ":8080";
@@ -82,16 +91,7 @@ class server {
         
 };
 
-void new_connection(threadargs args) {
-    ssize_t r;
-    while (!args.s->isclosed(args.sock)) {
-        r = send(args.sock, ".\n", 2, 0);
-        if (r < 0) 
-            break;
-        sleep(1);
-    }
-    close(args.sock);
-}
+
 
 
 int main(int argc, char *argv[]){
