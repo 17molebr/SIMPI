@@ -18,7 +18,7 @@ void new_connection (int sock);
 class server {
     public:
         const char *port= ":8080";
-        void new_connection(int sock);        
+        static void new_connection(int sock);        
         int make_sock(const char *servspec){
             const int one = 1;
             struct addrinfo hints = {};
