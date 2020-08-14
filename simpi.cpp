@@ -181,6 +181,7 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
+        std::cout << main_simpi->get_client().sock << "\n";
         run_client(m, main_simpi->get_client().sock);
         //std::cout << "MATRIX SENT" << "\n";
 
