@@ -118,7 +118,6 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     num_workers = _num_workers;
     num_workstations = _num_workstaions;
     workstationid = _workstation_id;
-    client c;
     size_t synchObjectSize =
         sizeof(synch_object) + sizeof(int) * (num_workers + 1);
     int fd = shm_open(SYNCH_OBJECT_MEM_NAME, O_RDWR, 0777);
