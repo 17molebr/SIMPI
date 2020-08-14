@@ -28,10 +28,10 @@ void run_client(matrix m, int s){
     data_info info;
     info.arr = m.arr;
     */
+   std::cout << s << "\n";
     char array[10];
     strcpy(array, "hello");
     int r = send(s, &array, sizeof(array), 0);
-    std::cout << r << "\n";
     close(s);
 }
 
