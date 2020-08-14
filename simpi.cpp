@@ -126,6 +126,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         perror("Unable to mmap synch_info: ");
         exit(1);
     }
+    std::cout << "workstation id =", workstationid;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
         server s;
@@ -176,7 +177,6 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
-        std::cout << "distrubute send";
         run_client(m, main_simpi->get_client().sock);
     }
 }
