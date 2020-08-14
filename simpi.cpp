@@ -28,7 +28,7 @@ void run_client(matrix m, int s){
     data_info info;
     info.arr = m.arr;
     */
-   std::cout << s << "\n";
+    //std::cout << s << "\n";
     char array[10];
     strcpy(array, "hello");
     int r = send(s, &array, sizeof(array), 0);
@@ -149,6 +149,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     else if(workstationid != 0 && id == 0){
         std::cout << "client setup";
         c.setup_client();
+        std::cout << c.sock;
     }
        
 }
