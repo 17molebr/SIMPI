@@ -20,6 +20,7 @@
 #include <stdlib.h> 
 #include <stdio.h>
 #include <netdb.h>
+#include <signal.h>
 #define PORT 8080 
 #define SYNCH_OBJECT_MEM_NAME "/simpi_shared_mem"
 #define UNIQUE_ID_SIZE 23
