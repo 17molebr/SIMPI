@@ -19,15 +19,16 @@ void SIMPI_FINALIZE()
     delete main_simpi;
 }
 
-struct data_info
-{
-    int start;
-    int end;
-    double *arr;
-};
-
 class server;
 void new_connection(int sock, server s);
+
+
+void run_client(matrix m, int s){
+    data_info info;
+    info.arr = m.arr;
+    int r = send(s, &info, sizeof(info), 0);
+    close(s);
+}
 
 class server {
     public:
@@ -90,10 +91,12 @@ class server {
 
 void new_connection(int sock, server s) {
     ssize_t r;
+    data_info info;
     while (!s.isclosed(sock)) {
-        r = send(sock, ".\n", 2, 0);
+        r = read(sock, &info, sizeof(info));
         if (r < 0) 
             break;
+        std::cout << info.arr;
         sleep(1);
     }
     close(sock);
@@ -106,6 +109,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     num_workers = _num_workers;
     num_workstations = _num_workstaions;
     workstationid = _workstation_id;
+    client c;
     size_t synchObjectSize =
         sizeof(synch_object) + sizeof(int) * (num_workers + 1);
     int fd = shm_open(SYNCH_OBJECT_MEM_NAME, O_RDWR, 0777);
@@ -122,7 +126,16 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         perror("Unable to mmap synch_info: ");
         exit(1);
     }
-   
+    if(workstationid == 0 && id == 0){
+        server s;
+        signal(SIGPIPE, SIG_IGN);
+        s.accept_loop(s.port, s);
+        return;
+    }
+    else if(workstationid != 0 && id == 0){
+        c.setup_client();
+    }
+       
 }
 simpi::~simpi()
 {
@@ -159,7 +172,11 @@ void simpi::synch()
     }
 }
 
-
+void SIMPI_DISTRIBUTE(matrix m){
+    if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
+        run_client(m, main_simpi->get_client().sock);
+    }
+}
 
 std::pair<std::string, double *> simpi::create_matrix(int x, int y)
 {

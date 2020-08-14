@@ -25,7 +25,12 @@
 #define UNIQUE_ID_SIZE 23
 
 
-
+struct data_info
+{
+    int start;
+    int end;
+    double *arr;
+};
 
 typedef struct matrix_metadata {
   char unique_id[UNIQUE_ID_SIZE];
@@ -46,6 +51,34 @@ void SIMPI_SYNCH();
 void SIMPI_FINALIZE();
 
 
+class client{
+    public:
+        int port = 8080;
+        int sock = 0;
+    int setup_client(){
+        int valread; 
+        struct sockaddr_in serv_addr;  
+        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+            { 
+                printf("\n Socket creation error \n"); 
+                return 0; 
+            }          
+        serv_addr.sin_family = AF_INET; 
+        serv_addr.sin_port = htons(port);
+
+        if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
+        { 
+            printf("\nInvalid address/ Address not supported \n"); 
+            return 0; 
+        }
+        if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+            { 
+                printf("\nConnection Failed \n"); 
+                return 0; 
+            } 
+    }
+};
+
 class simpi {
  public:
   simpi(int _id, int _num_workers, int _num_workstatons, int _workstation_id);
@@ -59,6 +92,7 @@ class simpi {
   int get_socket() {return simpi_socket;}
   void set_start(int start_) {start = start_;}
   void set_end(int end_) {end = end_;}
+  client get_client() {return c;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
@@ -75,6 +109,7 @@ class simpi {
   int start;
   int end;
   int simpi_socket;
+  client c;
   synch_object* synch_info;
   std::map<std::string, matrix_metadata> matrix_info;
   std::string sync_shared_mem_name;
@@ -166,38 +201,4 @@ class matrix  // similar stuff for vector
   matrix &SIMPI_DISTRIBUTE();
 };
 
-class client{
-    public:
-        int port = 8080;
-        int sock = 0;
-    int setup_client(){
-        int valread; 
-        struct sockaddr_in serv_addr;  
-        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-            { 
-                printf("\n Socket creation error \n"); 
-                return 0; 
-            }          
-        serv_addr.sin_family = AF_INET; 
-        serv_addr.sin_port = htons(port);
-
-        if(inet_pton(AF_INET, "192.168.168.13", &serv_addr.sin_addr)<=0)  
-        { 
-            printf("\nInvalid address/ Address not supported \n"); 
-            return 0; 
-        }
-        if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
-            { 
-                printf("\nConnection Failed \n"); 
-                return 0; 
-            } 
-    }
-
-    void run_client(){
-        char array[2]; 
-        int r = read(sock, &array, 2);
-        std::cout << array; 
-        close(sock);
-    }
-
-};
+void SIMPI_DISTRIBUTE(matrix m);
