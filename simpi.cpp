@@ -127,12 +127,14 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         exit(1);
     }
     if(workstationid == 0 && id == 0){
+        std::cout << "serversetup";
         server s;
         signal(SIGPIPE, SIG_IGN);
         s.accept_loop(s.port, s);
         return;
     }
     else if(workstationid != 0 && id == 0){
+        std::cout << "client setup";
         c.setup_client();
     }
        
