@@ -55,7 +55,7 @@ void SIMPI_FINALIZE();
 class client{
     public:
         int port = 8080;
-        int sock = 0;
+        int sock; // = 0;
     int setup_client(){
         int valread; 
         struct sockaddr_in serv_addr;  
