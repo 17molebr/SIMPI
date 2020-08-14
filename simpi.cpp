@@ -24,9 +24,13 @@ void new_connection(int sock, server s);
 
 
 void run_client(matrix m, int s){
+    /*
     data_info info;
     info.arr = m.arr;
-    int r = send(s, &info, sizeof(info), 0);
+    */
+    char array[10];
+    strcpy(array, "hello");
+    int r = send(s, &array, sizeof(array), 0);
     std::cout << r << "\n";
     close(s);
 }
@@ -91,13 +95,17 @@ class server {
 };
 
 void new_connection(int sock, server s) {
+    
     ssize_t r;
+    /*
     data_info info;
+    */
+    char array[10];
     while (!s.isclosed(sock)) {
-        r = read(sock, &info, sizeof(info));
+        r = read(sock, &array, sizeof(array));
         if (r < 0) 
             break;
-        std::cout << info.arr;
+        std::cout << array;
         sleep(1);
     }
     close(sock);
@@ -181,7 +189,6 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
-        std::cout << main_simpi->get_client().sock << "\n";
         run_client(m, main_simpi->get_client().sock);
         //std::cout << "MATRIX SENT" << "\n";
 
