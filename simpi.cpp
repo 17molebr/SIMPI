@@ -146,9 +146,9 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         exit(0);
     }
     else if(workstationid != 0 && id == 0){
-        std::cout << "client setup";
+        //std::cout << "client setup";
         c.setup_client();
-        std::cout << c.sock;
+        //std::cout << c.sock;
     }
        
 }
@@ -189,6 +189,7 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
+        std::cout << "passed in sock= "<< main_simpi->get_client().sock << "\n";
         run_client(m, main_simpi->get_client().sock);
         //std::cout << "MATRIX SENT" << "\n";
 
