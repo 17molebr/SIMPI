@@ -95,7 +95,7 @@ class simpi {
   int get_socket() {return simpi_socket;}
   void set_start(int start_) {start = start_;}
   void set_end(int end_) {end = end_;}
-  client get_client() {return c;}
+  //client get_client() {return c;}
   synch_object* get_synch_info() { return synch_info; }
 
   std::pair<std::string, double*> create_matrix(int x, int y);
