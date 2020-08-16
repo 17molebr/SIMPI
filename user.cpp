@@ -54,5 +54,5 @@ int main(int argc, char* argv[])
 
   //std::cout << C; 
   //SIMPI_FINALIZE();
-  
+  exit(0);
 }

@@ -80,6 +80,8 @@ class client{
     }
 };
 
+
+
 class simpi {
  public:
   simpi(int _id, int _num_workers, int _num_workstatons, int _workstation_id);
@@ -110,7 +112,6 @@ class simpi {
   int start;
   int end;
   int simpi_socket;
-  client c;
   synch_object* synch_info;
   std::map<std::string, matrix_metadata> matrix_info;
   std::string sync_shared_mem_name;
