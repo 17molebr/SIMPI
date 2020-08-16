@@ -118,6 +118,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     num_workers = _num_workers;
     num_workstations = _num_workstaions;
     workstationid = _workstation_id;
+    server s;
     size_t synchObjectSize =
         sizeof(synch_object) + sizeof(int) * (num_workers + 1);
     int fd = shm_open(SYNCH_OBJECT_MEM_NAME, O_RDWR, 0777);
@@ -187,7 +188,7 @@ void simpi::synch()
 }
 
 void SIMPI_DISTRIBUTE(matrix m){
-    if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
+    if(main_simpi->get_workstation_id() != 0){
         std::cout << "passed in sock= "<< main_simpi->get_client().sock << "\n";
         run_client(m, main_simpi->get_client().sock);
         //std::cout << "MATRIX SENT" << "\n";
