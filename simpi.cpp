@@ -97,15 +97,10 @@ class server {
 void new_connection(int sock, server s) {
     
     ssize_t r;
-    /*
-    data_info info;
-    */
-    char array[10];
     while (!s.isclosed(sock)) {
-        r = read(sock, &array, sizeof(array));
+        r = send(sock, ".\n", 2, 0);
         if (r < 0) 
             break;
-        std::cout << array;
         sleep(1);
     }
     close(sock);
@@ -189,9 +184,10 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id() == 0){
-        std::cout << "passed in sock= "<< main_simpi->get_client().sock << "\n";
-        run_client(m, main_simpi->get_client().sock);
-        //std::cout << "MATRIX SENT" << "\n";
+        char array[2]; 
+        int r = read(main_simpi->get_client().sock, &array, 2);
+        std::cout << array; 
+        close(main_simpi->get_client().sock);
 
     }
 }
