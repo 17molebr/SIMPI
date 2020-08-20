@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
     
     //Local Workstaion simpi run
-    run_simpi(4, numMachines); 
+    run_simpi(1, numMachines); 
     int fullrun = 4;
     for(int i=0; i < fullWorkstations; i++){   
     
