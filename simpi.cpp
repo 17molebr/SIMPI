@@ -51,7 +51,9 @@ class server {
             hints.ai_flags = AI_PASSIVE;
 
             *service++ = '\0';
-            getaddrinfo(*node ? node : "0::0", service, &hints, &res);
+            if(getaddrinfo(*node ? node : "0::0", service, &hints, &res)!=0){
+                printf("Error with getaddrinfo\n");
+            }
             free(node);
 
             for (ai = res; ai; ai = ai->ai_next) {
@@ -61,8 +63,15 @@ class server {
             ai = ai ? ai : ai4;
 
             sock = socket(ai->ai_family, SOCK_STREAM, 0);
-            setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-            bind(sock, ai->ai_addr, ai->ai_addrlen);
+            if(sock < 0){
+                printf("Socket creation erorr\n");
+            }
+            if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one))!= 0){
+                printf("sockoptions erorr");
+            }
+            if(bind(sock, ai->ai_addr, ai->ai_addrlen)!=0){
+                printf("bind erorr\n");
+            }
             listen(sock, 256);
             freeaddrinfo(res);
 
