@@ -149,7 +149,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
-        signal(SIGPIPE, SIG_IGN);
+        //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
         return;
