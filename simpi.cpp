@@ -117,15 +117,15 @@ void new_connection(int sock, server s) {
     /*
     data_info info;
     */
-    char array[10];
+    ssize_t r;
     while (!s.isclosed(sock)) {
-        r = send(sock, &array, sizeof(array),0);
+        r = send(sock, ".\n", 2, 0);
         if (r < 0) 
             break;
-        std::cout << array;
         sleep(1);
     }
     close(sock);
+    
 }
 
 /******************Simpi Functions*************************/
