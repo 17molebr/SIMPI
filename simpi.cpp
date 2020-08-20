@@ -33,6 +33,7 @@ void run_client(matrix m, int s){
     int r = read(s, &array, 2);
     std::cout << array; 
     close(s);
+    return;
 }
 
 class server {
@@ -206,8 +207,9 @@ void SIMPI_DISTRIBUTE(matrix m){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
         //std::cout << "MATRIX SENT" << "\n";
-
+        return;
     }
+    return;
 }
 
 std::pair<std::string, double *> simpi::create_matrix(int x, int y)
