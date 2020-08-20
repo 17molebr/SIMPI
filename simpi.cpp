@@ -70,7 +70,7 @@ class server {
                 printf("sockoptions erorr");
             }
             if(bind(sock, ai->ai_addr, ai->ai_addrlen)!=0){
-                printf("bind erorr\n");
+                perror("bind erorr: ");
             }
             listen(sock, 256);
             freeaddrinfo(res);
@@ -150,6 +150,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
         signal(SIGPIPE, SIG_IGN);
+        std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
         return;
     }
