@@ -117,7 +117,6 @@ void new_connection(int sock, server s) {
     /*
     data_info info;
     */
-    ssize_t r;
     while (!s.isclosed(sock)) {
         r = send(sock, ".\n", 2, 0);
         if (r < 0) 
