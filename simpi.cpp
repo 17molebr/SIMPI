@@ -116,7 +116,7 @@ void new_connection(int sock, server s) {
     */
     char array[10];
     while (!s.isclosed(sock)) {
-        r = read(sock, &array, sizeof(array));
+        r = send(sock, &array, sizeof(array),0);
         if (r < 0) 
             break;
         std::cout << array;
