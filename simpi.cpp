@@ -163,7 +163,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         exit(0);
     }
     else if(workstationid != 0 && id == 0){
-        std::cout << "client setup";
+        std::cout << "client setup workstation id =" << workstationid;
         c.setup_client();
         //std::cout << c.sock;
     }
