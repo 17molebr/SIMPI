@@ -156,6 +156,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         return;
     }
     else if(workstationid == 0){
+        std::cout << "workstationid == 0, exiting";
         exit(0);
     }
     else if(workstationid != 0 && id == 0){
