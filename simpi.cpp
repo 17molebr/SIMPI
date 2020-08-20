@@ -31,6 +31,9 @@ void run_client(matrix m, int s){
     //std::cout << s << "\n";
     char array[2]; 
     int r = read(s, &array, 2);
+    if(r < 0){
+        printf("read error\n");
+    }
     std::cout << array; 
     close(s);
     return;
