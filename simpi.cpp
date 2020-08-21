@@ -48,7 +48,7 @@ void run_client(matrix m, int s){
     r = send(s, &end, sizeof(end), 0); 
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
-    r = send(s, &m.arr, sizeof(m.arr), 0);
+    r = send(s, &m.arr[0], sizeof(m.arr[0]), 0);
     close(s);
     return;
 }
@@ -153,9 +153,9 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
-            int temp[xdim * ydim];
-            r = read(sock, &temp, sizeof(temp));
-            std::cout << temp[2] << "\n";
+            double temp[xdim * ydim];
+            r = read(sock, &temp[0], sizeof(temp[0]));
+            std::cout << temp[0] << "\n";
         }
     }
     close(sock);
