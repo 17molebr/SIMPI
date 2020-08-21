@@ -173,7 +173,7 @@ void new_connection(int sock, server s) {
                 std::cout << "\n";
                 for (int j = 0; j < ydim; j++)
                 {
-                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
+                    std::cout << std::fixed << std::setprecision(2) << temp[j + i * xdim];
                     std::cout << ", ";
                 }
             }
