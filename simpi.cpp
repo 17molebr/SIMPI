@@ -155,7 +155,7 @@ void new_connection(int sock, server s) {
             r = read(sock, &ydim, sizeof(ydim));
             int temp[xdim * ydim];
             r = read(sock, &temp, sizeof(temp));
-            std::cout << temp << "\n";
+            std::cout << *temp << "\n";
         }
     }
     close(sock);
