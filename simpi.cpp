@@ -170,7 +170,11 @@ void new_connection(int sock, server s) {
                     int element;
                     r = read(sock, &element, sizeof(element));
                     //temp[a*xdim +b] = element;
+<<<<<<< HEAD
                     //std::cout << element << "\n";
+=======
+                    std::cout << element << "\n";
+>>>>>>> 426c62ad1f134d4be5b4de029459ad80caca49ab
                 }
             }
             //count += 1;
