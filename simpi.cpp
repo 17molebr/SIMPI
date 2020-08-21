@@ -1140,7 +1140,7 @@ matrix &matrix::multiply(matrix other)
 {
     matrix *result = new matrix(xdim, other.get_y());
     int number_of_processes = main_simpi->get_synch_info()->par_count;
-    int number_of_workstations = main_simpi->get_num_workstations();
+    int number_of_workstations = main_simpi->get_num_workstations() + 1;
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1;
