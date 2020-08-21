@@ -173,19 +173,19 @@ void new_connection(int sock, server s) {
                     //std::cout << element << "\n";
                 }
             }
-            //count += 1;
-            
-            for (int i = 0; i < xdim; i++)
-            {
-                std::cout << "\n";
-                for (int j = 0; j < ydim; j++)
+            count += 1;
+            if(count == main_simpi->get_num_workstations()){
+                for (int i = 0; i < xdim; i++)
                 {
-                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
-                    std::cout << ", ";
+                    std::cout << "\n";
+                    for (int j = 0; j < ydim; j++)
+                    {
+                        std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
+                        std::cout << ", ";
+                    }
                 }
+                std::cout << "\n";
             }
-            std::cout << "\n";
-            
         }
     }
     close(sock);
