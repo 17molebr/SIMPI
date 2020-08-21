@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         remainderCores = 0;
     }
     else{
-        fullWorkstations = numprocess/4;
+        fullWorkstations = numprocess/4+1;
         remainderCores = numprocess%4;
     }
     char server_ips[8][30] = {"192.168.168.17",
