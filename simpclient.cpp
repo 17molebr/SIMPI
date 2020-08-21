@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     int fullWorkstations;
     int remainderCores; 
     if(numprocess % 4 == 0){
-        fullWorkstations = numprocess/4 -1;
+        fullWorkstations = numprocess/4;
         remainderCores = 0;
     }
     else{
