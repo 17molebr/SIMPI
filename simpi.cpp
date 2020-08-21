@@ -134,6 +134,7 @@ class server {
 client c;
 server s;
 double temp[100];
+int count = 0;
 
 void new_connection(int sock, server s) {
     
@@ -147,7 +148,6 @@ void new_connection(int sock, server s) {
         if (r < 0) 
             break;
         sleep(1)*/
-        int count = 0;
         int status = 0;
         r = read(sock, &status, sizeof(status));
         std::cout << status << "\n"; 
@@ -174,7 +174,7 @@ void new_connection(int sock, server s) {
                 }
             }
             count += 1;
-            if(count == main_simpi->get_num_workstations()){
+            if(count == 2){
                 for (int i = 0; i < xdim; i++)
                 {
                     std::cout << "\n";
