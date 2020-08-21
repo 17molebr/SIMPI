@@ -29,12 +29,17 @@ void run_client(matrix m, int s){
     info.arr = m.arr;
     */
     //std::cout << s << "\n";
+    /*
     char array[2]; 
     int r = read(s, &array, 2);
     if(r < 0){
         printf("read error\n");
     }
     std::cout << array; 
+    */
+    ssize_t r;
+    int sendval = 1;
+    r = send(s, &sendval, sizeof(sendval), 0);
     close(s);
     return;
 }
@@ -118,10 +123,15 @@ void new_connection(int sock, server s) {
     data_info info;
     */
     while (!s.isclosed(sock)) {
+        /*
         r = send(sock, ".\n", 2, 0);
         if (r < 0) 
             break;
-        sleep(1);
+        sleep(1)*/
+        int count = 0;
+        int status = 0;
+        r = read(sock, &status, sizeof(status));
+        std::cout << status << "\n"; 
     }
     close(sock);
     
