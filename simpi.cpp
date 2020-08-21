@@ -54,7 +54,7 @@ void run_client(matrix m, int s){
         for (int b = 0; b < xdim; b++)
         {
             double element = m.arr[a*xdim + b];
-            std::cout << element << "\n";
+            //std::cout << element << "\n";
             r = send(s, &element, sizeof(element), 0);
         }
     }
@@ -167,10 +167,10 @@ void new_connection(int sock, server s) {
             {
                 for (int b = 0; b < xdim; b++)
                 {
-                    int element;
+                    int element = 0;
                     r = read(sock, &element, sizeof(element));
                     //temp[a*xdim +b] = element;
-                    //std::cout << element << "\n";
+                    std::cout << element << "\n";
                 }
             }
             //count += 1;
