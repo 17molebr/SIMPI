@@ -48,7 +48,13 @@ void run_client(matrix m, int s){
     r = send(s, &end, sizeof(end), 0); 
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
-    r = send(s, &m.arr[0], sizeof(m.arr[0]), 0);
+    for (int a = start; a < end; a++)
+    {
+        for (int b = 0; b < xdim; b++)
+        {
+            r = send(s, &m.arr[a*xdim + b], sizeof(m.arr[a*xdim + b]), 0);
+        }
+    }
     close(s);
     return;
 }
@@ -124,7 +130,7 @@ class server {
 
 client c;
 server s;
-int output[100];
+int temp[100];
 
 void new_connection(int sock, server s) {
     
@@ -153,9 +159,26 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
-            double temp[xdim * ydim];
-            r = read(sock, &temp[0], sizeof(temp[0]));
-            std::cout << temp[0] << "\n";
+            //double temp[xdim * ydim];
+            for (int a = start; a < end; a++)
+            {
+                for (int b = 0; b < xdim; b++)
+                {
+                    r = read(sock, &temp[a*xdim + b], sizeof(temp[a*xdim + b]));
+                }
+            }
+            //count += 1;
+            for (int i = 0; i < xdim; i++)
+            {
+                std::cout << "\n";
+                for (int j = 0; j < ydim; j++)
+                {
+                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
+                    std::cout << ", ";
+                }
+            }
+            std::cout << "\n";
+            
         }
     }
     close(sock);
