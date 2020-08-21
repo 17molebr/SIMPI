@@ -133,7 +133,7 @@ class server {
 
 client c;
 server s;
-int temp[100];
+double temp[100];
 
 void new_connection(int sock, server s) {
     
@@ -167,7 +167,7 @@ void new_connection(int sock, server s) {
             {
                 for (int b = 0; b < xdim; b++)
                 {
-                    int element = 0;
+                    double element = 0;
                     r = read(sock, &element, sizeof(element));
                     //temp[a*xdim +b] = element;
                     std::cout << element << "\n";
