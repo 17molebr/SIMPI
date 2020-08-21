@@ -53,7 +53,8 @@ void run_client(matrix m, int s){
     {
         for (int b = 0; b < xdim; b++)
         {
-            r = send(s, &m.arr[a*xdim + b], sizeof(m.arr[a*xdim + b]), 0);
+            double element = m.arr[a*xdim + b];
+            r = send(s, &element, sizeof(element), 0);
         }
     }
     close(s);
@@ -165,7 +166,9 @@ void new_connection(int sock, server s) {
             {
                 for (int b = 0; b < xdim; b++)
                 {
-                    r = read(sock, &temp[a*xdim + b], sizeof(temp[a*xdim + b]));
+                    int element;
+                    r = read(sock, &element, sizeof(element));
+                    temp[a*xdim +b] = element;
                 }
             }
             //count += 1;
