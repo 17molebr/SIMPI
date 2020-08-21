@@ -168,10 +168,12 @@ void new_connection(int sock, server s) {
                 {
                     int element;
                     r = read(sock, &element, sizeof(element));
-                    temp[a*xdim +b] = element;
+                    //temp[a*xdim +b] = element;
+                    std::cout << element << "\n";
                 }
             }
             //count += 1;
+            /*
             for (int i = 0; i < xdim; i++)
             {
                 std::cout << "\n";
@@ -182,7 +184,7 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n";
-            
+            */
         }
     }
     close(sock);
