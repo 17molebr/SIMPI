@@ -39,7 +39,11 @@ void run_client(matrix m, int s){
     */
     ssize_t r;
     int sendval = 1;
+    int start = main_simpi->get_start();
+    int end = main_simpi->get_end();
     r = send(s, &sendval, sizeof(sendval), 0);
+    r = send(s, &start, sizeof(start), 0); 
+    r = send(s, &end, sizeof(end), 0); 
     close(s);
     return;
 }
@@ -115,6 +119,7 @@ class server {
 
 client c;
 server s;
+int output[100];
 
 void new_connection(int sock, server s) {
     
@@ -132,6 +137,14 @@ void new_connection(int sock, server s) {
         int status = 0;
         r = read(sock, &status, sizeof(status));
         std::cout << status << "\n"; 
+        if(status == 1){
+            int start;
+            int end;
+            r = read(sock, &start, sizeof(start));
+            r = read(sock, &end, sizeof(end));
+            std::cout << start << "\n";
+            std::cout << end << "\n";
+        }
     }
     close(sock);
     
