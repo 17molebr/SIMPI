@@ -41,9 +41,14 @@ void run_client(matrix m, int s){
     int sendval = 1;
     int start = main_simpi->get_start();
     int end = main_simpi->get_end();
+    int xdim = m.get_x();
+    int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
     r = send(s, &start, sizeof(start), 0); 
     r = send(s, &end, sizeof(end), 0); 
+    r = send(s, &xdim, sizeof(xdim), 0); 
+    r = send(s, &ydim, sizeof(ydim), 0);
+    r = send(s, &m.arr, sizeof(m.arr), 0);
     close(s);
     return;
 }
@@ -140,10 +145,17 @@ void new_connection(int sock, server s) {
         if(status == 1){
             int start;
             int end;
+            int xdim;
+            int ydim;
             r = read(sock, &start, sizeof(start));
             r = read(sock, &end, sizeof(end));
             std::cout << start << "\n";
             std::cout << end << "\n";
+            r = read(sock, &xdim, sizeof(xdim));
+            r = read(sock, &ydim, sizeof(ydim));
+            int temp[xdim * ydim];
+            r = read(sock, &temp, sizeof(temp));
+            std::cout << temp << "\n";
         }
     }
     close(sock);
