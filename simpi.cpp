@@ -173,7 +173,7 @@ void new_connection(int sock, server s) {
                     //std::cout << element << "\n";
                 }
             }
-            //count += 1  asdfgasf ;
+            //count += 1  asdfga ;
             
             for (int i = 0; i < xdim; i++)
             {
