@@ -48,6 +48,7 @@ void run_client(matrix m, int s){
     r = send(s, &end, sizeof(end), 0); 
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
+    std::cout << m.arr[6*xdim + 4];
     for (int a = start; a < end; a++)
     {
         for (int b = 0; b < xdim; b++)
@@ -173,7 +174,7 @@ void new_connection(int sock, server s) {
                 std::cout << "\n";
                 for (int j = 0; j < ydim; j++)
                 {
-                    std::cout << std::fixed << std::setprecision(2) << temp[j + i * xdim];
+                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
                     std::cout << ", ";
                 }
             }
