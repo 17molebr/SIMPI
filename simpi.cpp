@@ -1161,7 +1161,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end(end);
+        main_simpi->set_end(end + number_of_processes - 1) ;
         if (Arow % number_of_processes != 0)
         {
 
@@ -1173,7 +1173,7 @@ matrix &matrix::multiply(matrix other)
                 int start = parId;
                 int end = start + 1;
                 main_simpi->set_start(start);
-                main_simpi->set_end(end);
+                main_simpi->set_end(end + number_of_processes - 1);
                 for (int a = start; a < end; a++)
                 {
                     for (int b = 0; b < Arow; b++)
