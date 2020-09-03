@@ -1141,10 +1141,11 @@ matrix &matrix::multiply(matrix other)
     matrix *result = new matrix(xdim, other.get_y());
     int number_of_processes = main_simpi->get_synch_info()->par_count;
     int number_of_workstations = main_simpi->get_num_workstations();
+    int tempForProcesses = number_of_processes;
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1 ;
-    parId = workstationid * 4 + parId;
+    parId = workstationid * tempForProcesses + parId;
     printf("WORKSTATION ID = %d\n", workstationid);
     printf("parID ID = %d\n", parId);
     if (parId <= other.get_y())
@@ -1161,7 +1162,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end(end + 4 - 1) ;
+        main_simpi->set_end(end + tempForProcesses - 1) ;
         if (Arow % number_of_processes != 0)
         {
 
@@ -1173,7 +1174,7 @@ matrix &matrix::multiply(matrix other)
                 int start = parId;
                 int end = start + 1;
                 main_simpi->set_start(start);
-                main_simpi->set_end(end + 4 - 1);
+                main_simpi->set_end(end + tempForProcesses - 1);
                 for (int a = start; a < end; a++)
                 {
                     for (int b = 0; b < Arow; b++)
