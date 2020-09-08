@@ -179,7 +179,7 @@ void new_connection(int sock, server s) {
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
        
-        stage = workstations[workstation_id-1];
+        stage = workstations[workstation_id];
         
         
         //send stage back to client
@@ -223,7 +223,7 @@ void new_connection(int sock, server s) {
                 */
                 
             }
-            workstations.at(workstation_id-1) == 1;
+            workstations.at(workstation_id) == 1;
         }
         else if(stage ==1){
             for(int i = 0; i<3; i++){
@@ -241,7 +241,7 @@ void new_connection(int sock, server s) {
                     send(sock, &value, sizeof(value),0);
                 }
             }
-            workstations.at(workstation_id-1) == 0;
+            workstations.at(workstation_id) == 0;
         }
     }
     close(sock);
