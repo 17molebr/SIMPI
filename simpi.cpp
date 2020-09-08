@@ -21,6 +21,7 @@ void SIMPI_FINALIZE()
 
 class server;
 void new_connection(int sock, server s);
+std::vector<int> workstations;
 
 
 void run_client(matrix m, int s){
@@ -147,7 +148,16 @@ void new_connection(int sock, server s) {
         if (r < 0) 
             break;
         sleep(1)*/
-        int count = 0;
+        /*
+        int workstaion_id = 0;
+        int stage = 0;
+        r = read(sock, &workstaion_id, sizeof(workstaion_id));
+        stage = workstations.at(workstaion_id-1);
+        */
+
+        
+
+        //
         int status = 0;
         r = read(sock, &status, sizeof(status));
         std::cout << status << "\n"; 
@@ -162,7 +172,6 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
-            //double temp[xdim * ydim];
             for (int a = start; a < end; a++)
             {
                 for (int b = 0; b < xdim; b++)
@@ -173,7 +182,7 @@ void new_connection(int sock, server s) {
                     //std::cout << element << "\n";
                 }
             }
-            //count += 1  asdfga ;
+            
             
             for (int i = 0; i < xdim; i++)
             {
@@ -218,6 +227,8 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
+        workstations.reserve(num_workstations);
+        std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
