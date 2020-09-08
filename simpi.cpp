@@ -40,6 +40,7 @@ int run_client(matrix m, int s){
     */
     ssize_t r;
     int workstation_id = main_simpi->get_workstation_id();
+    std::cout << "FROM CLIENT ID: " << workstation_id << "\n";
     int stage;
     //send 
     r = send(s, &workstation_id, sizeof(workstation_id), 0); 
