@@ -183,7 +183,7 @@ void new_connection(int sock, server s) {
         }
         catch (const std::out_of_range & ex)
         {   
-            std::cout << "out_of_range Exception Caught :: " << ex.what() << std::endl;
+            std::cout << "out_of_range Exception Caught :: " << ex.what() << std::endl << workstation_id;
             return;
         }
         //send stage back to client
