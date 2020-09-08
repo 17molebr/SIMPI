@@ -227,9 +227,11 @@ void new_connection(int sock, server s) {
         }
         else if(stage ==1){
             for(int i = 0; i<3; i++){
+                /*
                 if(workstations.at(i) == 0){
                     break;
                 }
+                */
             }
             std::fill(workstations.begin(), workstations.end(), 2);
         }
@@ -240,7 +242,7 @@ void new_connection(int sock, server s) {
                     send(sock, &value, sizeof(value),0);
                 }
             }
-            workstations.at(workstation_id-1) == 0;
+            //workstations.at(workstation_id-1) == 0;
         }
     }
     close(sock);
