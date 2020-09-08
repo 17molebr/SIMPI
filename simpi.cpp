@@ -40,7 +40,6 @@ int run_client(matrix m, int s){
     */
     ssize_t r;
     int workstation_id = main_simpi->get_workstation_id();
-    std::cout << "FROM CLIENT ID: " << workstation_id << "\n";
     int stage;
     //send 
     r = send(s, &workstation_id, sizeof(workstation_id), 0); 
@@ -327,7 +326,8 @@ void simpi::synch()
 
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
-        std::cout << "passed in sock= "<< c.sock << "\n";
+        //std::cout << "passed in sock= "<< c.sock << "\n";
+        std::cout << "FROM CLIENT ID: " << main_simpi->get_workstation_id() << "\n";
         int ret = 0;
         while(ret = 0){
             ret = run_client(m, c.sock);
