@@ -271,6 +271,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
         workstations.reserve(num_workstations);
+        std::cout << "list size: " << workstations.size()<< "\n";
         std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
