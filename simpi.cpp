@@ -178,14 +178,10 @@ void new_connection(int sock, server s) {
         int stage = 0;
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
-        try{
-             stage = workstations[workstation_id-1];
-        }
-        catch (const std::out_of_range & ex)
-        {   
-            std::cout << "out_of_range Exception Caught :: " << ex.what() << std::endl << workstation_id;
-            return;
-        }
+       
+        stage = workstations[workstation_id-1];
+        
+        
         //send stage back to client
         r = send(sock, &stage, sizeof(stage), 0);
 
@@ -230,7 +226,7 @@ void new_connection(int sock, server s) {
             workstations.at(workstation_id-1) == 1;
         }
         else if(stage ==1){
-            for(int i = 0; i<workstations.size(); i++){
+            for(int i = 0; i<3; i++){
                 if(workstations.at(i) == 0){
                     break;
                 }
