@@ -21,7 +21,7 @@ void SIMPI_FINALIZE()
 
 class server;
 void new_connection(int sock, server s);
-std::vector<int> workstations;
+std::vector<int> workstations(3);
 
 
 int run_client(matrix m, int s){
@@ -178,7 +178,6 @@ void new_connection(int sock, server s) {
         int stage = 0;
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
-        std::cout << "clinet_id: "<< workstation_id; 
         stage = workstations.at(workstation_id-1);
         //send stage back to client
         r = send(sock, &stage, sizeof(stage), 0);
@@ -271,9 +270,9 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup num of workstaion" << num_workstations << "\n";
-        workstations.resize(3);
+        //workstations.resize(3);
         std::cout << "list size: " << workstations.size()<< "\n";
-        std::fill(workstations.begin(), workstations.end(), 0);
+        //std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
