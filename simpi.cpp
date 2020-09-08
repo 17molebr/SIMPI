@@ -24,7 +24,7 @@ void new_connection(int sock, server s);
 std::vector<int> workstations;
 
 
-void run_client(matrix m, int s){
+int run_client(matrix m, int s){
     /*
     data_info info;
     info.arr = m.arr;
@@ -39,28 +39,52 @@ void run_client(matrix m, int s){
     std::cout << array; 
     */
     ssize_t r;
-    int sendval = 1;
-    int start = main_simpi->get_start();
-    int end = main_simpi->get_end();
-    int xdim = m.get_x();
-    int ydim = m.get_y();
-    r = send(s, &sendval, sizeof(sendval), 0);
-    r = send(s, &start, sizeof(start), 0); 
-    r = send(s, &end, sizeof(end), 0); 
-    r = send(s, &xdim, sizeof(xdim), 0); 
-    r = send(s, &ydim, sizeof(ydim), 0);
-    std::cout << m.arr[6*xdim + 4];
-    for (int a = start; a < end; a++)
-    {
-        for (int b = 0; b < xdim; b++)
+    int workstation_id = main_simpi->get_workstation_id();
+    int stage;
+    //send 
+    r = send(s, &workstation_id, sizeof(workstation_id), 0); 
+    r = read(s, &stage, sizeof(stage));
+
+    
+    if(stage == 0){
+        int sendval = 1;
+        int start = main_simpi->get_start();
+        int end = main_simpi->get_end();
+        int xdim = m.get_x();
+        int ydim = m.get_y();
+        r = send(s, &sendval, sizeof(sendval), 0);
+        r = send(s, &start, sizeof(start), 0); 
+        r = send(s, &end, sizeof(end), 0); 
+        r = send(s, &xdim, sizeof(xdim), 0); 
+        r = send(s, &ydim, sizeof(ydim), 0);
+        std::cout << m.arr[6*xdim + 4];
+        for (int a = start; a < end; a++)
         {
-            double element = m.arr[a*xdim + b];
-            //std::cout << element << "\n";
-            r = send(s, &element, sizeof(element), 0);
+            for (int b = 0; b < xdim; b++)
+            {
+                double element = m.arr[a*xdim + b];
+                //std::cout << element << "\n";
+                r = send(s, &element, sizeof(element), 0);
+            }
         }
+        close(s);
+        return 0;
     }
-    close(s);
-    return;
+    else if(stage == 1){
+        close(s);
+        return 0;
+    }
+    else if(stage == 2){
+        for(int a = 0; a < m.get_y(); a++){
+            for(int b = 0; b < m.get_x(); b++){
+                int value;
+                r = read(s, &value, sizeof(value));
+                m.arr[a*m.get_x()+b] = value;
+            }
+        }
+        return 1;
+    }
+    return 0;
 }
 
 class server {
@@ -148,53 +172,72 @@ void new_connection(int sock, server s) {
         if (r < 0) 
             break;
         sleep(1)*/
-        /*
-        int workstaion_id = 0;
+        int xdim;
+        int ydim;
+        int workstation_id = 0;
         int stage = 0;
-        r = read(sock, &workstaion_id, sizeof(workstaion_id));
-        stage = workstations.at(workstaion_id-1);
-        */
+        //get workstaion id
+        r = read(sock, &workstation_id, sizeof(workstation_id));
+        stage = workstations.at(workstation_id-1);
+        //send stage back to client
+        r = send(sock, &stage, sizeof(stage), 0);
 
-        
-
-        //
-        int status = 0;
-        r = read(sock, &status, sizeof(status));
-        std::cout << status << "\n"; 
-        if(status == 1){
-            int start;
-            int end;
-            int xdim;
-            int ydim;
-            r = read(sock, &start, sizeof(start));
-            r = read(sock, &end, sizeof(end));
-            std::cout << start << "\n";
-            std::cout << end << "\n";
-            r = read(sock, &xdim, sizeof(xdim));
-            r = read(sock, &ydim, sizeof(ydim));
-            for (int a = start; a < end; a++)
-            {
-                for (int b = 0; b < xdim; b++)
+        if(stage == 0){
+            int status = 0;
+            r = read(sock, &status, sizeof(status));
+            std::cout << status << "\n"; 
+            if(status == 1){
+                int start;
+                int end;
+                r = read(sock, &start, sizeof(start));
+                r = read(sock, &end, sizeof(end));
+                std::cout << start << "\n";
+                std::cout << end << "\n";
+                r = read(sock, &xdim, sizeof(xdim));
+                r = read(sock, &ydim, sizeof(ydim));
+                for (int a = start; a < end; a++)
                 {
-                    double element = 0;
-                    r = read(sock, &element, sizeof(element));
-                    temp[a*xdim +b] = element;
-                    //std::cout << element << "\n";
+                    for (int b = 0; b < xdim; b++)
+                    {
+                        double element = 0;
+                        r = read(sock, &element, sizeof(element));
+                        temp[a*xdim +b] = element;
+                        //std::cout << element << "\n";
+                    }
                 }
-            }
-            
-            
-            for (int i = 0; i < xdim; i++)
-            {
+                
+                /*
+                for (int i = 0; i < xdim; i++)
+                {
+                    std::cout << "\n";
+                    for (int j = 0; j < ydim; j++)
+                    {
+                        std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
+                        std::cout << ", ";
+                    }
+                }
                 std::cout << "\n";
-                for (int j = 0; j < ydim; j++)
-                {
-                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
-                    std::cout << ", ";
+                */
+                
+            }
+            workstations.at(workstation_id-1) == 1;
+        }
+        else if(stage ==1){
+            for(int i = 0; i<workstations.size(); i++){
+                if(workstations.at(i) == 0){
+                    break;
                 }
             }
-            std::cout << "\n";
-            
+            std::fill(workstations.begin(), workstations.end(), 2);
+        }
+        else if(stage == 2){
+            for(int a = 0; a < ydim; a++){
+                for(int b= 0; b < xdim; b++){
+                    int value = temp[a*xdim+b];
+                    send(sock, &value, sizeof(value),0);
+                }
+            }
+            workstations.at(workstation_id-1) == 0;
         }
     }
     close(sock);
@@ -283,7 +326,10 @@ void simpi::synch()
 void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
-        run_client(m, c.sock);
+        int ret = 0;
+        while(ret = 0){
+            ret = run_client(m, c.sock);
+        }
         //std::cout << "MATRIX SENT" << "\n";
         return;
     }

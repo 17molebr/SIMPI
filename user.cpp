@@ -49,10 +49,8 @@ int main(int argc, char* argv[])
   C= A * B;
   std::cout << C;
   SIMPI_DISTRIBUTE(C);
-  //std::cout << C;
-  //C= A.inverse();
+  SIMPI_SYNCH();
+  std::cout << C;
 
-  //std::cout << C; 
-  //SIMPI_FINALIZE();
   exit(0);
 }
