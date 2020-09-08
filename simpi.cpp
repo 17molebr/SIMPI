@@ -223,7 +223,7 @@ void new_connection(int sock, server s) {
                 */
                 
             }
-            workstations.at(workstation_id-1) == 1;
+            //workstations.at(workstation_id-1) == 1;
         }
         else if(stage ==1){
             for(int i = 0; i<3; i++){
@@ -277,7 +277,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         std::cout << "serversetup num of workstaion" << num_workstations << "\n";
         //workstations.resize(3);
         std::cout << "list size: " << workstations.size()<< "\n";
-        //std::fill(workstations.begin(), workstations.end(), 0);
+        std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
