@@ -174,7 +174,7 @@ void new_connection(int sock, server s) {
         sleep(1)*/
         int xdim;
         int ydim;
-        int workstation_id = 0;
+        int workstation_id;
         int stage = 0;
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
@@ -223,15 +223,14 @@ void new_connection(int sock, server s) {
                 */
                 
             }
-            //workstations.at(workstation_id-1) == 1;
+            workstations.at(workstation_id-1) == 1;
         }
         else if(stage ==1){
             for(int i = 0; i<3; i++){
-                /*
                 if(workstations.at(i) == 0){
                     break;
                 }
-                */
+                
             }
             std::fill(workstations.begin(), workstations.end(), 2);
         }
@@ -242,7 +241,7 @@ void new_connection(int sock, server s) {
                     send(sock, &value, sizeof(value),0);
                 }
             }
-            //workstations.at(workstation_id-1) == 0;
+            workstations.at(workstation_id-1) == 0;
         }
     }
     close(sock);
