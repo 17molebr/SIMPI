@@ -178,6 +178,7 @@ void new_connection(int sock, server s) {
         int stage = 0;
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
+        std::cout << "clinet_id: "<< workstation_id; 
         stage = workstations.at(workstation_id-1);
         //send stage back to client
         r = send(sock, &stage, sizeof(stage), 0);
