@@ -269,7 +269,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     }
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
-        std::cout << "serversetup";
+        std::cout << "serversetup num of workstaion" << num_workstations << "\n";
         workstations.resize(num_workstations);
         std::cout << "list size: " << workstations.size()<< "\n";
         std::fill(workstations.begin(), workstations.end(), 0);
