@@ -79,13 +79,13 @@ int main(int argc, char *argv[])
         if(i == fullWorkstations -1 && remainderCores != 0){
             int workstation = i+1;
             send(sock , &remainderCores, sizeof(remainderCores), 0 ); 
-            send(sock, &numMachines, sizeof(numMachines), 0);
+            send(sock, &fullWorkstations, sizeof(fullWorkstations), 0);
             send(sock, &workstation, sizeof(workstation), 0);
             printf("Nums sent\n");
         }else{
             int workstation = i+1;
             send(sock , &fullrun, sizeof(fullrun), 0 );
-            send(sock, &numMachines, sizeof(numMachines), 0);
+            send(sock, &fullWorkstations, sizeof(fullWorkstations), 0);
             send(sock, &workstation, sizeof(workstation), 0);
             printf("Nums sent\n");
         }
