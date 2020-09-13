@@ -43,14 +43,15 @@ int main(int argc, char* argv[])
   SIMPI_SYNCH();
 
   
-  std::cout << A;
+  //std::cout << A;
   
-  std::cout << B;
+  //std::cout << B;
   C= A * B;
   std::cout << C;
   SIMPI_DISTRIBUTE(C);
+
   SIMPI_SYNCH();
-  std::cout << C;
+  //std::cout << C;
 
   exit(0);
 }

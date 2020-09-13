@@ -21,7 +21,7 @@ void SIMPI_FINALIZE()
 
 class server;
 void new_connection(int sock, server s);
-std::vector<int> workstations(3);
+//std::vector<int> workstations(3);
 
 
 int run_client(matrix m, int s){
@@ -39,14 +39,14 @@ int run_client(matrix m, int s){
     std::cout << array; 
     */
     ssize_t r;
-    int workstation_id = main_simpi->get_workstation_id();
-    int stage;
+    //int workstation_id = main_simpi->get_workstation_id();
+    //int stage;
     //send 
-    r = send(s, &workstation_id, sizeof(workstation_id), 0); 
-    r = read(s, &stage, sizeof(stage));
+    //r = send(s, &workstation_id, sizeof(workstation_id), 0); 
+    //r = read(s, &stage, sizeof(stage));
 
     
-    if(stage == 0){
+    //if(stage == 0){
         int sendval = 1;
         int start = main_simpi->get_start();
         int end = main_simpi->get_end();
@@ -69,7 +69,7 @@ int run_client(matrix m, int s){
         }
         close(s);
         return 0;
-    }
+   /*}
     else if(stage == 1){
         close(s);
         return 0;
@@ -85,6 +85,7 @@ int run_client(matrix m, int s){
         return 1;
     }
     return 0;
+    */
 }
 
 class server {
@@ -159,6 +160,7 @@ class server {
 client c;
 server s;
 double temp[100];
+time_t start_time, end_time;
 
 void new_connection(int sock, server s) {
     
@@ -174,18 +176,18 @@ void new_connection(int sock, server s) {
         sleep(1)*/
         int xdim;
         int ydim;
-        int workstation_id;
+        /*int workstation_id;
         int stage = 0;
         //get workstaion id
         r = read(sock, &workstation_id, sizeof(workstation_id));
        
         stage = workstations[workstation_id];
         
-        
+        */
         //send stage back to client
-        r = send(sock, &stage, sizeof(stage), 0);
+        //r = send(sock, &stage, sizeof(stage), 0);
 
-        if(stage == 0){
+        //if(stage == 0){
             int status = 0;
             r = read(sock, &status, sizeof(status));
             std::cout << status << "\n"; 
@@ -209,6 +211,11 @@ void new_connection(int sock, server s) {
                     }
                 }
                 
+                time(&end_time);
+                double time_taken = double(end_time - start_time);
+                std::cout << "Time taken by program is : " << std::fixed 
+                    << time_taken << std::setprecision(5); 
+                std::cout << " sec " << std::endl; 
                 /*
                 for (int i = 0; i < xdim; i++)
                 {
@@ -223,8 +230,8 @@ void new_connection(int sock, server s) {
                 */
                 
             }
-            workstations.at(workstation_id) == 1;
-        }
+           // workstations.at(workstation_id) == 1;
+       /* }
         else if(stage ==1){
             for(int i = 0; i<3; i++){
                 if(workstations.at(i) == 0){
@@ -242,7 +249,7 @@ void new_connection(int sock, server s) {
                 }
             }
             workstations.at(workstation_id) == 0;
-        }
+        }*/
     }
     close(sock);
     
@@ -274,9 +281,10 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup num of workstaion" << num_workstations << "\n";
+        time(&start_time);
         //workstations.resize(3);
-        std::cout << "list size: " << workstations.size()<< "\n";
-        std::fill(workstations.begin(), workstations.end(), 0);
+        //std::cout << "list size: " << workstations.size()<< "\n";
+        //std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
