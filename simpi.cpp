@@ -1169,6 +1169,7 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
+        std::cout << "Number of processes = " << number_of_processes << std::endl;
         int rpp = Bcol / number_of_processes;
         int start = rpp * parId;
         int end = start + rpp;
