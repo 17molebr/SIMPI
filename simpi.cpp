@@ -1175,7 +1175,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end(end + 5 - 1) ;
+        main_simpi->set_end(end) ;
         if (Arow % 5 != 0)
         {
 
@@ -1187,7 +1187,7 @@ matrix &matrix::multiply(matrix other)
                 int start = parId;
                 int end = start + 1;
                 main_simpi->set_start(start);
-                main_simpi->set_end(end + 5 - 1);
+                main_simpi->set_end(end);
                 for (int a = start; a < end; a++)
                 {
                     for (int b = 0; b < Arow; b++)
