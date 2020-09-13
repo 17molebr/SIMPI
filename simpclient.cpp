@@ -42,10 +42,12 @@ int main(int argc, char *argv[])
                               "192.168.168.60"};
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
+    /*
     if(numprocess <= 4){
         run_simpi(numprocess, numMachines);
         exit(0); 
     }
+    */
     
     //Local Workstaion simpi run
     run_simpi(4, numMachines); 
