@@ -1150,8 +1150,10 @@ matrix -> matrix
 matrix &matrix::multiply(matrix other)
 {
     matrix *result = new matrix(xdim, other.get_y());
-    int number_of_processes = main_simpi->get_num_workers();
+    int number_of_processes = main_simpi->get_synch_info()->par_count;
     int number_of_workstations = main_simpi->get_num_workstations();
+    std::cout << "Number of processes = " << number_of_processes << std::endl;
+    std::cout << "Number of workstations = " << number_of_workstations << std::endl;
     int tempForProcesses = number_of_processes;
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
@@ -1169,7 +1171,6 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
-        std::cout << "Number of processes = " << number_of_processes << std::endl;
         int rpp = Bcol / number_of_processes;
         int start = rpp * parId;
         int end = start + rpp;
