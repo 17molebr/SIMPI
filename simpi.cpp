@@ -1175,7 +1175,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end((end-start) * tempForProcesses) ;
+        main_simpi->set_end(start+(end-start) * tempForProcesses);
         if (Arow % 5 != 0)
         {
 
