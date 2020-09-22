@@ -1,9 +1,9 @@
 #!/bin/bash
-START=$(date +%s)
+START=$(date +%N)
 # do something
 # start your script work here
 ./client 5
 # your logic ends here
-END=$(date +%s)
+END=$(date +%N)
 DIFF=$(( $END - $START ))
 echo "It took $DIFF seconds"
