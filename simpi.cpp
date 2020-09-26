@@ -51,7 +51,7 @@ void run_client(matrix m, int s){
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
     std::cout << m.arr[6*xdim + 4];
-    for (int a = 0; a < 10; a++)
+    for (int a = start; a < end; a++)
     {
         for (int b = 0; b < xdim; b++)
         {
@@ -173,7 +173,7 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
-            for (int a = 0; a < 10; a++)
+            for (int a = start; a < end; a++)
             {
                 for (int b = 0; b < xdim; b++)
                 {
@@ -1178,15 +1178,15 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
-        int rpp = Bcol / 1;
+        int rpp = Bcol / 6;
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
         main_simpi->set_end(start+(end-start) * tempForProcesses);
-        if (Arow % 1 != 0)
+        if (Arow % 6 != 0)
         {
 
-            int leftover = Arow % 1;
+            int leftover = Arow % 6;
             if (parId < leftover)
             {
 
