@@ -187,7 +187,7 @@ void new_connection(int sock, server s) {
             long seconds = end1.tv_sec - begin.tv_sec;
             long microseconds = end1.tv_usec - begin.tv_usec;
             double elapsed = seconds + microseconds*1e-6;
-            printf("Time measured: %.10f seconds.\n", elapsed);
+            printf("Time measured: %.10f microseconds.\n", microseconds);
             
             for (int i = 0; i < xdim; i++)
             {
