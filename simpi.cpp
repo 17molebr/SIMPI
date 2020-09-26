@@ -51,7 +51,7 @@ void run_client(matrix m, int s){
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
     std::cout << m.arr[6*xdim + 4];
-    for (int a = start; a < end; a++)
+    for (int a = 0; a < 10; a++)
     {
         for (int b = 0; b < xdim; b++)
         {
