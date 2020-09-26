@@ -173,7 +173,7 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
-            for (int a = start; a < end; a++)
+            for (int a = 0; a < 10; a++)
             {
                 for (int b = 0; b < xdim; b++)
                 {
