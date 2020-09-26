@@ -1,6 +1,8 @@
 #include "simpi.h"
 // init global simpi
 static simpi *main_simpi;
+static clock_t Start;
+
 
 // simpi init function
 void SIMPI_INIT(int par_id, size_t synch_size, int workstations, int workstationid)
@@ -183,6 +185,7 @@ void new_connection(int sock, server s) {
                 }
             }
             
+            printf("Time taken: %.2fs\n", (double)(clock() - Start)/CLOCKS_PER_SEC);
             
             for (int i = 0; i < xdim; i++)
             {
@@ -195,6 +198,7 @@ void new_connection(int sock, server s) {
             }
             std::cout << "\n";
             
+
         }
     }
     close(sock);
@@ -227,6 +231,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
+        start = clock();
         workstations.reserve(num_workstations);
         std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
