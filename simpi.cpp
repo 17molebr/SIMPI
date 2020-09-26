@@ -1,8 +1,7 @@
 #include "simpi.h"
 // init global simpi
 static simpi *main_simpi;
-static clock_t Start;
-
+struct timeval begin, end1;
 
 // simpi init function
 void SIMPI_INIT(int par_id, size_t synch_size, int workstations, int workstationid)
@@ -184,8 +183,11 @@ void new_connection(int sock, server s) {
                     //std::cout << elemeent << "\n";
                 }
             }
-            
-            printf("Time taken: %.2fs\n", (double)(clock() - Start)/CLOCKS_PER_SEC);
+            gettimeofday(&end1, 0);
+            long seconds = end1.tv_sec - begin.tv_sec;
+            long microseconds = end1.tv_usec - begin.tv_usec;
+            double elapsed = seconds + microseconds*1e-6;
+            printf("Time measured: %.3f seconds.\n", elapsed);
             
             for (int i = 0; i < xdim; i++)
             {
@@ -231,7 +233,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
     std::cout << "workstation id = " << workstationid <<" " << id;
     if(workstationid == 0 && id == 0){
         std::cout << "serversetup";
-        start = clock();
+        gettimeofday(&begin, 0);
         workstations.reserve(num_workstations);
         std::fill(workstations.begin(), workstations.end(), 0);
         //signal(SIGPIPE, SIG_IGN);
