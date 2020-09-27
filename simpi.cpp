@@ -188,7 +188,7 @@ void new_connection(int sock, server s) {
             long microseconds = end1.tv_usec - begin.tv_usec;
             double elapsed = seconds + microseconds*1e-6;
             printf("Time measured: %.10f microseconds.\n", elapsed);
-            
+            /*
             for (int i = 0; i < xdim; i++)
             {
                 std::cout << "\n";
@@ -199,7 +199,7 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n";
-            
+            */
 
         }
     }
