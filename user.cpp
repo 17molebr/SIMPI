@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
   SIMPI_SYNCH();
 
   
-  std::cout << A;
+  //std::cout << A;
   
-  std::cout << B;
+  //std::cout << B;
   C= A * B;
-  std::cout << C;
+  //std::cout << C;
   SIMPI_DISTRIBUTE(C);
   //std::cout fsdf << C;
   //C= A.inverse();
