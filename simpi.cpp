@@ -135,7 +135,7 @@ class server {
 
 client c;
 server s;
-double temp[100];
+double temp[2500];
 
 void new_connection(int sock, server s) {
     
@@ -1178,15 +1178,15 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
-        int rpp = Bcol / 10;
+        int rpp = Bcol / 5;
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
         main_simpi->set_end(start+(end-start) * tempForProcesses);
-        if (Arow % 10 != 0)
+        if (Arow % 5 != 0)
         {
 
-            int leftover = Arow % 10;
+            int leftover = Arow % 5;
             if (parId < leftover)
             {
 
