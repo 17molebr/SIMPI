@@ -135,7 +135,7 @@ class server {
 
 client c;
 server s;
-double temp[100];
+double temp[2500];
 
 void new_connection(int sock, server s) {
     
@@ -189,6 +189,7 @@ void new_connection(int sock, server s) {
             double elapsed = seconds + microseconds*1e-6;
             printf("Time measured: %.10f microseconds.\n", elapsed);
             
+            /*
             for (int i = 0; i < xdim; i++)
             {
                 std::cout << "\n";
@@ -199,7 +200,7 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n";
-            
+            */
 
         }
     }
