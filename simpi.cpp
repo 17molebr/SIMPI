@@ -135,7 +135,7 @@ class server {
 
 client c;
 server s;
-double temp[2500];
+double temp[100];
 
 void new_connection(int sock, server s) {
     

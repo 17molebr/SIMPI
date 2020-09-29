@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "simpi.h"
-#define MATRIX_DIMENSION_X 50
-#define MATRIX_DIMENSION_Y 50
+#define MATRIX_DIMENSION_X 10
+#define MATRIX_DIMENSION_Y 10
 
 int par_id;
 
