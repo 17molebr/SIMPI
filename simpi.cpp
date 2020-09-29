@@ -1179,15 +1179,15 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
-        int rpp = Bcol / 6;
+        int rpp = Bcol / 7;
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
         main_simpi->set_end(start+(end-start) * tempForProcesses);
-        if (Arow % 6 != 0)
+        if (Arow % 7 != 0)
         {
 
-            int leftover = Arow % 6;
+            int leftover = Arow % 7;
             if (parId < leftover)
             {
 
