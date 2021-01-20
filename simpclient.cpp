@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
                               "192.168.168.60",
                               "192.168.168.13"};
     */
-    char server_ips[1][30] = {"192.168.122.1"};
+    char server_ips[1][30] = {"129.65.221.25"};
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
     /*
