@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "simpi.h"
-#define MATRIX_DIMENSION_X 50
-#define MATRIX_DIMENSION_Y 50
+#define MATRIX_DIMENSION_X 10
+#define MATRIX_DIMENSION_Y 10
 
 int par_id;
 
@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
   SIMPI_SYNCH();
 
   
-  //std::cout << A;
+  std::cout << A;
   
   //std::cout << B;
-  C= A * B;
+  //C= A * B;
   //std::cout << C;
-  SIMPI_DISTRIBUTE(C);
+  SIMPI_DISTRIBUTE(A);
   //std::cout fsdf << C;
   //C= A.inverse();
 
