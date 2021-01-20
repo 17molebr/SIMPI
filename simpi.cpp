@@ -64,8 +64,21 @@ void run_client(matrix m, int s){
     return;
 }
 
+void run_client2(matrix m, int s){
+    int r;
+    for (int a = 0; a < 10; a++){
+        for (int b = 0; b < 10; b++){
+            double element = 0;
+            r = read(s, &element, sizeof(element));
+            m.arr[a*10 +b] = element;
+                    //std::cout << elemeent << "\n";
+        }
+    }
+}
+
 class server {
     public:
+        int count = 0; //Number of machines has accessed 
         const char *port= ":8080";
         int make_sock(const char *servspec){
             const int one = 1;
@@ -110,11 +123,32 @@ class server {
 
         void accept_loop(const char *servspec, server s){
             int sock = make_sock(servspec);
-
+            
             for (;;) {
                 int new_sock = accept(sock, 0, 0);
                 std::thread t(new_connection, new_sock, s);
                 t.detach();
+                count += 1;
+                if(count == 1){
+                    count = 0;
+                    return;
+                }
+            
+            }
+        }
+         //redistubtion loop
+        void sendback_accept_loop(const char *servspec, server s){
+            int sock = make_sock(servspec);
+            
+            for (;;) {
+                int new_sock = accept(sock, 0, 0);
+                std::thread t(new_connection2, new_sock, s);
+                t.detach();
+                count += 1;
+                if(count == 1){
+                    break;
+                }
+                return;
             }
         }
 
@@ -183,12 +217,13 @@ void new_connection(int sock, server s) {
                     //std::cout << elemeent << "\n";
                 }
             }
+            /*
             gettimeofday(&end1, 0);
             long seconds = end1.tv_sec - begin.tv_sec;
             long microseconds = end1.tv_usec - begin.tv_usec;
             double elapsed = seconds + microseconds*1e-6;
             printf("Time measured: %.10f microseconds.\n", elapsed);
-            
+            */
             
             for (int i = 0; i < xdim; i++)
             {
@@ -206,6 +241,19 @@ void new_connection(int sock, server s) {
     }
     close(sock);
     
+}
+
+void new_connection2(int sock, server s){
+   int r;
+   for (int a = 0; a < 10; a++)
+    {
+        for (int b = 0; b < 10; b++)
+        {
+            double element = temp[a*10 + b];
+            //std::cout << element << "\n";
+            r = send(sock, &element, sizeof(element), 0);
+        }
+    }
 }
 
 /******************Simpi Functions*************************/
@@ -240,6 +288,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
+        s.sendback_accept_loop(s.port, s);
         return;
     }
     else if(workstationid == 0){
@@ -292,6 +341,7 @@ void SIMPI_DISTRIBUTE(matrix m){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
+        run_client2(m, c.sock);
         //std::cout << "MATRIX SENT" << "\n";
         return;
     }
