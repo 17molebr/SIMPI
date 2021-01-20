@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
         fullWorkstations = numprocess/4+1;
         remainderCores = numprocess%4;
     }
+    /*
     char server_ips[8][30] = {
                               "192.168.168.26",
                               "192.168.168.6",
@@ -41,6 +42,8 @@ int main(int argc, char *argv[])
                               "192.168.168.75",
                               "192.168.168.60",
                               "192.168.168.13"};
+    */
+    char server_ips[1][30] = {"192.168.122.1"};
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
     /*
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
     */
     
     //Local Workstaion simpi run
-    run_simpi(4, numMachines); 
+    //run_simpi(4, numMachines); 
     int fullrun = 4;
     for(int i=0; i < fullWorkstations; i++){   
     
