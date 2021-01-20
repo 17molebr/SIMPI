@@ -79,6 +79,7 @@ void run_client2(matrix m, int s){
         }
     }
     close(s);
+    return; 
 }
 
 class server {
@@ -255,6 +256,7 @@ void new_connection(int sock, server s) {
                     r = send(sock, &element, sizeof(element), 0);
                 }
             }
+            std::cout << "/n" << "Matrix has been redistributed"<<"\n";
         }
     }
     close(sock);
