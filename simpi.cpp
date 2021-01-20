@@ -61,12 +61,15 @@ void run_client(matrix m, int s){
             r = send(s, &element, sizeof(element), 0);
         }
     }
-    close(s);
+    //close(s);
     return;
 }
 
 void run_client2(matrix m, int s){
     int r;
+    //devope handshake here and if the sever has not racived all parts of the marix then you get a bad return value and rerun this function untill all parts have been distubuted
+    int sendval = 2;
+    r = send(s, &sendval, sizeof(sendval), 0);
     for (int a = 0; a < 10; a++){
         for (int b = 0; b < 10; b++){
             double element = 0;
@@ -75,6 +78,7 @@ void run_client2(matrix m, int s){
                     //std::cout << elemeent << "\n";
         }
     }
+    close(s);
 }
 
 class server {
@@ -129,15 +133,17 @@ class server {
                 int new_sock = accept(sock, 0, 0);
                 std::thread t(new_connection, new_sock, s);
                 t.detach();
+                /*
                 count += 1;
                 if(count == 1){
                     count = 0;
                     return;
                 }
-            
+                */
             }
         }
          //redistubtion loop
+         /*
         void sendback_accept_loop(const char *servspec, server s){
             int sock = make_sock(servspec);
             
@@ -152,6 +158,7 @@ class server {
                 return;
             }
         }
+        */
 
         bool isclosed(int sock) {
             fd_set rfd;
@@ -239,11 +246,21 @@ void new_connection(int sock, server s) {
             
 
         }
+        if(status == 2){
+            //will have handshake that checks here for completion of martix
+            for (int a = 0; a < 10; a++){
+                for (int b = 0; b < 10; b++){
+                    double element = temp[a*10 + b];
+                    //std::cout << element << "\n";
+                    r = send(sock, &element, sizeof(element), 0);
+                }
+            }
+        }
     }
     close(sock);
     
 }
-
+/*
 void new_connection2(int sock, server s){
    int r;
    for (int a = 0; a < 10; a++)
@@ -256,6 +273,7 @@ void new_connection2(int sock, server s){
         }
     }
 }
+*/
 
 /******************Simpi Functions*************************/
 simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_id)
@@ -289,7 +307,7 @@ simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_i
         //signal(SIGPIPE, SIG_IGN);
         std::cout << "signal sent, launching accept loop";
         s.accept_loop(s.port, s);
-        s.sendback_accept_loop(s.port, s);
+        //s.sendback_accept_loop(s.port, s);
         return;
     }
     else if(workstationid == 0){
