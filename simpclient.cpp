@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
                               "192.168.168.60",
                               "192.168.168.13"};
     */
-    char server_ips[1][30] = {"129.65.221.25"};
+    char server_ips[2][30] = {"129.65.221.25", "192.168.168.26"};
     int numMachines = sizeof(server_ips)/sizeof(server_ips[0]);
     int buffer[1024] = {0}; 
     /*
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     */
     
     //Local Workstaion simpi run
-    //run_simpi(4, numMachines); 
+    run_simpi(4, numMachines); 
     int fullrun = 4;
     for(int i=0; i < fullWorkstations; i++){   
     
