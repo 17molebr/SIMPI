@@ -48,10 +48,10 @@ int main(int argc, char* argv[])
   //std::cout << B;
   //C= A * B;
   //std::cout << C;
-  SIMPI_DISTRIBUTE(A);
+  SIMPI_DISTRIBUTE(A, B);
   //std::cout fsdf << C;
   //C= A.inverse();
-
+  std::cout << B;
   //std::cout << C; 
   //SIMPI_FINALIZE();
   exit(0);

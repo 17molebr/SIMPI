@@ -22,6 +22,7 @@ void SIMPI_FINALIZE()
 
 class server;
 void new_connection(int sock, server s);
+void new_connection2(int sock, server s);
 std::vector<int> workstations;
 
 
@@ -337,11 +338,11 @@ void simpi::synch()
     }
 }
 
-void SIMPI_DISTRIBUTE(matrix m){
+void SIMPI_DISTRIBUTE(matrix m, matrix m1){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
-        run_client2(m, c.sock);
+        run_client2(m1, c.sock);
         //std::cout << "MATRIX SENT" << "\n";
         return;
     }

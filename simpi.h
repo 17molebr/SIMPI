@@ -205,4 +205,4 @@ class matrix  // similar stuff for vector
   matrix &SIMPI_DISTRIBUTE();
 };
 
-void SIMPI_DISTRIBUTE(matrix m);
+void SIMPI_DISTRIBUTE(matrix m, matrix m1);
