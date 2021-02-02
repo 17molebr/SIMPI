@@ -86,6 +86,8 @@ class server {
     public:
         int count = 0; //Number of machines has accessed 
         const char *port= ":8080";
+        int defualt_size = 50;
+        int num_runs = 0;
         int make_sock(const char *servspec){
             const int one = 1;
             struct addrinfo hints = {};
@@ -178,7 +180,7 @@ class server {
 
 client c;
 server s;
-double temp[100];
+double *temp= new double[s.defualt_size];
 
 void new_connection(int sock, server s) {
     
@@ -216,6 +218,11 @@ void new_connection(int sock, server s) {
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
+            if(xdim * ydim != s.defualt_size && s.num_runs == 0){
+                double *array = new double[xdim*ydim];
+                delete [] temp;
+                temp = array;
+            }
             for (int a = 0; a < 16; a++)
             {
                 for (int b = 0; b < xdim; b++)
@@ -260,6 +267,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
         }
     }
+    s.num_runs += 1;
     close(sock);
     
 }
