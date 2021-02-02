@@ -65,7 +65,7 @@ void run_client(matrix m, int s){
     return;
 }
 
-void run_client2(matrix m, int s){
+void run_client2(const matrix &m, int s){
     int r;
     //devope handshake here and if the sever has not racived all parts of the marix then you get a bad return value and rerun this function untill all parts have been distubuted
     int sendval = 2;
@@ -359,7 +359,7 @@ void simpi::synch()
     }
 }
 
-void SIMPI_DISTRIBUTE(matrix m, matrix m1){
+void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
