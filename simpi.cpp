@@ -251,11 +251,12 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n";
-            
+            s.num_runs += 1;
 
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
+            s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             for (int a = 0; a < 10; a++){
                 for (int b = 0; b < 10; b++){
@@ -267,7 +268,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
         }
     }
-    s.num_runs += 1;
+    
     close(sock);
     
 }
