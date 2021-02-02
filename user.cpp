@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
   //std::cout << C;
   SIMPI_DISTRIBUTE(A, B);
   //std::cout fsdf << C;
-  //C= A.inverse();
+  SIMPI_SYNCH();
   std::cout << B;
   //std::cout << C; 
   //SIMPI_FINALIZE();
