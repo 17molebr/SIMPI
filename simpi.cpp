@@ -371,6 +371,7 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         run_client(m, c.sock);
         int done_val;
         done_val = run_client2(m1, c.sock);
+        std::cout << "\n" << "Done vale = " << done_val << "\n";
         while(done_val == 0){
             std::cout << "\n" << "waiting for other client" << "\n";
             done_val = run_client2(m1, c.sock);
