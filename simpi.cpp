@@ -243,13 +243,14 @@ void new_connection(int sock, server s) {
             }
             std::cout << "\n";
             s.num_runs += 1;
+            std::cout <<"\nIncrementing num_connections" <<"\n";
             s.num_connections += 1;
 
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
-            std::cout << "\n" << "Server in status == 2" << "\n";
-            std::cout << "\n Number of Connecitons =" << s.num_connections << "\n";
+            std::cout << "\n" << "Server in status = 2" << "\n";
+            std::cout << "\nNumber of Connecitons = " << s.num_connections << "\n";
             if(s.num_connections < 2){ //FIX THIS PLS
                 std::cout << "\n" << "In if statement" << "\n";
                 int status;
