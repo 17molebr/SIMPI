@@ -52,7 +52,7 @@ void run_client(matrix m, int s){
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
     std::cout << m.arr[6*xdim + 4];
-    for (int a = 0; a < 16; a++)
+    for (int a = 0; a < ydim; a++)
     {
         for (int b = 0; b < xdim; b++)
         {
@@ -65,11 +65,16 @@ void run_client(matrix m, int s){
     return;
 }
 
-void run_client2(const matrix &m, int s){
+int run_client2(const matrix &m, int s){
     int r;
     //devope handshake here and if the sever has not racived all parts of the marix then you get a bad return value and rerun this function untill all parts have been distubuted
     int sendval = 2;
+    int done;
     r = send(s, &sendval, sizeof(sendval), 0);
+    r = read(s, &done, sizeof(done));
+    if(done == 0){
+        return 0;
+    }
     for (int a = 0; a < 10; a++){
         for (int b = 0; b < 10; b++){
             double element = 0;
@@ -79,7 +84,7 @@ void run_client2(const matrix &m, int s){
         }
     }
     close(s);
-    return; 
+    return 1; 
 }
 
 class server {
@@ -88,6 +93,7 @@ class server {
         const char *port= ":8080";
         int defualt_size = 50;
         int num_runs = 0;
+        int num_connections = 0;
         int make_sock(const char *servspec){
             const int one = 1;
             struct addrinfo hints = {};
@@ -145,23 +151,7 @@ class server {
                 */
             }
         }
-         //redistubtion loop
-         /*
-        void sendback_accept_loop(const char *servspec, server s){
-            int sock = make_sock(servspec);
-            
-            for (;;) {
-                int new_sock = accept(sock, 0, 0);
-                std::thread t(new_connection2, new_sock, s);
-                t.detach();
-                count += 1;
-                if(count == 1){
-                    break;
-                }
-                return;
-            }
-        }
-        */
+         
 
         bool isclosed(int sock) {
             fd_set rfd;
@@ -183,7 +173,7 @@ server s;
 double *temp= new double[s.defualt_size];
 
 void new_connection(int sock, server s) {
-    
+    //Server Connection 
     ssize_t r;
     /*
     data_info info;
@@ -223,7 +213,7 @@ void new_connection(int sock, server s) {
                 delete [] temp;
                 temp = array;
             }
-            for (int a = 0; a < 16; a++)
+            for (int a = 0; a < ydim; a++)
             {
                 for (int b = 0; b < xdim; b++)
                 {
@@ -252,10 +242,16 @@ void new_connection(int sock, server s) {
             }
             std::cout << "\n";
             s.num_runs += 1;
+            s.num_connections += 1;
 
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
+            if(s.num_connections != main_simpi->get_num_workstations()){
+                int status;
+                status = send(sock, 0, sizeof(int), 0);
+                return;
+            }
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             for (int a = 0; a < 10; a++){
@@ -372,7 +368,11 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
-        run_client2(m1, c.sock);
+        int done_val;
+        done_val = run_client2(m1, c.sock);
+        while(done_val == 0){
+             done_val = run_client2(m1, c.sock);
+        }
         //std::cout << "MATRIX SENT" << "\n";
         return;
     }
