@@ -253,9 +253,11 @@ void new_connection(int sock, server s) {
                 int status;
                 int send1 = 0; //send to client that cant distribute yet
                 status = send(sock, &send1, sizeof(send1), 0);
+                std::cout << "\n" << "after send" << "\n";
                 close(sock);
                 return;
             }
+            std::cout << "\n" << "outside if statement" << "\n";
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             for (int a = 0; a < 10; a++){
