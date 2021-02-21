@@ -247,8 +247,9 @@ void new_connection(int sock, server s) {
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
-            std::cout << "\n" << "Server in state == 2 state" << "\n";
+            std::cout << "\n" << "Server in status == 2" << "\n";
             if(s.num_connections != main_simpi->get_num_workstations()){
+                std::cout << "\n" << "In if statement" << "\n";
                 int status;
                 int send1 = 0; //send to client that cant distribute yet
                 status = send(sock, &send1, sizeof(send1), 0);
