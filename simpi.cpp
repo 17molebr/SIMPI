@@ -250,14 +250,15 @@ void new_connection(int sock, server s) {
             }
             std::cout << "\n";
             s.num_runs += 1;
-            std::cout <<"\nIncrementing num_connections" <<"\n";
+            std::cout <<"\nIncrementing ip = " << id <<"\n";
             workstation_status[id] = 1;
 
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
             std::cout << "\n" << "Server in status = 2" << "\n";
-            std::cout << "\nNumber of Connecitons = " << *num_connections << "\n";
+            std::cout << "\nConnection 1 = " << workstation_status[1] << "\n";
+            std::cout << "\nConnection 2 = " << workstation_status[2] << "\n";
             if(workstation_status[1] == 0 || workstation_status[2] == 0){ //FIX THIS PLS
                 std::cout << "\n" << "In if statement" << "\n";
                 int status;
