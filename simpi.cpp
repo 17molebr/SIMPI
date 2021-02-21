@@ -249,7 +249,8 @@ void new_connection(int sock, server s) {
             //will have handshake that checks here for completion of martix
             if(s.num_connections != main_simpi->get_num_workstations()){
                 int status;
-                status = send(sock, 0, sizeof(int), 0);
+                int send1 = 0;
+                status = send(sock, &send1, sizeof(send1), 0);
                 close(sock);
                 return;
             }
