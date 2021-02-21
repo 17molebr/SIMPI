@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
   SIMPI_DISTRIBUTE(A, B);
   //std::cout fsdf << C;
   SIMPI_SYNCH();
+  std::cout << "\n" << "printing in user" << "\n"; 
   std::cout << B;
   //std::cout << C; 
   //SIMPI_FINALIZE();
