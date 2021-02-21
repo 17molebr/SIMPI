@@ -197,7 +197,7 @@ void new_connection(int sock, server s) {
         //
         int status = 0;
         r = read(sock, &status, sizeof(status));
-        std::cout << status << "\n"; 
+        std::cout << "\nStatus = " << status << "\n"; 
         if(status == 1){
             int start;
             int end;
@@ -379,7 +379,8 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         run_client(m, c.sock);
         int done_val;
         done_val = run_client2(m1, c.sock);
-        std::cout << "\n" << "Done vale = " << done_val << "\n";
+        std::cout << "\n" << "Done val = " << done_val << "\n";
+        sleep(5);
         while(done_val == 0){
             std::cout << "\n" << "waiting for other client" << "\n";
             done_val = run_client2(m1, c.sock);
