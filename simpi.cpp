@@ -1,4 +1,5 @@
 #include "simpi.h"
+//FIX server hard code in new_connection around 254
 // init global simpi
 static simpi *main_simpi;
 struct timeval begin, end1;
@@ -248,7 +249,8 @@ void new_connection(int sock, server s) {
         if(status == 2){
             //will have handshake that checks here for completion of martix
             std::cout << "\n" << "Server in status == 2" << "\n";
-            if(s.num_connections != 2){ 
+            std::cout << "\n Number of Connecitons =" << s.num_connections << "\n";
+            if(s.num_connections < 2){ //FIX THIS PLS
                 std::cout << "\n" << "In if statement" << "\n";
                 int status;
                 int send1 = 0; //send to client that cant distribute yet
