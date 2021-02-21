@@ -27,6 +27,7 @@ void new_connection2(int sock, server s);
 std::vector<int> workstations;
 
 
+
 void run_client(matrix m, int s){
     /*
     data_info info;
@@ -45,6 +46,7 @@ void run_client(matrix m, int s){
     int sendval = 1;
     int start = main_simpi->get_start();
     int end = main_simpi->get_end();
+    int id = main_simpi->get_id();
     int xdim = m.get_x();
     int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
@@ -52,6 +54,7 @@ void run_client(matrix m, int s){
     r = send(s, &end, sizeof(end), 0); 
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
+    r = send(s, &id, sizeof(id), 0);
     std::cout << m.arr[6*xdim + 4];
     for (int a = 0; a < ydim; a++)
     {
@@ -205,12 +208,14 @@ void new_connection(int sock, server s) {
             int end;
             int xdim;
             int ydim;
+            int id;
             r = read(sock, &start, sizeof(start));
             r = read(sock, &end, sizeof(end));
             std::cout << start << "\n";
             std::cout << end << "\n";
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
+            r = read(sock, &id, sizeof(id));
             if(xdim * ydim != s.defualt_size && s.num_runs == 0){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
@@ -246,7 +251,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n";
             s.num_runs += 1;
             std::cout <<"\nIncrementing num_connections" <<"\n";
-            workstation_status[main_simpi->get_id()] = 1;
+            workstation_status[id] = 1;
 
         }
         if(status == 2){
