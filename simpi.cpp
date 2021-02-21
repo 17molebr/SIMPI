@@ -94,7 +94,6 @@ class server {
         const char *port= ":8080";
         int defualt_size = 50;
         int num_runs = 0;
-        int num_connections = 0;
         int make_sock(const char *servspec){
             const int one = 1;
             struct addrinfo hints = {};
@@ -172,6 +171,7 @@ class server {
 client c;
 server s;
 double *temp= new double[s.defualt_size];
+int num_connections = 0;
 
 void new_connection(int sock, server s) {
     //Server Connection 
@@ -244,14 +244,14 @@ void new_connection(int sock, server s) {
             std::cout << "\n";
             s.num_runs += 1;
             std::cout <<"\nIncrementing num_connections" <<"\n";
-            s.num_connections += 1;
+            num_connections += 1;
 
         }
         if(status == 2){
             //will have handshake that checks here for completion of martix
             std::cout << "\n" << "Server in status = 2" << "\n";
-            std::cout << "\nNumber of Connecitons = " << s.num_connections << "\n";
-            if(s.num_connections < 2){ //FIX THIS PLS
+            std::cout << "\nNumber of Connecitons = " << num_connections << "\n";
+            if(num_connections < 2){ //FIX THIS PLS
                 std::cout << "\n" << "In if statement" << "\n";
                 int status;
                 int send1 = 0; //send to client that cant distribute yet
@@ -380,7 +380,6 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         int done_val;
         done_val = run_client2(m1, c.sock);
         std::cout << "\n" << "Done val = " << done_val << "\n";
-        sleep(5);
         while(done_val == 0){
             std::cout << "\n" << "waiting for other client" << "\n";
             done_val = run_client2(m1, c.sock);
