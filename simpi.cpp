@@ -46,7 +46,7 @@ void run_client(matrix m, int s){
     int sendval = 1;
     int start = main_simpi->get_start();
     int end = main_simpi->get_end();
-    int id = main_simpi->get_id();
+    int id = main_simpi->get_workstation_id();
     int xdim = m.get_x();
     int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
