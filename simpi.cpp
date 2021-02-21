@@ -250,6 +250,7 @@ void new_connection(int sock, server s) {
             if(s.num_connections != main_simpi->get_num_workstations()){
                 int status;
                 status = send(sock, 0, sizeof(int), 0);
+                close(sock);
                 return;
             }
             s.num_runs = 0;
