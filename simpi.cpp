@@ -255,7 +255,7 @@ void new_connection(int sock, server s) {
 
         }
         if(status == 2){
-            //will have handshake that checks here for completion of martix
+            //check for matrix completion if not then send back to client that unable to disribute yet 
             std::cout << "\n" << "Server in status = 2" << "\n";
             std::cout << "\nConnection 1 = " << workstation_status[1] << "\n";
             std::cout << "\nConnection 2 = " << workstation_status[2] << "\n";
@@ -274,7 +274,7 @@ void new_connection(int sock, server s) {
             for (int a = 0; a < 10; a++){
                 for (int b = 0; b < 10; b++){
                     double element = temp[a*10 + b];
-                    //std::cout << element << "\n";
+                    std::cout << "\nElement is "<< element << "\n";
                     r = send(sock, &element, sizeof(element), 0);
                 }
             }
