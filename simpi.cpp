@@ -1,5 +1,6 @@
 #include "simpi.h"
 //FIX server hard code in new_connection around 254
+//Fix hardcode in new_connection status 3 case to num workstations 
 // init global simpi
 static simpi *main_simpi;
 struct timeval begin, end1;
@@ -298,7 +299,17 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
         }
         if(status == 3){
-            while(workstation_status[1] == 0 || workstation_status[2] == 0);
+            while(1){
+                int flag = 0;
+                for(int i =1; i <= 2; i++){ //Fix this to num_workstations 
+                    if(workstation_status[i] == 0){
+                        flag = 1;
+                    }
+                }
+                if(flag != 1){
+                    break;
+                }
+            }
             int status2 = 0;
             int send3 = 1;
             status2 = send(sock, &send3, sizeof(send3), 0);
