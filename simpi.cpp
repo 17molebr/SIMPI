@@ -390,6 +390,7 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
         int done_val;
+        sleep(2);
         done_val = run_client2(m1, c.sock);
         std::cout << "\n" << "Done val = " << done_val << "\n";
         while(done_val == 0){
