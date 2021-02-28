@@ -268,13 +268,16 @@ void new_connection(int sock, server s) {
                 close(sock);
                 return;
             }
+            int status1 = 0;
+            int send2 = 1;
+            status1 = send(sock, &send2, sizeof(send2), 0); //ok to distribute 
             std::cout << "\n" << "outside if statement" << "\n";
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             for (int a = 0; a < 10; a++){
                 for (int b = 0; b < 10; b++){
                     double element = temp[a*10 + b];
-                    std::cout << "\nElement is "<< element << "\n";
+                    //std::cout << "\nElement is "<< element << "\n";
                     r = send(sock, &element, sizeof(element), 0);
                 }
             }
