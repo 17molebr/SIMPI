@@ -92,6 +92,19 @@ int run_client2(const matrix &m, int s){
     return 1; 
 }
 
+void run_client_synch(int s){
+    //synch function
+    int status = 3;
+    int client_status = 0;
+    int value = 0;
+    client_status = send(s, &status, sizeof(status), 0);
+    while(value == 0){
+        client_status = read(s, &value, sizeof(value));
+        std::cout << "\nstaus = " << client_status <<"\n";
+    }
+    return;
+}
+
 class server {
     public:
         int count = 0; //Number of machines has accessed 
@@ -284,6 +297,12 @@ void new_connection(int sock, server s) {
             }
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
         }
+        if(status == 3){
+            while(workstation_status[1] == 0 || workstation_status[2] == 0);
+            int status2 = 0;
+            int send3 = 1;
+            status2 = send(sock, &send3, sizeof(send3), 0);
+        }
     }
     
     close(sock);
@@ -390,7 +409,7 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
         int done_val;
-        sleep(2);
+        run_client_synch(c.sock);
         done_val = run_client2(m1, c.sock);
         std::cout << "\n" << "Done val = " << done_val << "\n";
         while(done_val == 0){
