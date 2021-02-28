@@ -87,7 +87,7 @@ int run_client2(const matrix &m, int s){
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
-    close(s);
+    //close(s);
     return 1; 
 }
 
