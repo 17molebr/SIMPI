@@ -274,6 +274,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Server in status = 2" << "\n";
             std::cout << "\nConnection 1 = " << workstation_status[1] << "\n";
             std::cout << "\nConnection 2 = " << workstation_status[2] << "\n";
+            /*
             if(workstation_status[1] == 0 || workstation_status[2] == 0){ //FIX THIS PLS
                 std::cout << "\n" << "In if statement" << "\n";
                 int status;
@@ -283,6 +284,7 @@ void new_connection(int sock, server s) {
                 close(sock);
                 return;
             }
+            */
             int status1 = 0;
             int send2 = 1;
             status1 = send(sock, &send2, sizeof(send2), 0); //ok to distribute 
@@ -299,6 +301,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
         }
         if(status == 3){
+            //Wait for whole matix to be updated and then send to client to move on and then start redistributing
             while(1){
                 int flag = 0;
                 for(int i =1; i <= 2; i++){ //Fix this to num_workstations 
@@ -311,7 +314,7 @@ void new_connection(int sock, server s) {
                 }
             }
             int status2 = 0;
-            int send3 = 1;
+            int send3 = 1; //Send value to have client break wating loop
             status2 = send(sock, &send3, sizeof(send3), 0);
         }
     }
@@ -422,6 +425,7 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
         int done_val;
         run_client_synch(c.sock);
         done_val = run_client2(m1, c.sock);
+        /*
         std::cout << "\n" << "Done val = " << done_val << "\n";
         while(done_val == 0){
             std::cout << "\n" << "waiting for other client" << "\n";
@@ -429,6 +433,7 @@ void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
             std::cout << "\n" << "Done val = " << done_val << "\n";
         }
         //std::cout << "MATRIX SENT" << "\n";
+        */
         return;
     }
     return;
