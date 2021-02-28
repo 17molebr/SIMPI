@@ -79,6 +79,7 @@ int run_client2(const matrix &m, int s){
     if(done == 0){
         return 0;
     }
+    std::cout << "\nin distribute\n";
     for (int a = 0; a < 10; a++){
         for (int b = 0; b < 10; b++){
             double element = 0;
@@ -87,7 +88,7 @@ int run_client2(const matrix &m, int s){
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
-    //close(s);
+    close(s);
     return 1; 
 }
 
