@@ -87,7 +87,7 @@ int run_client2(matrix &m, int s){
             double element = 0;
             r = read(s, &element, sizeof(element));
             m.arr[a*10 +b] = element;
-            std::cout << "\nElement in client is"<< element << "\n";
+            //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
     //close(s);
@@ -284,6 +284,7 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "outside if statement" << "\n";
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
+            std::cout << "\n x = " << current_x << " y = " << current_y << "\n";
             for (int a = 0; a < current_y; a++){
                 for (int b = 0; b < current_x; b++){
                     double element = temp[a*current_x + b];
