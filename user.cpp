@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
   matrix E(20, 20);
   matrix F(20,20);
   matrix G(10, 10);
+  matrix out(20, 20);
   //vector D(10);
   SIMPI_SYNCH();
 
@@ -62,11 +63,16 @@ int main(int argc, char* argv[])
   
   std::cout << B;
   C= A * B;
+  SIMPI_SYNCH();
+  F = D * E;
   //std::cout << C;
   SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
   std::cout << G;
-  //std::cout << C; 
+  SIMPI_SYNCH();
+  SIMPI_DISTRIBUTE(F, out);
+  SIMPI_SYNCH();
+  std::cout << out; 
   //SIMPI_FINALIZE();
   exit(0);
 }
