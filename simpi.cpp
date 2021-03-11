@@ -318,7 +318,7 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
-            //workstation_status[id] = 0;
+            workstation_status[id] = 0;
             //clear workstation_status value if last distribute
         }
         if(status == 3){
