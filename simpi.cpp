@@ -87,7 +87,7 @@ int run_client2(matrix &m, int s){
             double element = 0;
             r = read(s, &element, sizeof(element));
             m.arr[a*10 +b] = element;
-            //std::cout << "\nElement in client is"<< element << "\n";
+            std::cout << "\nElement in client is"<< element << "\n";
         }
     }
     //close(s);
