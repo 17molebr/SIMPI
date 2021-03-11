@@ -195,6 +195,7 @@ int *num_connections = &num;
 int *workstation_status = new int[2];
 int current_x = 0;
 int current_y = 0;
+
 void new_connection(int sock, server s) {
     //Server Connection 
     ssize_t r;
@@ -285,6 +286,15 @@ void new_connection(int sock, server s) {
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             std::cout << "\n x = " << current_x << " y = " << current_y << "\n";
+            for (int i = 0; i < current_x; i++)
+            {
+                std::cout << "\n";
+                for (int j = 0; j < current_y; j++)
+                {
+                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * current_y];
+                    std::cout << ", ";
+                }
+            }
             for (int a = 0; a < current_y; a++){
                 for (int b = 0; b < current_x; b++){
                     double element = temp[a*current_x + b];
