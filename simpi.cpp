@@ -242,6 +242,19 @@ void new_connection(int sock, server s) {
                 current_x = xdim;
                 current_y = ydim;
             }
+            workstation_status[id] = 1;
+            while(1){
+                int flag = 0;
+                for(int i =1; i <= 2; i++){ //Fix this to num_workstations 
+                    if(workstation_status[i] == 0){
+                        flag = 1;
+                    }
+                }
+                if(flag != 1){
+                    break;
+                }
+            }
+            workstation_status[id] = 0;
             for (int a = start; a < end; a++)
             {
                 for (int b = 0; b < xdim; b++)
