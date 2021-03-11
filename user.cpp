@@ -27,11 +27,11 @@ int main(int argc, char* argv[])
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
-  matrix D(20, 20);
-  matrix E(20, 20);
-  matrix F(20,20);
+  matrix D(10, 10);
+  matrix E(10, 10);
+  matrix F(10,10);
   matrix G(10, 10);
-  matrix out(20, 20);
+  matrix out(10, 10);
   //vector D(10);
   SIMPI_SYNCH();
 
@@ -45,13 +45,13 @@ int main(int argc, char* argv[])
       B.get(x, y) = rand()%10 + 1;
     }
   }
-  for (int y = 0; y < 20; y++) {
-    for (int x = 0; x < 20; x++) {
+  for (int y = 0; y < 10; y++) {
+    for (int x = 0; x < 10; x++) {
       D.get(x, y) = rand()%10 + 1;
     }
   }
-  for (int y = 0; y < 20; y++) {
-    for (int x = 0; x < 20; x++) {
+  for (int y = 0; y < 10; y++) {
+    for (int x = 0; x < 10; x++) {
       E.get(x, y) = rand()%10 + 1;
     }
   }
