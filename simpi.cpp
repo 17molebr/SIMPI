@@ -74,9 +74,11 @@ int run_client2(matrix &m, int s){
     int r;
     int sendval = 2;
     int done;
+    int id = main_simpi->get_workstation_id();
     int xdim = m.get_x();
     int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
+    r = send(s, &id, sizeof(id), 0);
     r = read(s, &done, sizeof(done));
     if(done == 0){
         return 0;
@@ -242,6 +244,8 @@ void new_connection(int sock, server s) {
                 current_x = xdim;
                 current_y = ydim;
             }
+            //must synch after this step to make sure that you are not attempting to write to something that has been deleated 
+            //*synch*
             workstation_status[id] = 1;
             while(1){
                 int flag = 0;
@@ -255,6 +259,7 @@ void new_connection(int sock, server s) {
                 }
             }
             workstation_status[id] = 0;
+            //*end synch*
             for (int a = start; a < end; a++)
             {
                 for (int b = 0; b < xdim; b++)
@@ -265,13 +270,7 @@ void new_connection(int sock, server s) {
                     //std::cout << elemeent << "\n";
                 }
             }
-            /*
-            gettimeofday(&end1, 0);
-            long seconds = end1.tv_sec - begin.tv_sec;
-            long microseconds = end1.tv_usec - begin.tv_usec;
-            double elapsed = seconds + microseconds*1e-6;
-            printf("Time measured: %.10f microseconds.\n", elapsed);
-            */
+    
             
             for (int i = 0; i < xdim; i++)
             {
@@ -295,6 +294,8 @@ void new_connection(int sock, server s) {
             std::cout << "\nConnection 2 = " << workstation_status[2] << "\n";
             int status1 = 0;
             int send2 = 1;
+            int id = 0;
+            status1 = read(sock, &id, sizeof(id));
             status1 = send(sock, &send2, sizeof(send2), 0); //ok to distribute 
             std::cout << "\n" << "outside if statement" << "\n";
             s.num_runs = 0;
@@ -317,6 +318,7 @@ void new_connection(int sock, server s) {
                 }
             }
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
+            workstation_status[id] = 0;
             //clear workstation_status value if last distribute
         }
         if(status == 3){
