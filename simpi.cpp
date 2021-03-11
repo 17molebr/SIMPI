@@ -234,7 +234,7 @@ void new_connection(int sock, server s) {
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
             r = read(sock, &id, sizeof(id));
-            if(xdim * ydim != s.defualt_size && s.num_runs == 0){
+            if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0){
                 std::cout << "\nIN THIS CASE\n";
                 double *array = new double[xdim*ydim];
                 delete [] temp;
