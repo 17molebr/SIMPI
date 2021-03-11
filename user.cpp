@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
   //std::cout << C;
   SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
-  std::cout << C;
+  std::cout << G;
   //std::cout << C; 
   //SIMPI_FINALIZE();
   exit(0);
