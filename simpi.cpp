@@ -57,7 +57,7 @@ void run_client(matrix m, int s){
     r = send(s, &ydim, sizeof(ydim), 0);
     r = send(s, &id, sizeof(id), 0);
     std::cout << m.arr[6*xdim + 4];
-    for (int a = 0; a < ydim; a++)
+    for (int a = start; a < end; a++)
     {
         for (int b = 0; b < xdim; b++)
         {
@@ -70,31 +70,32 @@ void run_client(matrix m, int s){
     return;
 }
 
-int run_client2(const matrix &m, int s){
+int run_client2(matrix &m, int s){
     int r;
-    //devope handshake here and if the sever has not racived all parts of the marix then you get a bad return value and rerun this function untill all parts have been distubuted
     int sendval = 2;
     int done;
+    int xdim = m.get_x();
+    int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
     r = read(s, &done, sizeof(done));
     if(done == 0){
         return 0;
     }
     std::cout << "\nin distribute done = \n"<< done;
-    for (int a = 0; a < 10; a++){
-        for (int b = 0; b < 10; b++){
+    for (int a = 0; a < ydim; a++){
+        for (int b = 0; b < xdim; b++){
             double element = 0;
             r = read(s, &element, sizeof(element));
             m.arr[a*10 +b] = element;
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
-    close(s);
+    //close(s);
     return 1; 
 }
 
 void run_client_synch(int s){
-    //synch function
+    //synch function to wait for all parts of matix to be completed
     int status = 3;
     int client_status = 0;
     int value = 0;
@@ -192,7 +193,8 @@ double *temp= new double[s.defualt_size];
 int num = 0;
 int *num_connections = &num;
 int *workstation_status = new int[2];
-
+int current_x = 0;
+int current_y = 0;
 void new_connection(int sock, server s) {
     //Server Connection 
     ssize_t r;
@@ -235,8 +237,10 @@ void new_connection(int sock, server s) {
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
+                current_x = xdim;
+                current_y = ydim;
             }
-            for (int a = 0; a < ydim; a++)
+            for (int a = start; a < end; a++)
             {
                 for (int b = 0; b < xdim; b++)
                 {
@@ -274,31 +278,21 @@ void new_connection(int sock, server s) {
             std::cout << "\n" << "Server in status = 2" << "\n";
             std::cout << "\nConnection 1 = " << workstation_status[1] << "\n";
             std::cout << "\nConnection 2 = " << workstation_status[2] << "\n";
-            /*
-            if(workstation_status[1] == 0 || workstation_status[2] == 0){ //FIX THIS PLS
-                std::cout << "\n" << "In if statement" << "\n";
-                int status;
-                int send1 = 0; //send to client that cant distribute yet
-                status = send(sock, &send1, sizeof(send1), 0);
-                std::cout << "\n" << "after send" << "\n";
-                close(sock);
-                return;
-            }
-            */
             int status1 = 0;
             int send2 = 1;
             status1 = send(sock, &send2, sizeof(send2), 0); //ok to distribute 
             std::cout << "\n" << "outside if statement" << "\n";
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
-            for (int a = 0; a < 10; a++){
-                for (int b = 0; b < 10; b++){
-                    double element = temp[a*10 + b];
+            for (int a = 0; a < current_y; a++){
+                for (int b = 0; b < current_x; b++){
+                    double element = temp[a*current_x + b];
                     //std::cout << "\nElement is "<< element << "\n";
                     r = send(sock, &element, sizeof(element), 0);
                 }
             }
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
+            //clear workstation_status value if last distribute
         }
         if(status == 3){
             //Wait for whole matix to be updated and then send to client to move on and then start redistributing
@@ -322,20 +316,7 @@ void new_connection(int sock, server s) {
     close(sock);
     
 }
-/*
-void new_connection2(int sock, server s){
-   int r;
-   for (int a = 0; a < 10; a++)
-    {
-        for (int b = 0; b < 10; b++)
-        {
-            double element = temp[a*10 + b];
-            //std::cout << element << "\n";
-            r = send(sock, &element, sizeof(element), 0);
-        }
-    }
-}
-*/
+
 
 /******************Simpi Functions*************************/
 simpi::simpi(int _id, int _num_workers, int _num_workstaions, int _workstation_id)
@@ -418,22 +399,13 @@ void simpi::synch()
     }
 }
 
-void SIMPI_DISTRIBUTE(matrix m, const matrix &m1){
+void SIMPI_DISTRIBUTE(matrix m, matrix &m1){
     if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
         std::cout << "passed in sock= "<< c.sock << "\n";
         run_client(m, c.sock);
         int done_val;
         run_client_synch(c.sock);
         done_val = run_client2(m1, c.sock);
-        /*
-        std::cout << "\n" << "Done val = " << done_val << "\n";
-        while(done_val == 0){
-            std::cout << "\n" << "waiting for other client" << "\n";
-            done_val = run_client2(m1, c.sock);
-            std::cout << "\n" << "Done val = " << done_val << "\n";
-        }
-        //std::cout << "MATRIX SENT" << "\n";
-        */
         return;
     }
     return;

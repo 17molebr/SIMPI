@@ -27,7 +27,10 @@ int main(int argc, char* argv[])
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
-  vector D(10);
+  matrix D(20, 20);
+  matrix E(20, 20);
+  matrix F(20,20);
+  //vector D(10);
   SIMPI_SYNCH();
 
   for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
@@ -40,19 +43,28 @@ int main(int argc, char* argv[])
       B.get(x, y) = rand()%10 + 1;
     }
   }
+  for (int y = 0; y < 20; y++) {
+    for (int x = 0; x < 20; x++) {
+      D.get(x, y) = rand()%10 + 1;
+    }
+  }
+  for (int y = 0; y < 20; y++) {
+    for (int x = 0; x < 20; x++) {
+      E.get(x, y) = rand()%10 + 1;
+    }
+  }
+
   SIMPI_SYNCH();
 
   
   std::cout << A;
   
-  //std::cout << B;
-  //C= A * B;
-  //std::cout << C;
-  SIMPI_DISTRIBUTE(A, B);
-  //std::cout fsdf << C;
-  SIMPI_SYNCH();
-  std::cout << "\n" << "printing in user" << "\n"; 
   std::cout << B;
+  C= A * B;
+  //std::cout << C;
+  SIMPI_DISTRIBUTE(C, C);
+  SIMPI_SYNCH();
+  std::cout << C;
   //std::cout << C; 
   //SIMPI_FINALIZE();
   exit(0);
