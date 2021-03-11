@@ -237,7 +237,6 @@ void new_connection(int sock, server s) {
             r = read(sock, &ydim, sizeof(ydim));
             r = read(sock, &id, sizeof(id));
             if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0){
-                std::cout << "\nIN THIS CASE\n";
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
@@ -301,15 +300,6 @@ void new_connection(int sock, server s) {
             s.num_runs = 0;
             std::cout << "\n" << "Matrix has been redistributed"<<"\n";
             std::cout << "\n x = " << current_x << " y = " << current_y << "\n";
-            for (int i = 0; i < current_x; i++)
-            {
-                std::cout << "\n";
-                for (int j = 0; j < current_y; j++)
-                {
-                    std::cout << std::fixed << std::setprecision(2) << temp[i + j * current_y];
-                    std::cout << ", ";
-                }
-            }
             for (int a = 0; a < current_y; a++){
                 for (int b = 0; b < current_x; b++){
                     double element = temp[a*current_x + b];
