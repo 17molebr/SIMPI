@@ -1327,8 +1327,10 @@ matrix &matrix::multiply(matrix other)
         main_simpi->set_end(start+(end-start) * tempForProcesses);
         if (numCols % tempForProcesses != 0){
             int leftover = numCols % tempForProcesses;
+            printf("DEBUG 1\n");
             if (parIDInit < leftover)
                 {
+                    printf("DEBUG 2\n");
                 // parId += (Arow - leftover);
                 int start = parId + (numCols);
                 int end = start + 1;
