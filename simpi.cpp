@@ -1330,7 +1330,7 @@ matrix &matrix::multiply(matrix other)
             printf("DEBUG 1\n");
             if (parIDInit < leftover)
                 {
-                    printf("DEBUG 2\n");
+                    printf("DEBUG 2 par ID : %d numcols : %d\n", parID, numCols);
                 // parId += (Arow - leftover);
                 int start = parId + (numCols);
                 int end = start + 1;
