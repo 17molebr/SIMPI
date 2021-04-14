@@ -1324,7 +1324,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end(start+(end-start) * tempForProcesses);
+        main_simpi->set_end(((wokstation_id + 1) * numCols);
         if (numCols % tempForProcesses != 0){
             int leftover = numCols % tempForProcesses;
             printf("DEBUG 1\n");
@@ -1334,8 +1334,8 @@ matrix &matrix::multiply(matrix other)
                 // parId += (Arow - leftover);
                 int start = parId + (numCols);
                 int end = start + 1;
-                main_simpi->set_start(start);
-                main_simpi->set_end(start + (end-start) * tempForProcesses);
+                // main_simpi->set_start(start);
+                // main_simpi->set_end(start + (end-start) * tempForProcesses);
                 for (int a = start; a < end; a++)
                 {
                     for (int b = 0; b < Arow; b++)
