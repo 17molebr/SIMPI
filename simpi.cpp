@@ -1321,7 +1321,7 @@ matrix &matrix::multiply(matrix other)
 
         
         int rpp = Bcol / 10;
-        int start = rpp * parId;
+        int start = rpp * parIDInit + numCols * workstationid;
         int end = start + rpp;
         main_simpi->set_start(workstationid * numCols);
         main_simpi->set_end((workstationid + 1) * numCols);
