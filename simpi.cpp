@@ -1323,7 +1323,7 @@ matrix &matrix::multiply(matrix other)
         int rpp = Bcol / 10;
         int start = rpp * parId;
         int end = start + rpp;
-        main_simpi->set_start(start);
+        main_simpi->set_start(workstationid * numCols);
         main_simpi->set_end((workstationid + 1) * numCols);
         if (numCols % tempForProcesses != 0){
             int leftover = numCols % tempForProcesses;
