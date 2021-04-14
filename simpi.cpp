@@ -1296,7 +1296,7 @@ matrix &matrix::multiply(matrix other)
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1 ;
-    int parIDInit = parID;
+    int parIDInit = parId;
     parId = workstationid * 4 + parId;
 
     printf("WORKSTATION ID = %d\n", workstationid);
