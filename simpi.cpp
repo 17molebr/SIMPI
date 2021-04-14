@@ -18,7 +18,7 @@ void SIMPI_SYNCH()
 
 void SIMPI_FINALIZE()
 {
-    main_simpi->synch();
+    //main_simpi->synch();
     delete main_simpi;
     char buff[100] = "pkill -f user";
     system(buff);
