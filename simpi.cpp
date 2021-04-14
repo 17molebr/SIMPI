@@ -1296,9 +1296,12 @@ matrix &matrix::multiply(matrix other)
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1 ;
+    int parIDInit = parID;
     parId = workstationid * 4 + parId;
+
     printf("WORKSTATION ID = %d\n", workstationid);
     printf("parID ID = %d\n", parId);
+    int numCols = other.get_y() / number_of_workstations;
     if (parId <= other.get_y())
     {
         if (number_of_processes > other.get_y())
@@ -1309,20 +1312,25 @@ matrix &matrix::multiply(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
+
+
+        if (Acol != Brow)
+        {
+            printf("Error. Matrices can't be multiplied\n");
+        }
+
+        
         int rpp = Bcol / 10;
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
         main_simpi->set_end(start+(end-start) * tempForProcesses);
-        if (Arow % 10 != 0)
-        {
-
-            int leftover = Arow % 10;
-            if (parId < leftover)
-            {
-
-                parId += (Arow - leftover);
-                int start = parId;
+        if (numCols % tempForProcesses != 0){
+            int leftover = numCols % tempForProcesses;
+            if (parIDInit < leftover)
+                {
+                // parId += (Arow - leftover);
+                int start = parId + (numCols);
                 int end = start + 1;
                 main_simpi->set_start(start);
                 main_simpi->set_end((end-start) * tempForProcesses);
@@ -1339,10 +1347,6 @@ matrix &matrix::multiply(matrix other)
                     }
                 }
             }
-        }
-        if (Acol != Brow)
-        {
-            printf("Error. Matrices can't be multiplied\n");
         }
         for (int a = start; a < end; a++)
         {
