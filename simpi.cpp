@@ -1324,7 +1324,7 @@ matrix &matrix::multiply(matrix other)
         int start = rpp * parId;
         int end = start + rpp;
         main_simpi->set_start(start);
-        main_simpi->set_end(((wokstation_id + 1) * numCols);
+        main_simpi->set_end(((workstation_id + 1) * numCols);
         if (numCols % tempForProcesses != 0){
             int leftover = numCols % tempForProcesses;
             printf("DEBUG 1\n");
