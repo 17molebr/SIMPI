@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
   int num_workstations = atoi(argv[3]);
   int workstationid = atoi(argv[4]);
   SIMPI_INIT(par_id, num_workers, num_workstations, workstationid);
+  //user code goes here 
   matrix A(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
@@ -73,6 +74,6 @@ int main(int argc, char* argv[])
   SIMPI_DISTRIBUTE(F, out);
   SIMPI_SYNCH();
   std::cout << out; 
-  //SIMPI_FINALIZE();
+  SIMPI_FINALIZE();
   exit(0);
 }
