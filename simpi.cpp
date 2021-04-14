@@ -1325,31 +1325,31 @@ matrix &matrix::multiply(matrix other)
         int end = start + rpp;
         main_simpi->set_start(start);
         main_simpi->set_end(start+(end-start) * tempForProcesses);
-        // if (numCols % tempForProcesses != 0){
-        //     int leftover = numCols % tempForProcesses;
-        //     printf("DEBUG 1\n");
-        //     if (parIDInit < leftover)
-        //         {
-        //             printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
-        //         // parId += (Arow - leftover);
-        //         int start = parId + (numCols);
-        //         int end = start + 1;
-        //         main_simpi->set_start(start);
-        //         main_simpi->set_end((end-start) * tempForProcesses);
-        //         for (int a = start; a < end; a++)
-        //         {
-        //             for (int b = 0; b < Arow; b++)
-        //             {
-        //                 int sum = 0;
-        //                 for (int c = 0; c < Brow; c++)
-        //                 {
-        //                     sum = sum + other.get_algbera(c + a * Brow) * get_algbera(c * Arow + b);
-        //                 }
-        //                 result->set(a * Arow + b, sum);
-        //             }
-        //         }
-        //     }
-        // }
+        if (numCols % tempForProcesses != 0){
+            int leftover = numCols % tempForProcesses;
+            printf("DEBUG 1\n");
+            if (parIDInit < leftover)
+                {
+                    printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
+                // parId += (Arow - leftover);
+                int start = parId + (numCols);
+                int end = start + 1;
+                main_simpi->set_start(start);
+                main_simpi->set_end(start + (end-start) * tempForProcesses);
+                for (int a = start; a < end; a++)
+                {
+                    for (int b = 0; b < Arow; b++)
+                    {
+                        int sum = 0;
+                        for (int c = 0; c < Brow; c++)
+                        {
+                            sum = sum + other.get_algbera(c + a * Brow) * get_algbera(c * Arow + b);
+                        }
+                        result->set(a * Arow + b, sum);
+                    }
+                }
+            }
+        }
         for (int a = start; a < end; a++)
         {
             for (int b = 0; b < Arow; b++)
