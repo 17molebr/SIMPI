@@ -63,9 +63,9 @@ int main(int argc, char* argv[])
   std::cout << A;
   
   std::cout << B;
-  C= A * B;
+  C= A + B;
   SIMPI_SYNCH();
-  F = D * E;
+  F = D + E;
   //std::cout << C;
   SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
