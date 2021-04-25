@@ -1410,13 +1410,18 @@ matrix &matrix::add(matrix other)
     matrix *result = new matrix(xdim, other.get_y());
     int number_of_processes = main_simpi->get_synch_info()->par_count;
     int number_of_workstations = main_simpi->get_num_workstations();
+    std::cout << "Number of processes = " << number_of_processes << std::endl;
+    std::cout << "Number of workstations = " << number_of_workstations << std::endl;
     int tempForProcesses = number_of_processes;
     number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1 ;
-    parId = workstationid * tempForProcesses + parId;
+    int parIDInit = parId;
+    parId = workstationid * 4 + parId;
+
     printf("WORKSTATION ID = %d\n", workstationid);
     printf("parID ID = %d\n", parId);
+    int numCols = other.get_y() / number_of_workstations;
     if (parId <= other.get_y())
     {
         if (number_of_processes > other.get_y())
@@ -1427,49 +1432,121 @@ matrix &matrix::add(matrix other)
         int Acol = get_y();
         int Brow = other.get_x();
         int Bcol = other.get_y();
-        int rpp = Bcol / number_of_processes;
-        int start = rpp * parId;
-        int end = start + rpp;
-        main_simpi->set_start(start);
-        main_simpi->set_end(end + tempForProcesses - 1) ;
-        if (Arow % number_of_processes != 0)
+
+
+        if (Acol != Brow)
         {
+            printf("Error. Matrices can't be multiplied\n");
+        }
 
-            int leftover = Arow % number_of_processes;
-            if (parId < leftover)
-            {
-
-                parId += (Arow - leftover);
-                int start = parId;
+        
+        int rpp = Bcol / 10;
+        int start = rpp * parIDInit + numCols * workstationid;
+        int end = start + rpp;
+        main_simpi->set_start(workstationid * numCols);
+        main_simpi->set_end((workstationid + 1) * numCols);
+        if (numCols % tempForProcesses != 0){
+            int leftover = numCols % tempForProcesses;
+            printf("DEBUG 1\n");
+            if (parIDInit < leftover)
+                {
+                    printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
+                int start =  numCols * workstationid + (numCols - 1 );
                 int end = start + 1;
-                main_simpi->set_start(start);
-                main_simpi->set_end(end + tempForProcesses - 1);
                 for (int a = start; a < end; a++)
                 {
                     for (int b = 0; b < Arow; b++)
                     {
                         result->set(b + a * Arow,
-                        (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
+                         (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
                     }
                 }
             }
-        }
-        if (Acol != Brow)
-        {
-            printf("Error. Matrices can't be multiplied\n");
         }
         for (int a = start; a < end; a++)
         {
             for (int b = 0; b < Arow; b++)
             {
                 result->set(b + a * Arow,
-                        (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
+                         (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
             }
         }
         main_simpi->synch();
         return *result;
     }
 }
+
+
+
+
+
+
+
+// matrix &matrix::add(matrix other)
+// {
+//     matrix *result = new matrix(xdim, other.get_y());
+//     int number_of_processes = main_simpi->get_synch_info()->par_count;
+//     int number_of_workstations = main_simpi->get_num_workstations();
+//     int tempForProcesses = number_of_processes;
+//     number_of_processes = number_of_processes * number_of_workstations;
+//     int parId = main_simpi->get_id();
+//     int workstationid = main_simpi->get_workstation_id() - 1 ;
+//     parId = workstationid * tempForProcesses + parId;
+//     printf("WORKSTATION ID = %d\n", workstationid);
+//     printf("parID ID = %d\n", parId);
+//     if (parId <= other.get_y())
+//     {
+//         if (number_of_processes > other.get_y())
+//         {
+//             number_of_processes = other.get_y();
+//         }
+//         int Arow = get_x();
+//         int Acol = get_y();
+//         int Brow = other.get_x();
+//         int Bcol = other.get_y();
+//         int rpp = Bcol / number_of_processes;
+//         int start = rpp * parId;
+//         int end = start + rpp;
+//         main_simpi->set_start(start);
+//         main_simpi->set_end(end + tempForProcesses - 1) ;
+//         if (Arow % number_of_processes != 0)
+//         {
+
+//             int leftover = Arow % number_of_processes;
+//             if (parId < leftover)
+//             {
+
+//                 parId += (Arow - leftover);
+//                 int start = parId;
+//                 int end = start + 1;
+//                 main_simpi->set_start(start);
+//                 main_simpi->set_end(end + tempForProcesses - 1);
+//                 for (int a = start; a < end; a++)
+//                 {
+//                     for (int b = 0; b < Arow; b++)
+//                     {
+//                         result->set(b + a * Arow,
+//                         (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
+//                     }
+//                 }
+//             }
+//         }
+//         if (Acol != Brow)
+//         {
+//             printf("Error. Matrices can't be multiplied\n");
+//         }
+//         for (int a = start; a < end; a++)
+//         {
+//             for (int b = 0; b < Arow; b++)
+//             {
+//                 result->set(b + a * Arow,
+//                         (other.get_algbera(b + a * Arow) + get_algbera(b + a * Arow)));
+//             }
+//         }
+//         main_simpi->synch();
+//         return *result;
+//     }
+// }
 /*
 Solves matrix subtraction in parallel and outputs the difference
 matrix -> matrix
