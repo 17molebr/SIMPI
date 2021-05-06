@@ -867,7 +867,8 @@ void matrix::getCofactor(double *A,
 
 
 // NEW LUDDECOMO
-// void matrix::luDecomposition_new(matrix *lower, matrix *upper)
+void matrix::luDecomposition_new(matrix *lower, matrix *upper)
+{}
 // {
 
 //     // Check if Matrix is square
