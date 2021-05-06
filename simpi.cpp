@@ -865,115 +865,117 @@ void matrix::getCofactor(double *A,
 //     return;
 // }
 
-void matrix::luDecomposition_new(matrix *lower, matrix *upper)
-{
 
-    // Check if Matrix is square
-    if (get_x() != get_y())
-    {
-        std::cout << "Invalid Matrix";
-        exit(1);
-    }
+// NEW LUDDECOMO
+// void matrix::luDecomposition_new(matrix *lower, matrix *upper)
+// {
 
-    // parallelize initialization later
-    // init upper and lower
-    for (int i = 0; i < get_x(); i++)
-    {
-        // Upper Triangular initialization
-        for (int j = 0; j < get_y(); j++)
-        {
-            if (i >=j)
-            {
-                lower->set(i*get_x() + j, 1);
-            }
-            // Summation of L(i, j) * U(j, k)
-            float sum = 0;
-            for (int j = 0; j < i; j++)
-                sum += (lower->get(i, j) * upper->get(j, k));
+//     // Check if Matrix is square
+//     if (get_x() != get_y())
+//     {
+//         std::cout << "Invalid Matrix";
+//         exit(1);
+//     }
 
-            // Evaluating U(i, k)
-            upper->get(i, k) = get(i, k) - sum;
-        }
+//     // parallelize initialization later
+//     // init upper and lower
+//     for (int i = 0; i < get_x(); i++)
+//     {
+//         // Upper Triangular initialization
+//         for (int j = 0; j < get_y(); j++)
+//         {
+//             if (i >=j)
+//             {
+//                 lower->set(i*get_x() + j, 1);
+//             }
+//             // Summation of L(i, j) * U(j, k)
+//             float sum = 0;
+//             for (int j = 0; j < i; j++)
+//                 sum += (lower->get(i, j) * upper->get(j, k));
 
-        // Calculate and execute which processes take the leftover work
-        if (total % num_processes != 0)
-        {
-            int leftover = total % num_processes;
-            if (parID < leftover)
-            {
-                parID += (xdim - leftover);
-                int start = parID;
-                int end = start + 1;
-                for (int a = start; a < end; a++)
-                {
-                    // Summation of L(i, j) * U(j, k)
-                    float sum = 0;
-                    for (int j = 0; j < i; j++)
-                        sum += (lower->get(i, j) * upper->get(j, a));
-                    // Evaluating U(i, k)
-                    upper->get(i, a) = get(i, a) - sum;
-                }
-            }
-        }
+//             // Evaluating U(i, k)
+//             upper->get(i, k) = get(i, k) - sum;
+//         }
 
-        main_simpi->synch();
+//         // Calculate and execute which processes take the leftover work
+//         if (total % num_processes != 0)
+//         {
+//             int leftover = total % num_processes;
+//             if (parID < leftover)
+//             {
+//                 parID += (xdim - leftover);
+//                 int start = parID;
+//                 int end = start + 1;
+//                 for (int a = start; a < end; a++)
+//                 {
+//                     // Summation of L(i, j) * U(j, k)
+//                     float sum = 0;
+//                     for (int j = 0; j < i; j++)
+//                         sum += (lower->get(i, j) * upper->get(j, a));
+//                     // Evaluating U(i, k)
+//                     upper->get(i, a) = get(i, a) - sum;
+//                 }
+//             }
+//         }
 
-        total = get_x() - i;
-        parID = main_simpi->get_id();
-        num_processes = main_simpi->get_num_workers();
+//         main_simpi->synch();
 
-        // Lower Triangular
-        for (int k = start; k < end; k++)
-        {
-            if (k >= get_x())
-            {
-                break;
-            }
-            if (i == k)
-            {
-                lower->get(i, i) = 1; // Diagonal as 1
-            }
-            else
-            {
-                // Summation of L(k, j) * U(j, i)
-                float sum = 0;
-                for (int j = 0; j < i; j++)
-                    sum += (lower->get(k, j) * upper->get(j, i));
-                // Evaluating L(k, i)
-                lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
-            }
-        }
+//         total = get_x() - i;
+//         parID = main_simpi->get_id();
+//         num_processes = main_simpi->get_num_workers();
 
-        // Calculate and execute which processes take the leftover work
-        if (total % num_processes != 0)
-        {
-            int leftover = total % num_processes;
-            if (parID < leftover)
-            {
-                parID += (get_x() - leftover);
-                int start = parID;
-                int end = start + 1;
-                for (int a = start; a < end; a++)
-                {
-                    if (i == a)
-                        lower->get(i, i) = 1; // Diagonal as 1
-                    else
-                    {
-                        // Summation of L(k, j) * U(j, i)
-                        float sum = 0;
-                        for (int j = 0; j < i; j++)
-                            sum += (lower->get(a, j) * upper->get(j, i));
+//         // Lower Triangular
+//         for (int k = start; k < end; k++)
+//         {
+//             if (k >= get_x())
+//             {
+//                 break;
+//             }
+//             if (i == k)
+//             {
+//                 lower->get(i, i) = 1; // Diagonal as 1
+//             }
+//             else
+//             {
+//                 // Summation of L(k, j) * U(j, i)
+//                 float sum = 0;
+//                 for (int j = 0; j < i; j++)
+//                     sum += (lower->get(k, j) * upper->get(j, i));
+//                 // Evaluating L(k, i)
+//                 lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
+//             }
+//         }
 
-                        // Evaluating L(k, i)
-                        lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
-                    }
-                }
-            }
-        }
-        main_simpi->synch();
-    }
-    return;
-}
+//         // Calculate and execute which processes take the leftover work
+//         if (total % num_processes != 0)
+//         {
+//             int leftover = total % num_processes;
+//             if (parID < leftover)
+//             {
+//                 parID += (get_x() - leftover);
+//                 int start = parID;
+//                 int end = start + 1;
+//                 for (int a = start; a < end; a++)
+//                 {
+//                     if (i == a)
+//                         lower->get(i, i) = 1; // Diagonal as 1
+//                     else
+//                     {
+//                         // Summation of L(k, j) * U(j, i)
+//                         float sum = 0;
+//                         for (int j = 0; j < i; j++)
+//                             sum += (lower->get(a, j) * upper->get(j, i));
+
+//                         // Evaluating L(k, i)
+//                         lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
+//                     }
+//                 }
+//             }
+//         }
+//         main_simpi->synch();
+//     }
+//     return;
+// }
  
 
 /*
