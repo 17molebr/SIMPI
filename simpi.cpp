@@ -739,12 +739,133 @@ void matrix::getCofactor(double *A,
     }
 }
 
-/*
-This function calculates the lower and upper triangular matrices of a square nxn matrix
-It requires an input of 2 empty nxn matrices that are modified
-A = LU
-*/
-void matrix::luDecomposition(matrix *lower, matrix *upper)
+// /*
+// This function calculates the lower and upper triangular matrices of a square nxn matrix
+// It requires an input of 2 empty nxn matrices that are modified
+// A = LU
+// */
+// void matrix::luDecomposition(matrix *lower, matrix *upper)
+// {
+
+//     // Check if Matrix is square
+//     if (get_x() != get_y())
+//     {
+//         std::cout << "Invalid Matrix";
+//         exit(1);
+//     }
+
+//     for (int i = 0; i < get_x(); i++)
+//     {
+//         // Calculate work per parallel process
+//         // Has to be calculated on every loop iteration as the inner loop is decrementing
+//         int num_processes = main_simpi->get_num_workers();
+//         int parID = main_simpi->get_id();
+//         int total = xdim - i;
+//         if (num_processes > total)
+//         {
+//             num_processes = total;
+//         }
+//         int rpp = total / num_processes;
+//         int start = rpp * main_simpi->get_id() + i;
+//         int end = start + rpp;
+
+//         // Upper Triangular
+//         for (int k = start; k < end; k++)
+//         {
+//             if (k >= get_x())
+//             {
+//                 break;
+//             }
+//             // Summation of L(i, j) * U(j, k)
+//             float sum = 0;
+//             for (int j = 0; j < i; j++)
+//                 sum += (lower->get(i, j) * upper->get(j, k));
+
+//             // Evaluating U(i, k)
+//             upper->get(i, k) = get(i, k) - sum;
+//         }
+
+//         // Calculate and execute which processes take the leftover work
+//         if (total % num_processes != 0)
+//         {
+//             int leftover = total % num_processes;
+//             if (parID < leftover)
+//             {
+//                 parID += (xdim - leftover);
+//                 int start = parID;
+//                 int end = start + 1;
+//                 for (int a = start; a < end; a++)
+//                 {
+//                     // Summation of L(i, j) * U(j, k)
+//                     float sum = 0;
+//                     for (int j = 0; j < i; j++)
+//                         sum += (lower->get(i, j) * upper->get(j, a));
+//                     // Evaluating U(i, k)
+//                     upper->get(i, a) = get(i, a) - sum;
+//                 }
+//             }
+//         }
+
+//         main_simpi->synch();
+
+//         total = get_x() - i;
+//         parID = main_simpi->get_id();
+//         num_processes = main_simpi->get_num_workers();
+
+//         // Lower Triangular
+//         for (int k = start; k < end; k++)
+//         {
+//             if (k >= get_x())
+//             {
+//                 break;
+//             }
+//             if (i == k)
+//             {
+//                 lower->get(i, i) = 1; // Diagonal as 1
+//             }
+//             else
+//             {
+//                 // Summation of L(k, j) * U(j, i)
+//                 float sum = 0;
+//                 for (int j = 0; j < i; j++)
+//                     sum += (lower->get(k, j) * upper->get(j, i));
+//                 // Evaluating L(k, i)
+//                 lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
+//             }
+//         }
+
+//         // Calculate and execute which processes take the leftover work
+//         if (total % num_processes != 0)
+//         {
+//             int leftover = total % num_processes;
+//             if (parID < leftover)
+//             {
+//                 parID += (get_x() - leftover);
+//                 int start = parID;
+//                 int end = start + 1;
+//                 for (int a = start; a < end; a++)
+//                 {
+//                     if (i == a)
+//                         lower->get(i, i) = 1; // Diagonal as 1
+//                     else
+//                     {
+//                         // Summation of L(k, j) * U(j, i)
+//                         float sum = 0;
+//                         for (int j = 0; j < i; j++)
+//                             sum += (lower->get(a, j) * upper->get(j, i));
+
+//                         // Evaluating L(k, i)
+//                         lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
+//                     }
+//                 }
+//             }
+//         }
+//         main_simpi->synch();
+//     }
+//     return;
+// }
+
+void matrix::luDecomposition_new(matrix *lower, matrix *upper)
 {
 
     // Check if Matrix is square
@@ -754,27 +875,16 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
         exit(1);
     }
 
+    // parallelize initialization later
+    // init upper and lower
     for (int i = 0; i < get_x(); i++)
     {
-        // Calculate work per parallel process
-        // Has to be calculated on every loop iteration as the inner loop is decrementing
-        int num_processes = main_simpi->get_num_workers();
-        int parID = main_simpi->get_id();
-        int total = xdim - i;
-        if (num_processes > total)
+        // Upper Triangular initialization
+        for (int j = 0; j < get_y(); j++)
         {
-            num_processes = total;
-        }
-        int rpp = total / num_processes;
-        int start = rpp * main_simpi->get_id() + i;
-        int end = start + rpp;
-
-        // Upper Triangular
-        for (int k = start; k < end; k++)
-        {
-            if (k >= get_x())
+            if (i >=j)
             {
-                break;
+                lower->set(i*get_x() + j, 1);
             }
             // Summation of L(i, j) * U(j, k)
             float sum = 0;
@@ -864,6 +974,7 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
     }
     return;
 }
+ 
 
 /*
 This method calculates the inverse of a matrix by using its LU Decomposition
@@ -1305,6 +1416,7 @@ matrix &matrix::multiply(matrix other)
     printf("WORKSTATION ID = %d\n", workstationid);
     printf("parID ID = %d\n", parId);
     int numCols = other.get_y() / number_of_workstations;
+    int totalNumCols = other.get_y();
     if (parId <= other.get_y())
     {
         if (number_of_processes > other.get_y())
@@ -1323,19 +1435,19 @@ matrix &matrix::multiply(matrix other)
         }
 
         
-        int rpp = Bcol / 10;
-        int start = rpp * parIDInit + numCols * workstationid;
+        int rpp = Bcol / number_of_processes;
+        int start = rpp * (parIDInit + tempForProcesses * workstationid);
         int end = start + rpp;
-        main_simpi->set_start(workstationid * numCols);
-        main_simpi->set_end((workstationid + 1) * numCols);
-        if (numCols % tempForProcesses != 0){
-            int leftover = numCols % tempForProcesses;
+        main_simpi->set_start(start);
+        main_simpi->set_end(end);
+        if (totalNumCols % number_of_processes != 0){
+            int leftover = totalNumCols % (number_of_processes * rpp);
             printf("DEBUG 1\n");
-            if (parIDInit < leftover)
+            if ((parIDInit * number_of_workstations + workstationid < leftover))
                 {
                     printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
                 // parId += (Arow - leftover);
-                int start =  numCols * workstationid + (numCols - 1 );
+                int start =  (number_of_processes * rpp) + (parIDInit * number_of_workstations + workstationid);
                 int end = start + 1;
                 // main_simpi->set_start(start);
                 // main_simpi->set_end(start + (end-start) * tempForProcesses);
