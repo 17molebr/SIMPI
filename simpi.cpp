@@ -744,131 +744,131 @@ void matrix::getCofactor(double *A,
 // It requires an input of 2 empty nxn matrices that are modified
 // A = LU
 // */
-// void matrix::luDecomposition(matrix *lower, matrix *upper)
-// {
+void matrix::luDecomposition(matrix *lower, matrix *upper)
+{
 
-//     // Check if Matrix is square
-//     if (get_x() != get_y())
-//     {
-//         std::cout << "Invalid Matrix";
-//         exit(1);
-//     }
+    // Check if Matrix is square
+    if (get_x() != get_y())
+    {
+        std::cout << "Invalid Matrix";
+        exit(1);
+    }
 
-//     for (int i = 0; i < get_x(); i++)
-//     {
-//         // Calculate work per parallel process
-//         // Has to be calculated on every loop iteration as the inner loop is decrementing
-//         int num_processes = main_simpi->get_num_workers();
-//         int parID = main_simpi->get_id();
-//         int total = xdim - i;
-//         if (num_processes > total)
-//         {
-//             num_processes = total;
-//         }
-//         int rpp = total / num_processes;
-//         int start = rpp * main_simpi->get_id() + i;
-//         int end = start + rpp;
+    for (int i = 0; i < get_x(); i++)
+    {
+        // Calculate work per parallel process
+        // Has to be calculated on every loop iteration as the inner loop is decrementing
+        int num_processes = main_simpi->get_num_workers();
+        int parID = main_simpi->get_id();
+        int total = xdim - i;
+        if (num_processes > total)
+        {
+            num_processes = total;
+        }
+        int rpp = total / num_processes;
+        int start = rpp * main_simpi->get_id() + i;
+        int end = start + rpp;
 
-//         // Upper Triangular
-//         for (int k = start; k < end; k++)
-//         {
-//             if (k >= get_x())
-//             {
-//                 break;
-//             }
-//             // Summation of L(i, j) * U(j, k)
-//             float sum = 0;
-//             for (int j = 0; j < i; j++)
-//                 sum += (lower->get(i, j) * upper->get(j, k));
+        // Upper Triangular
+        for (int k = start; k < end; k++)
+        {
+            if (k >= get_x())
+            {
+                break;
+            }
+            // Summation of L(i, j) * U(j, k)
+            float sum = 0;
+            for (int j = 0; j < i; j++)
+                sum += (lower->get(i, j) * upper->get(j, k));
 
-//             // Evaluating U(i, k)
-//             upper->get(i, k) = get(i, k) - sum;
-//         }
+            // Evaluating U(i, k)
+            upper->get(i, k) = get(i, k) - sum;
+        }
 
-//         // Calculate and execute which processes take the leftover work
-//         if (total % num_processes != 0)
-//         {
-//             int leftover = total % num_processes;
-//             if (parID < leftover)
-//             {
-//                 parID += (xdim - leftover);
-//                 int start = parID;
-//                 int end = start + 1;
-//                 for (int a = start; a < end; a++)
-//                 {
-//                     // Summation of L(i, j) * U(j, k)
-//                     float sum = 0;
-//                     for (int j = 0; j < i; j++)
-//                         sum += (lower->get(i, j) * upper->get(j, a));
-//                     // Evaluating U(i, k)
-//                     upper->get(i, a) = get(i, a) - sum;
-//                 }
-//             }
-//         }
+        // Calculate and execute which processes take the leftover work
+        if (total % num_processes != 0)
+        {
+            int leftover = total % num_processes;
+            if (parID < leftover)
+            {
+                parID += (xdim - leftover);
+                int start = parID;
+                int end = start + 1;
+                for (int a = start; a < end; a++)
+                {
+                    // Summation of L(i, j) * U(j, k)
+                    float sum = 0;
+                    for (int j = 0; j < i; j++)
+                        sum += (lower->get(i, j) * upper->get(j, a));
+                    // Evaluating U(i, k)
+                    upper->get(i, a) = get(i, a) - sum;
+                }
+            }
+        }
 
-//         main_simpi->synch();
+        main_simpi->synch();
 
-//         total = get_x() - i;
-//         parID = main_simpi->get_id();
-//         num_processes = main_simpi->get_num_workers();
+        total = get_x() - i;
+        parID = main_simpi->get_id();
+        num_processes = main_simpi->get_num_workers();
 
-//         // Lower Triangular
-//         for (int k = start; k < end; k++)
-//         {
-//             if (k >= get_x())
-//             {
-//                 break;
-//             }
-//             if (i == k)
-//             {
-//                 lower->get(i, i) = 1; // Diagonal as 1
-//             }
-//             else
-//             {
-//                 // Summation of L(k, j) * U(j, i)
-//                 float sum = 0;
-//                 for (int j = 0; j < i; j++)
-//                     sum += (lower->get(k, j) * upper->get(j, i));
-//                 // Evaluating L(k, i)
-//                 lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
-//             }
-//         }
+        // Lower Triangular
+        for (int k = start; k < end; k++)
+        {
+            if (k >= get_x())
+            {
+                break;
+            }
+            if (i == k)
+            {
+                lower->get(i, i) = 1; // Diagonal as 1
+            }
+            else
+            {
+                // Summation of L(k, j) * U(j, i)
+                float sum = 0;
+                for (int j = 0; j < i; j++)
+                    sum += (lower->get(k, j) * upper->get(j, i));
+                // Evaluating L(k, i)
+                lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
+            }
+        }
 
-//         // Calculate and execute which processes take the leftover work
-//         if (total % num_processes != 0)
-//         {
-//             int leftover = total % num_processes;
-//             if (parID < leftover)
-//             {
-//                 parID += (get_x() - leftover);
-//                 int start = parID;
-//                 int end = start + 1;
-//                 for (int a = start; a < end; a++)
-//                 {
-//                     if (i == a)
-//                         lower->get(i, i) = 1; // Diagonal as 1
-//                     else
-//                     {
-//                         // Summation of L(k, j) * U(j, i)
-//                         float sum = 0;
-//                         for (int j = 0; j < i; j++)
-//                             sum += (lower->get(a, j) * upper->get(j, i));
+        // Calculate and execute which processes take the leftover work
+        if (total % num_processes != 0)
+        {
+            int leftover = total % num_processes;
+            if (parID < leftover)
+            {
+                parID += (get_x() - leftover);
+                int start = parID;
+                int end = start + 1;
+                for (int a = start; a < end; a++)
+                {
+                    if (i == a)
+                        lower->get(i, i) = 1; // Diagonal as 1
+                    else
+                    {
+                        // Summation of L(k, j) * U(j, i)
+                        float sum = 0;
+                        for (int j = 0; j < i; j++)
+                            sum += (lower->get(a, j) * upper->get(j, i));
 
-//                         // Evaluating L(k, i)
-//                         lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
-//                     }
-//                 }
-//             }
-//         }
-//         main_simpi->synch();
-//     }
-//     return;
-// }
+                        // Evaluating L(k, i)
+                        lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
+                    }
+                }
+            }
+        }
+        main_simpi->synch();
+    }
+    return;
+}
 
 
 // NEW LUDDECOMO
-void matrix::luDecomposition_new(matrix *lower, matrix *upper)
-{}
+// void matrix::luDecomposition_new(matrix *lower, matrix *upper)
+// {}
 // {
 
 //     // Check if Matrix is square
