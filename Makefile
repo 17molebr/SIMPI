@@ -6,7 +6,9 @@ LINKFLAGS = -lrt
 
 all : mpi user client server
 clean : 
-	rm -f user mpi /dev/shm/simpi_shared_mem
+	rm /dev/shm/*
+	rm server
+	rm client
 simpi : simpi.cpp simpi.h
 	$(CC) $(CFLAGS) -c simpi.cpp -o simpi $(LINKFLAGS)
 mpi : mpi.cpp user  simpi simpi.h

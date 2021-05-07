@@ -91,7 +91,7 @@ int run_client2(matrix &m, int s){
         for (int b = 0; b < xdim; b++){
             double element = 0;
             r = read(s, &element, sizeof(element));
-            m.arr[a*10 +b] = element;
+            m.arr[a*xdim +b] = element;
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }

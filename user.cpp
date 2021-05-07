@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "simpi.h"
-#define MATRIX_DIMENSION_X 10
-#define MATRIX_DIMENSION_Y 10
+#define MATRIX_DIMENSION_X 20
+#define MATRIX_DIMENSION_Y 20
 
 int par_id;
 
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   matrix D(10, 10);
   matrix E(10, 10);
   matrix F(10,10);
-  matrix G(10, 10);
+  matrix G(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix out(10, 10);
   //vector D(10);
   SIMPI_SYNCH();
@@ -65,15 +65,15 @@ int main(int argc, char* argv[])
   std::cout << B;
   C= A + B;
   SIMPI_SYNCH();
-  F = D + E;
+  //F = D + E;
   //std::cout << C;
   SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
   std::cout << G;
-  SIMPI_SYNCH();
-  SIMPI_DISTRIBUTE(F, out);
-  SIMPI_SYNCH();
-  std::cout << out; 
-  SIMPI_FINALIZE();
+ //SIMPI_SYNCH();
+  //SIMPI_DISTRIBUTE(F, out);
+  //SIMPI_SYNCH();
+  //std::cout << out; 
+  //SIMPI_FINALIZE();
   exit(0);
 }

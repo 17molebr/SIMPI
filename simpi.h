@@ -69,7 +69,7 @@ class client{
         serv_addr.sin_family = AF_INET; 
         serv_addr.sin_port = htons(port);
         //This is where you put the address of the main server(thats running the client code because in TCP terms we are using it oposite)
-        if(inet_pton(AF_INET, "129.65.221.34", &serv_addr.sin_addr)<=0)  
+        if(inet_pton(AF_INET, "129.65.128.82", &serv_addr.sin_addr)<=0)  
         { 
             printf("\nInvalid address/ Address not supported \n"); 
             return 0; 
