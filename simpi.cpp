@@ -1419,7 +1419,10 @@ matrix &matrix::multiply(matrix other)
     printf("WORKSTATION ID = %d\n", workstationid);
     printf("parID ID = %d\n", parId);
     int numCols = other.get_y() / number_of_workstations;
-    int totalNumCols = other.get_y();
+    int leftoverLast = other.get_y() % number_of_workstations;
+
+
+
     if (parId <= other.get_y())
     {
         if (number_of_processes > other.get_y())
@@ -1438,19 +1441,26 @@ matrix &matrix::multiply(matrix other)
         }
 
         
-        int rpp = Bcol / number_of_processes;
-        int start = rpp * (parIDInit + tempForProcesses * workstationid);
+        int rpp = Bcol / 10;
+        int start = rpp * parIDInit + numCols * workstationid;
         int end = start + rpp;
-        main_simpi->set_start(start);
-        main_simpi->set_end(end);
-        if (totalNumCols % number_of_processes != 0){
-            int leftover = totalNumCols % (number_of_processes * rpp);
+        int endMatrixDistribute = (workstationid + 1) * numCols;
+        if (leftoverLast && workstationid == (number_of_workstations - 1)){
+            endMatrixDistribute+= leftoverLast;
+            if(parIDInit == tempForProcesses - 1){
+                end += leftoverLast;
+            }
+        }
+        main_simpi->set_start(workstationid * numCols);
+        main_simpi->set_end(endMatrixDistribute);
+        if (numCols % tempForProcesses != 0){
+            int leftover = numCols % tempForProcesses;
             printf("DEBUG 1\n");
-            if ((parIDInit * number_of_workstations + workstationid < leftover))
+            if (parIDInit < leftover)
                 {
                     printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
                 // parId += (Arow - leftover);
-                int start =  (number_of_processes * rpp) + (parIDInit * number_of_workstations + workstationid);
+                int start =  numCols * workstationid + (numCols - 1 );
                 int end = start + 1;
                 // main_simpi->set_start(start);
                 // main_simpi->set_end(start + (end-start) * tempForProcesses);
