@@ -1460,7 +1460,7 @@ matrix &matrix::multiply(matrix other)
                 {
                     printf("DEBUG 2 par ID : %d numcols : %d\n", parId, numCols);
                 // parId += (Arow - leftover);
-                int start =  numCols * workstationid + (numCols - 1 );
+                int start = (numCols * workstationid) + (numCols - (parIDInit + 1) );
                 int end = start + 1;
                 // main_simpi->set_start(start);
                 // main_simpi->set_end(start + (end-start) * tempForProcesses);
