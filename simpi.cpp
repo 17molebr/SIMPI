@@ -1420,7 +1420,7 @@ matrix &matrix::multiply(matrix other)
     printf("parID ID = %d\n", parId);
     int numCols = other.get_y() / number_of_workstations;
     int leftoverLast = other.get_y() % number_of_workstations;
-
+    printf("LeftoverLast %d\n", leftoverLast);
 
 
     if (parId <= other.get_y())
