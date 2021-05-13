@@ -884,11 +884,8 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
     int number_of_workstations = main_simpi->get_num_workstations();
     // std::cout << "Number of processes = " << number_of_processes << std::endl;
     // std::cout << "Number of workstations = " << number_of_workstations << std::endl;
-    int tempForProcesses = number_of_processes;
-    // number_of_processes = number_of_processes * number_of_workstations;
     int parId = main_simpi->get_id();
     int workstationid = main_simpi->get_workstation_id() - 1 ;
-    int parIDInit = parId;
 
     int numRows = get_x();
     int numCols = get_y();
