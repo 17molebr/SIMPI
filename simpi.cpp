@@ -865,118 +865,113 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
     return;
 }
 
+// /*
+// This function calculates the lower and upper triangular matrices of a square nxn matrix
+// It requires an input of 2 empty nxn matrices that are modified
+// A = LU
+// */
+void matrix::newluDecomposition(matrix *lower, matrix *upper)
+{
+    // not square
+    if (get_x() != get_y()) {
+        printf("Invalid matrix\n");
+        exit(EXIT_FAILURE);
+    }
 
-// NEW LUDDECOMO
-// void matrix::luDecomposition_new(matrix *lower, matrix *upper)
-// {}
-// {
+    // difference between main_simpi->get_synch_info()->par_count; and main_simpi->get_num_workers(); ?????
 
-//     // Check if Matrix is square
-//     if (get_x() != get_y())
-//     {
-//         std::cout << "Invalid Matrix";
-//         exit(1);
-//     }
+    int number_of_processes = main_simpi->get_synch_info()->par_count;
+    int number_of_workstations = main_simpi->get_num_workstations();
+    // std::cout << "Number of processes = " << number_of_processes << std::endl;
+    // std::cout << "Number of workstations = " << number_of_workstations << std::endl;
+    int tempForProcesses = number_of_processes;
+    // number_of_processes = number_of_processes * number_of_workstations;
+    int parId = main_simpi->get_id();
+    int workstationid = main_simpi->get_workstation_id() - 1 ;
+    int parIDInit = parId;
 
-//     // parallelize initialization later
-//     // init upper and lower
-//     for (int i = 0; i < get_x(); i++)
-//     {
-//         // Upper Triangular initialization
-//         for (int j = 0; j < get_y(); j++)
-//         {
-//             if (i >=j)
-//             {
-//                 lower->set(i*get_x() + j, 1);
-//             }
-//             // Summation of L(i, j) * U(j, k)
-//             float sum = 0;
-//             for (int j = 0; j < i; j++)
-//                 sum += (lower->get(i, j) * upper->get(j, k));
+    int numRows = get_x();
+    int numCols = get_y();
 
-//             // Evaluating U(i, k)
-//             upper->get(i, k) = get(i, k) - sum;
-//         }
+    int chunkSize = numRows / number_of_workstations;
 
-//         // Calculate and execute which processes take the leftover work
-//         if (total % num_processes != 0)
-//         {
-//             int leftover = total % num_processes;
-//             if (parID < leftover)
-//             {
-//                 parID += (xdim - leftover);
-//                 int start = parID;
-//                 int end = start + 1;
-//                 for (int a = start; a < end; a++)
-//                 {
-//                     // Summation of L(i, j) * U(j, k)
-//                     float sum = 0;
-//                     for (int j = 0; j < i; j++)
-//                         sum += (lower->get(i, j) * upper->get(j, a));
-//                     // Evaluating U(i, k)
-//                     upper->get(i, a) = get(i, a) - sum;
-//                 }
-//             }
-//         }
+    // init
+    for (int row = chunkSize * workstationid; row < chunkSize * (workstationid + 1); row += number_of_processes)
+    {
+        for (int col = 0; col < numCols; col++)
+        {
+            upper->set((row + parId) * numRows + col, get(row + parId, col);
+            lower->set((row + parId) * numRows + col, row == col);
+        }
+    }
+    // leftovers
+    // COULD OPTIMIZE THIS LATER TO WORK ON MORE THAN JUST WORKSTATION 0
+    for (int row = chunkSize * (workstationid + number_of_workstations); row < numRows; row += number_of_processes)
+    {
+        if (row + parId < numRows) {
+            for (int col = 0; col < numCols; col++)
+            {
+                upper->set((row + parId) * numRows + col, get(row + parId, col);
+                lower->set((row + parId) * numRows + col, row == col);
+            }
+        }
+    }
 
-//         main_simpi->synch();
+    main_simpi->synch();
 
-//         total = get_x() - i;
-//         parID = main_simpi->get_id();
-//         num_processes = main_simpi->get_num_workers();
+    // doesn't handle leftovers yet
+    for (int col = 0; col < numCols - 1; col++)
+    {
+        // double or flat???
+        double currDiag = upper->get(col, col);
+        chunkSize = (numRows - (col + 1)) / number_of_workstations;
 
-//         // Lower Triangular
-//         for (int k = start; k < end; k++)
-//         {
-//             if (k >= get_x())
-//             {
-//                 break;
-//             }
-//             if (i == k)
-//             {
-//                 lower->get(i, i) = 1; // Diagonal as 1
-//             }
-//             else
-//             {
-//                 // Summation of L(k, j) * U(j, i)
-//                 float sum = 0;
-//                 for (int j = 0; j < i; j++)
-//                     sum += (lower->get(k, j) * upper->get(j, i));
-//                 // Evaluating L(k, i)
-//                 lower->get(k, i) = ((get(k, i) - sum) / upper->get(i, i));
-//             }
-//         }
+        for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
+        {
+            // double or float???
+            // x*currDiag + upper[currRow, col] = 0
+            double multVal = -upper->get(row + parId, col) / currDiag;
 
-//         // Calculate and execute which processes take the leftover work
-//         if (total % num_processes != 0)
-//         {
-//             int leftover = total % num_processes;
-//             if (parID < leftover)
-//             {
-//                 parID += (get_x() - leftover);
-//                 int start = parID;
-//                 int end = start + 1;
-//                 for (int a = start; a < end; a++)
-//                 {
-//                     if (i == a)
-//                         lower->get(i, i) = 1; // Diagonal as 1
-//                     else
-//                     {
-//                         // Summation of L(k, j) * U(j, i)
-//                         float sum = 0;
-//                         for (int j = 0; j < i; j++)
-//                             sum += (lower->get(a, j) * upper->get(j, i));
+            // add {col} row multiplied by {multVal} to current row
+            upper->set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+            for (int i = col + 1; i < numCols; i++)
+            {
+                // double or float???
+                double new_val = multVal * upper->get(col, i) + upper->get(row + parId, i);
+                upper->set((row + parId) * numRows + i , new_val);
+            }
 
-//                         // Evaluating L(k, i)
-//                         lower->get(a, i) = (get(a, i) - sum) / upper->get(i, i);
-//                     }
-//                 }
-//             }
-//         }
-//         main_simpi->synch();
-//     }
-//     return;
-// }
+            lower->set((row + parId) * numRows + col, -multVal);
+        }
+
+        // leftovers
+        // COULD OPTIMIZE THIS LATER TO WORK ON MORE THAN JUST WORKSTATION 0
+        for (int row = (col + 1) + chunkSize * (workstationid + number_of_workstations); row < numRows; row += number_of_processes)
+        {
+            if (row + parId < numRows) {
+                // double or float???
+                // x*currDiag + upper[currRow, col] = 0
+                double multVal = -upper->get(row + parId, col) / currDiag;
+
+                // add {col} row multiplied by {multVal} to current row
+                upper->set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                for (int i = col + 1; i < numCols; i++)
+                {
+                    // double or float???
+                    double new_val = multVal * upper->get(col, i) + upper->get(row + parId, i);
+                    upper->set((row + parId) * numRows + i , new_val);
+                }
+
+                lower->set((row + parId) * numRows + col, -multVal);
+            }
+        }
+
+        // sync after every column is completed, since the rows are overwritten and thus values will be diff in the next column iteration
+        main_simpi->synch();
+    }
+
+    main_simpi->synch(); // shouldn't be necessary here; but added just in case
+}
  
 
 /*
