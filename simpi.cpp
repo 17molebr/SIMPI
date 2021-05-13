@@ -919,7 +919,6 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
 
     main_simpi->synch();
 
-    // doesn't handle leftovers yet
     for (int col = 0; col < numCols - 1; col++)
     {
         // double or flat???
