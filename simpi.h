@@ -174,6 +174,7 @@ class matrix  // similar stuff for vector
   void set(int pos, int val) { arr[pos] = val; }
   void inverse_old(matrix *inverse);
   void luDecomposition(matrix* lower, matrix* upper);
+  void matrix::newluDecomposition(matrix *lower, matrix *upper);
   void inverse(matrix* inverse);
   void backward_substitution(float* b, float* x);
   void forward_substitution(float *b, float* x);
