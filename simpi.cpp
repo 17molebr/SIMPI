@@ -266,7 +266,7 @@ void new_connection(int sock, server s) {
             workstation_status[id] = 1;
             while(1){
                 int flag = 0;
-                for(int i =1; i <= 2; i++){ //Fix this to num_workstations 
+                for(int i =1; i <= main_simpi->get_num_workstations(); i++){ //Fix this to num_workstations 
                     if(workstation_status[i] == 0){
                         flag = 1;
                     }
@@ -347,7 +347,7 @@ void new_connection(int sock, server s) {
             //Wait for whole matix to be updated and then send to client to move on and then start redistributing
             while(1){
                 int flag = 0;
-                for(int i =1; i <= 2; i++){ //Fix this to num_workstations 
+                for(int i =1; i <= main_simpi->get_num_workstations(); i++){ //Fix this to num_workstations 
                     if(workstation_status[i] == 0){
                         flag = 1;
                     }
