@@ -994,10 +994,10 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         printf("Lu decom end = %d\n", (col + 1) + chunkSize * (workstationid + 1));
         main_simpi->set_start((col + 1) + chunkSize * workstationid);
         main_simpi->set_end((col + 1) + chunkSize * (workstationid + 1));
-        for (int i = 0; i < xdim; i++)
+        for (int i = 0; i < 10; i++)
         {
             std::cout << "\n";
-            for (int j = 0; j < ydim; j++)
+            for (int j = 0; j < 10; j++)
             {
                 std::cout << std::fixed << std::setprecision(2) << lower->arr[i + j * xdim];
                 std::cout << ", ";
