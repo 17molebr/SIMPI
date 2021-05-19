@@ -988,12 +988,21 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
 
         // sync after every column is completed, since the rows are overwritten and thus values will be diff in the next column iteration
         main_simpi->synch();
-
+        
         // distribubte evvery iteration of for loop
         printf("Lu decomp start = %d\n", (col + 1) + chunkSize * workstationid);
         printf("Lu decom end = %d\n", (col + 1) + chunkSize * (workstationid + 1));
         main_simpi->set_start((col + 1) + chunkSize * workstationid);
         main_simpi->set_end((col + 1) + chunkSize * (workstationid + 1));
+        for (int i = 0; i < xdim; i++)
+        {
+            std::cout << "\n";
+            for (int j = 0; j < ydim; j++)
+            {
+                std::cout << std::fixed << std::setprecision(2) << temp[i + j * xdim];
+                std::cout << ", ";
+            }
+        }
         ::SIMPI_DISTRIBUTE(*upper, *upper);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(*lower, *lower);
