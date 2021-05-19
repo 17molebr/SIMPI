@@ -9,6 +9,7 @@ clean :
 	rm /dev/shm/*
 	rm server
 	rm client
+	pkill -f user
 simpi : simpi.cpp simpi.h
 	$(CC) $(CFLAGS) -c simpi.cpp -o simpi $(LINKFLAGS)
 mpi : mpi.cpp user  simpi simpi.h
