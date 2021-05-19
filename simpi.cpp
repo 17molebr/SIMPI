@@ -30,7 +30,8 @@ void new_connection(int sock, server s);
 void new_connection2(int sock, server s);
 std::vector<int> workstations;
 
-
+//global to track if distubution by rows or cols
+int is_luDecomp = 0;
 
 void run_client(matrix m, int s){
     /*
@@ -60,18 +61,31 @@ void run_client(matrix m, int s){
     r = send(s, &ydim, sizeof(ydim), 0);
     r = send(s, &id, sizeof(id), 0);
     std::cout << m.arr[6*xdim + 4];
-    for (int a = start; a < end; a++)
-    {
-        for (int b = 0; b < xdim; b++)
+    if(is_luDecomp == 1){
+       for (int a = 0; a < xdim; a++){
+            for (int b = start; b < end; b++){
+                double element = m.arr[a*ydim +b];
+                r = send(s, &element, sizeof(element), 0);
+                //std::cout << elemeent << "\n";
+            }
+        } 
+    }
+    else{
+        for (int a = start; a < end; a++)
         {
-            double element = m.arr[a*xdim + b];
-            //std::cout << element << "\n";
-            r = send(s, &element, sizeof(element), 0);
+            for (int b = 0; b < xdim; b++)
+            {
+                double element = m.arr[a*xdim + b];
+                //std::cout << element << "\n";
+                r = send(s, &element, sizeof(element), 0);
+            }
         }
     }
     //close(s);
     return;
 }
+
+
 
 int run_client2(matrix &m, int s){
     int r;
@@ -201,6 +215,7 @@ int *workstation_status = new int[2];
 int current_x = 0;
 int current_y = 0;
 
+
 void new_connection(int sock, server s) {
     //Server Connection 
     ssize_t r;
@@ -262,16 +277,30 @@ void new_connection(int sock, server s) {
             }
             workstation_status[id] = 0;
             //*end synch*
-            for (int a = start; a < end; a++)
-            {
-                for (int b = 0; b < xdim; b++)
-                {
-                    double element = 0;
-                    r = read(sock, &element, sizeof(element));
-                    temp[a*xdim +b] = element;
-                    //std::cout << elemeent << "\n";
-                }
+            if(is_luDecomp == 1){
+                //iterate by rows 
+                for (int a = 0; a < xdim; a++){
+                    for (int b = start; b < end; b++){
+                        double element = 0;
+                        r = read(sock, &element, sizeof(element));
+                        temp[a*ydim +b] = element;
+                        //std::cout << elemeent << "\n";
+                    }
+                } 
             }
+            else{
+                //iterate by cols
+                for (int a = start; a < end; a++)
+                {
+                    for (int b = 0; b < xdim; b++)
+                    {
+                        double element = 0;
+                        r = read(sock, &element, sizeof(element));
+                        temp[a*xdim +b] = element;
+                        //std::cout << elemeent << "\n";
+                    }
+                }
+            }        
     
             
             for (int i = 0; i < xdim; i++)
@@ -753,7 +782,6 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
         std::cout << "Invalid Matrix";
         exit(1);
     }
-
     for (int i = 0; i < get_x(); i++)
     {
         // Calculate work per parallel process
@@ -877,7 +905,7 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         printf("Invalid matrix\n");
         exit(EXIT_FAILURE);
     }
-
+    is_luDecomp = 1;
     // difference between main_simpi->get_synch_info()->par_count; and main_simpi->get_num_workers(); ?????
 
     int number_of_processes = main_simpi->get_synch_info()->par_count;
@@ -962,8 +990,12 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         main_simpi->synch();
 
         // distribubte evvery iteration of for loop
+        ::SIMPI_DISTRIBUTE(*upper, *upper);
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(*lower, *lower);
+        main_simpi->synch();
     }
-
+    is_luDecomp = 0;
     main_simpi->synch(); // shouldn't be necessary here; but added just in case
 }
  

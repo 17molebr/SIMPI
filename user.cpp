@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "simpi.h"
-#define MATRIX_DIMENSION_X 101
-#define MATRIX_DIMENSION_Y 101
+#define MATRIX_DIMENSION_X 10
+#define MATRIX_DIMENSION_Y 10
 
 int par_id;
 
@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
   }
   for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
     for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
-      B.get(x, y) = rand()%10 + 1;
+      B.get(x, y) = 0;
     }
   }
   for (int y = 0; y < 10; y++) {
     for (int x = 0; x < 10; x++) {
-      D.get(x, y) = rand()%10 + 1;
+      D.get(x, y) = 0;
     }
   }
   for (int y = 0; y < 10; y++) {
@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
   SIMPI_SYNCH();
 
   
+  
   // std::cout << A;
   
   // std::cout << B;
@@ -70,21 +71,22 @@ int main(int argc, char* argv[])
   // SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
   // std::cout << G;
-  time_t start,end;
-  start=clock();
-
-  C= A * B;
-  SIMPI_SYNCH();
-  end=clock();
+  //time_t start,end;
+  //start=clock();
+  A.newluDecomposition(&B, &C);
+  std::cout << B;
+  std::cout << C;
+  //SIMPI_SYNCH();
+  //end=clock();
   // std::cout << C;
-  if (par_id == 1) { 
-    float t= ((float) end-start)/CLOCKS_PER_SEC;
-    std::cout << '\n' << t;
-  }
+  //if (par_id == 1) { 
+   // float t= ((float) end-start)/CLOCKS_PER_SEC;
+    //std::cout << '\n' << t;
+  //}
   //F = D + E;
   //std::cout << C;
-  SIMPI_DISTRIBUTE(C, G);
-  SIMPI_SYNCH();
+  //SIMPI_DISTRIBUTE(C, G);
+  //SIMPI_SYNCH();
   
  //SIMPI_SYNCH();
   //SIMPI_DISTRIBUTE(F, out);
