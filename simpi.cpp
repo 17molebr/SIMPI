@@ -918,13 +918,11 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
 
     for (int col = 0; col < numCols - 1; col++)
     {
-        // double or flat???
         double currDiag = upper->get(col, col);
         chunkSize = (numRows - (col + 1)) / number_of_workstations;
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
-            // double or float???
             // x*currDiag + upper[currRow, col] = 0
             double multVal = -upper->get(row + parId, col) / currDiag;
 
@@ -945,7 +943,6 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         for (int row = (col + 1) + chunkSize * (workstationid + number_of_workstations); row < numRows; row += number_of_processes)
         {
             if (row + parId < numRows) {
-                // double or float???
                 // x*currDiag + upper[currRow, col] = 0
                 double multVal = -upper->get(row + parId, col) / currDiag;
 
@@ -953,7 +950,6 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
                 upper->set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
                 for (int i = col + 1; i < numCols; i++)
                 {
-                    // double or float???
                     double new_val = multVal * upper->get(col, i) + upper->get(row + parId, i);
                     upper->set((row + parId) * numRows + i , new_val);
                 }
@@ -964,6 +960,8 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
 
         // sync after every column is completed, since the rows are overwritten and thus values will be diff in the next column iteration
         main_simpi->synch();
+
+        // distribubte evvery iteration of for loop
     }
 
     main_simpi->synch(); // shouldn't be necessary here; but added just in case
