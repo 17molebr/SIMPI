@@ -897,7 +897,7 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
     {
         for (int col = 0; col < numCols; col++)
         {
-            upper->set((row + parId) * numRows + col, get(row + parId, col);
+            upper->set((row + parId) * numRows + col, get(row + parId, col));
             lower->set((row + parId) * numRows + col, row == col);
         }
     }
@@ -908,7 +908,7 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         if (row + parId < numRows) {
             for (int col = 0; col < numCols; col++)
             {
-                upper->set((row + parId) * numRows + col, get(row + parId, col);
+                upper->set((row + parId) * numRows + col, get(row + parId, col));
                 lower->set((row + parId) * numRows + col, row == col);
             }
         }

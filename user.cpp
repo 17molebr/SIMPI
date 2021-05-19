@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "simpi.h"
-#define MATRIX_DIMENSION_X 30
-#define MATRIX_DIMENSION_Y 30
+#define MATRIX_DIMENSION_X 101
+#define MATRIX_DIMENSION_Y 101
 
 int par_id;
 
@@ -60,16 +60,32 @@ int main(int argc, char* argv[])
   SIMPI_SYNCH();
 
   
-  std::cout << A;
+  // std::cout << A;
   
-  std::cout << B;
+  // std::cout << B;
+  // C= A * B;
+  // SIMPI_SYNCH();
+  // //F = D + E;
+  // //std::cout << C;
+  // SIMPI_DISTRIBUTE(C, G);
+  SIMPI_SYNCH();
+  // std::cout << G;
+  time_t start,end;
+  start=clock();
+
   C= A * B;
   SIMPI_SYNCH();
+  end=clock();
+  // std::cout << C;
+  if (par_id == 1) { 
+    float t= ((float) end-start)/CLOCKS_PER_SEC;
+    std::cout << '\n' << t;
+  }
   //F = D + E;
   //std::cout << C;
   SIMPI_DISTRIBUTE(C, G);
   SIMPI_SYNCH();
-  std::cout << G;
+  
  //SIMPI_SYNCH();
   //SIMPI_DISTRIBUTE(F, out);
   //SIMPI_SYNCH();

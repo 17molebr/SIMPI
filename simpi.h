@@ -69,7 +69,7 @@ class client{
         serv_addr.sin_family = AF_INET; 
         serv_addr.sin_port = htons(port);
         //This is where you put the address of the main server(thats running the client code because in TCP terms we are using it oposite)
-        if(inet_pton(AF_INET, "129.65.128.80", &serv_addr.sin_addr)<=0)  
+        if(inet_pton(AF_INET, "129.65.221.34", &serv_addr.sin_addr)<=0)  
         { 
             printf("\nInvalid address/ Address not supported \n"); 
             return 0; 
@@ -174,6 +174,7 @@ class matrix  // similar stuff for vector
   void set(int pos, int val) { arr[pos] = val; }
   void inverse_old(matrix *inverse);
   void luDecomposition(matrix* lower, matrix* upper);
+  void newluDecomposition(matrix *lower, matrix *upper);
   void inverse(matrix* inverse);
   void backward_substitution(float* b, float* x);
   void forward_substitution(float *b, float* x);
