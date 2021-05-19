@@ -990,6 +990,8 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         main_simpi->synch();
 
         // distribubte evvery iteration of for loop
+        printf("Lu decomp start = %d\n", (col + 1) + chunkSize * workstationid);
+        printf("Lu decom end = %d\n", (col + 1) + chunkSize * (workstationid + 1));
         main_simpi->set_start((col + 1) + chunkSize * workstationid);
         main_simpi->set_end((col + 1) + chunkSize * (workstationid + 1));
         ::SIMPI_DISTRIBUTE(*upper, *upper);
