@@ -89,13 +89,13 @@ void run_client(matrix m, int s){
 
 
 
-int run_client2(matrix * m, int s){
+int run_client2(matrix &m, int s){
     int r;
     int sendval = 2;
     int done;
     int id = main_simpi->get_workstation_id();
-    int xdim = m->get_x();
-    int ydim = m->get_y();
+    int xdim = m.get_x();
+    int ydim = m.get_y();
     r = send(s, &sendval, sizeof(sendval), 0);
     r = send(s, &id, sizeof(id), 0);
     r = read(s, &done, sizeof(done));
@@ -108,7 +108,7 @@ int run_client2(matrix * m, int s){
             printf("In distribute for loop \n");
             double element = 0;
             r = read(s, &element, sizeof(element));
-            m->arr[a*xdim +b] = element;
+            m.arr[a*xdim +b] = element;
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
@@ -468,7 +468,7 @@ void SIMPI_DISTRIBUTE(matrix m, matrix m1, int status){
             run_client(m, c.sock);
             int done_val;
             run_client_synch(c.sock);
-            done_val = run_client2(&m1, c.sock);
+            done_val = run_client2(m1, c.sock);
             return;
         }
     }
@@ -478,7 +478,7 @@ void SIMPI_DISTRIBUTE(matrix m, matrix m1, int status){
             run_client(m, c.sock);
             int done_val;
             run_client_synch(c.sock);
-            done_val = run_client2(&m, c.sock);
+            done_val = run_client2(m, c.sock);
             return;
         }
     }
