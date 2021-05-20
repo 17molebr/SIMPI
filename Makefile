@@ -7,9 +7,9 @@ LINKFLAGS = -lrt
 all : mpi user client server
 clean : 
 	rm /dev/shm/*
+	pkill -f user
 	rm server
 	rm client
-	pkill -f user
 simpi : simpi.cpp simpi.h
 	$(CC) $(CFLAGS) -c simpi.cpp -o simpi $(LINKFLAGS)
 mpi : mpi.cpp user  simpi simpi.h
