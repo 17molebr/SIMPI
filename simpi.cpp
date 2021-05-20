@@ -255,13 +255,21 @@ void new_connection(int sock, server s) {
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
             r = read(sock, &id, sizeof(id));
-            if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0){
+            if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0 &&is_luDecomp == 0){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
                 current_x = xdim;
                 current_y = ydim;
             }
+            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 && is_luDecomp ==1){
+                double *array = new double[xdim*ydim];
+                delete [] temp;
+                temp = array;
+                current_x = xdim;
+                current_y = ydim;
+            }
+
             //must synch after this step to make sure that you are not attempting to write to something that has been deleated 
             //*synch*
             workstation_status[id] = 1;
