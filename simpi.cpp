@@ -54,6 +54,7 @@ void run_client(matrix m, int s){
     int id = main_simpi->get_workstation_id();
     int xdim = m.get_x();
     int ydim = m.get_y();
+    printf("Matrix xdim = %d\n", xdim);
     r = send(s, &sendval, sizeof(sendval), 0);
     r = send(s, &start, sizeof(start), 0); 
     r = send(s, &end, sizeof(end), 0); 
@@ -62,8 +63,8 @@ void run_client(matrix m, int s){
     r = send(s, &id, sizeof(id), 0);
     std::cout << m.arr[6*xdim + 4];
     if(is_luDecomp == 1){
-       for (int a = 0; a < xdim; a++){
-            for (int b = start; b < end; b++){
+       for (int a = start; a < end; a++){
+            for (int b = 0; b < ydim; b++){
                 double element = m.arr[a*ydim +b];
                 r = send(s, &element, sizeof(element), 0);
                 //std::cout << elemeent << "\n";
@@ -279,15 +280,16 @@ void new_connection(int sock, server s) {
             //*end synch*
             if(is_luDecomp == 1){
                 //iterate by rows 
-                for (int a = 0; a < xdim; a++){
-                    for (int b = start; b < end; b++){
+                for (int a = start; a < end; a++){
+                    for (int b = 0; b < ydim; b++){
                         double element = 0;
                         r = read(sock, &element, sizeof(element));
-                        temp[a*ydim +b] = element;
-                        //std::cout << elemeent << "\n";
+                        temp[a*ydim + b] = element;
+                //std::cout << elemeent << "\n";
                     }
-                } 
+                }
             }
+    
             else{
                 //iterate by cols
                 for (int a = start; a < end; a++)
