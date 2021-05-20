@@ -1005,6 +1005,7 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
             }
         }
         }
+        main_simpi->synch();
         ::SIMPI_DISTRIBUTE(*upper, *upper);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(*lower, *lower);
