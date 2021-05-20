@@ -264,7 +264,7 @@ void new_connection(int sock, server s) {
                 current_x = xdim;
                 current_y = ydim;
             }
-            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 && is_luDecomp == 1){
+            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 &&is_luDecomp == 1){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
@@ -1020,9 +1020,9 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         }
         main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(upper, upper);
-        main_simpi->synch();
         ::SIMPI_DISTRIBUTE(lower, lower);
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(upper, upper);
         main_simpi->synch();
     }
     is_luDecomp = 0;
