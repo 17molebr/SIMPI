@@ -61,6 +61,7 @@ void run_client(matrix m, int s){
     r = send(s, &xdim, sizeof(xdim), 0); 
     r = send(s, &ydim, sizeof(ydim), 0);
     r = send(s, &id, sizeof(id), 0);
+    r = send(s, &is_luDecomp, sizeof(is_luDecomp), 0);
     std::cout << m.arr[6*xdim + 4];
     if(is_luDecomp == 1){
        for (int a = start; a < end; a++){
@@ -255,6 +256,7 @@ void new_connection(int sock, server s) {
             r = read(sock, &xdim, sizeof(xdim));
             r = read(sock, &ydim, sizeof(ydim));
             r = read(sock, &id, sizeof(id));
+            r = read(sock, &is_luDecomp, sizeof(is_luDecomp));
             if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0 &&is_luDecomp == 0){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
@@ -262,7 +264,7 @@ void new_connection(int sock, server s) {
                 current_x = xdim;
                 current_y = ydim;
             }
-            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 && is_luDecomp ==1){
+            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 && is_luDecomp == 1){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
