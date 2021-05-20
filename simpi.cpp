@@ -461,14 +461,26 @@ void simpi::synch()
     }
 }
 
-void SIMPI_DISTRIBUTE(matrix m, matrix &m1){
-    if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
-        std::cout << "passed in sock= "<< c.sock << "\n";
-        run_client(m, c.sock);
-        int done_val;
-        run_client_synch(c.sock);
-        done_val = run_client2(m1, c.sock);
-        return;
+void SIMPI_DISTRIBUTE(matrix &m, matrix &m1, int status){
+    if(status == 0){
+        if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
+            std::cout << "passed in sock= "<< c.sock << "\n";
+            run_client(m, c.sock);
+            int done_val;
+            run_client_synch(c.sock);
+            done_val = run_client2(m1, c.sock);
+            return;
+        }
+    }
+    if(status == 1){
+        if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
+            std::cout << "passed in sock= "<< c.sock << "\n";
+            run_client(m, c.sock);
+            int done_val;
+            run_client_synch(c.sock);
+            done_val = run_client2(m, c.sock);
+            return;
+        }
     }
     return;
 }
@@ -1021,9 +1033,10 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         }
         main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(lower, lower);
+        int flag = 1;
+        ::SIMPI_DISTRIBUTE(lower, lower, flag);
         main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(upper, upper);
+        ::SIMPI_DISTRIBUTE(upper, upper, flag);
         main_simpi->synch();
     }
     is_luDecomp = 0;
