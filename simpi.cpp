@@ -461,7 +461,7 @@ void simpi::synch()
     }
 }
 
-void SIMPI_DISTRIBUTE(matrix m, matrix m1, int status){
+void SIMPI_DISTRIBUTE(matrix m, matrix &m1, int status){
     if(status == 0){
         if(main_simpi->get_workstation_id() != 0 && main_simpi->get_id()== 0){
             std::cout << "passed in sock= "<< c.sock << "\n";
