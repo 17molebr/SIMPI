@@ -898,7 +898,7 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
 // It requires an input of 2 empty nxn matrices that are modified
 // A = LU
 // */
-void matrix::newluDecomposition(matrix *lower, matrix *upper)
+void matrix::newluDecomposition(matrix lower, matrix upper)
 {
     // not square
     if (get_x() != get_y()) {
@@ -921,12 +921,13 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
     int chunkSize = numRows / number_of_workstations;
 
     // init
+    /*
     for (int row = chunkSize * workstationid; row < chunkSize * (workstationid + 1); row += number_of_processes)
     {
         for (int col = 0; col < numCols; col++)
         {
-            upper->set((row + parId) * numRows + col, get(row + parId, col));
-            lower->set((row + parId) * numRows + col, row == col);
+            upper.set((row + parId) * numRows + col, get(row + parId, col));
+            lower.set((row + parId) * numRows + col, row == col);
         }
     }
     // leftovers
@@ -936,34 +937,35 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         if (row + parId < numRows) {
             for (int col = 0; col < numCols; col++)
             {
-                upper->set((row + parId) * numRows + col, get(row + parId, col));
-                lower->set((row + parId) * numRows + col, row == col);
+                upper.set((row + parId) * numRows + col, get(row + parId, col));
+                lower.set((row + parId) * numRows + col, row == col);
             }
         }
     }
+    */
 
     main_simpi->synch();
 
     for (int col = 0; col < numCols - 1; col++)
     {
-        double currDiag = upper->get(col, col);
+        double currDiag = upper.get(col, col);
         chunkSize = (numRows - (col + 1)) / number_of_workstations;
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
             // x*currDiag + upper[currRow, col] = 0
-            double multVal = -upper->get(row + parId, col) / currDiag;
+            double multVal = -upper.get(row + parId, col) / currDiag;
 
             // add {col} row multiplied by {multVal} to current row
-            upper->set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+            upper.set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
             for (int i = col + 1; i < numCols; i++)
             {
                 // double or float???
-                double new_val = multVal * upper->get(col, i) + upper->get(row + parId, i);
-                upper->set((row + parId) * numRows + i , new_val);
+                double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+                upper.get((row + parId) * numRows + i , new_val);
             }
 
-            lower->set((row + parId) * numRows + col, -multVal);
+            lower.set((row + parId) * numRows + col, -multVal);
         }
 
         // leftovers
@@ -972,17 +974,17 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
         {
             if (row + parId < numRows) {
                 // x*currDiag + upper[currRow, col] = 0
-                double multVal = -upper->get(row + parId, col) / currDiag;
+                double multVal = -upper.get(row + parId, col) / currDiag;
 
                 // add {col} row multiplied by {multVal} to current row
-                upper->set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                upper.set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
                 for (int i = col + 1; i < numCols; i++)
                 {
-                    double new_val = multVal * upper->get(col, i) + upper->get(row + parId, i);
-                    upper->set((row + parId) * numRows + i , new_val);
+                    double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+                    upper.set((row + parId) * numRows + i , new_val);
                 }
 
-                lower->set((row + parId) * numRows + col, -multVal);
+                lower.set((row + parId) * numRows + col, -multVal);
             }
         }
 
@@ -1000,15 +1002,15 @@ void matrix::newluDecomposition(matrix *lower, matrix *upper)
             std::cout << "\n";
             for (int j = 0; j < 10; j++)
             {
-                std::cout << std::fixed << std::setprecision(2) << lower->arr[i + j * xdim];
+                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
                 std::cout << ", ";
             }
         }
         }
         main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(*upper, *upper);
+        ::SIMPI_DISTRIBUTE(upper, upper);
         main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(*lower, *lower);
+        ::SIMPI_DISTRIBUTE(lower, lower);
         main_simpi->synch();
     }
     is_luDecomp = 0;

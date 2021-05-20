@@ -43,12 +43,20 @@ int main(int argc, char* argv[])
   }
   for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
     for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
-      B.get(x, y) = 0;
+      //lower
+      if(x==y){
+        B.get(x,y) = 1;
+      }
+      else{
+        B.get(x, y) = 0;
+      }
+
     }
   }
   for (int y = 0; y < 10; y++) {
     for (int x = 0; x < 10; x++) {
-      D.get(x, y) = 0;
+      //uper
+      C.get(x, y) = A.get(x,y);
     }
   }
   for (int y = 0; y < 10; y++) {
@@ -73,7 +81,7 @@ int main(int argc, char* argv[])
   // std::cout << G;
   //time_t start,end;
   //start=clock();
-  A.newluDecomposition(&B, &C);
+  A.newluDecomposition(C, B);
   std::cout << B;
   std::cout << C;
   //SIMPI_SYNCH();
