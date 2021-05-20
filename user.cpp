@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
   // std::cout << G;
   //time_t start,end;
   //start=clock();
-  A.newluDecomposition(C, B);
+  A.newluDecomposition(B, C);
   std::cout << B;
   std::cout << C;
   //SIMPI_SYNCH();
