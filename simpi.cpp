@@ -111,6 +111,7 @@ int run_client2(matrix &m, int s){
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
+    printf("End of distribute \n");
     //close(s);
     return 1; 
 }
