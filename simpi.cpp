@@ -105,13 +105,13 @@ int run_client2(matrix &m, int s){
     std::cout << "\nin distribute done = \n"<< done;
     for (int a = 0; a < ydim; a++){
         for (int b = 0; b < xdim; b++){
+            printf("In distribute for loop \n");
             double element = 0;
             r = read(s, &element, sizeof(element));
             m.arr[a*xdim +b] = element;
             //std::cout << "\nElement in client is"<< element << "\n";
         }
     }
-    printf("End of distribute \n");
     //close(s);
     return 1; 
 }
