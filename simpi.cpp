@@ -1017,7 +1017,9 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
-            printf("row = %d\n", row);
+            printf("row = %d\n", row + parId);
+            printf("chunksize = %d\n", chunksize);
+
             // x*currDiag + upper[currRow, col] = 0
             double multVal = -upper.get(row + parId, col) / currDiag;
 
