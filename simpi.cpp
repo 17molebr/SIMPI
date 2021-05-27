@@ -997,6 +997,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         ::SIMPI_DISTRIBUTE(lower, lower, flag);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(upper, upper, flag);
+        main_simpi->synch();
         if(main_simpi->get_id() == 0){
         for (int i = 0; i < 10; i++)
         {
