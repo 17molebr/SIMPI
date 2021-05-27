@@ -972,8 +972,8 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
     printf("Lu decomp start = %d\n", (0 + 1) + chunkSize * workstationid);
     printf("Lu decom end = %d\n", (0 + 1) + chunkSize * (workstationid + 1));
-    main_simpi->set_start((0 + 1) + chunkSize * workstationid);
-    main_simpi->set_end((0 + 1) + chunkSize * (workstationid + 1));
+    main_simpi->set_start(chunkSize * workstationid);
+    main_simpi->set_end((chunkSize * (workstationid + 1))-1);
 
     main_simpi->synch();
 
@@ -990,8 +990,9 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             }
         }
         }
-        main_simpi->set_start(chunkSize * workstationid);
-        main_simpi->set_end(chunkSize * (workstationid + 1)-1);
+        printf("\n");
+        //main_simpi->set_start(chunkSize * workstationid);
+        //main_simpi->set_end(chunkSize * (workstationid + 1)-1);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(lower, lower, flag);
         main_simpi->synch();
