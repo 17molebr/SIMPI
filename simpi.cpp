@@ -991,13 +991,6 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         }
         printf("\n");
-        //main_simpi->set_start(chunkSize * workstationid);
-        //main_simpi->set_end(chunkSize * (workstationid + 1)-1);
-        main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(lower, lower, flag);
-        main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(upper, upper, flag);
-        main_simpi->synch();
         if(main_simpi->get_id() == 0){
         for (int i = 0; i < 10; i++)
         {
@@ -1009,6 +1002,24 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             }
         }
         }
+        //main_simpi->set_start(chunkSize * workstationid);
+        //main_simpi->set_end(chunkSize * (workstationid + 1)-1);
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(lower, lower, flag);
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(upper, upper, flag);
+        main_simpi->synch();
+        // if(main_simpi->get_id() == 0){
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     std::cout << "\n";
+        //     for (int j = 0; j < 10; j++)
+        //     {
+        //         std::cout << std::fixed << std::setprecision(2) << upper.arr[i + j * numRows];
+        //         std::cout << ", ";
+        //     }
+        // }
+        // }
 
 
 
@@ -1017,11 +1028,11 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
-            printf("row = %d; col = %d\n", row + parId, col);
             printf("chunksize = %d\n", chunkSize);
 
             // x*currDiag + upper[currRow, col] = 0
             double multVal = -upper.get(row + parId, col) / currDiag;
+            printf("row = %d; col = %d; multVal = %f\n", row + parId, col, multVal);
 
             // add {col} row multiplied by {multVal} to current row
             upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
@@ -1037,7 +1048,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         if(workstationid == number_of_workstations-1){
             for(int row = (col +1) + chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
-                printf("leftover row = %d\n", row + parId);
+                printf("leftover row = %d; col = %d\n", row + parId, col);
                 if (row + parId < numRows) {
                     double multVal = -upper.get(row + parId, col) / currDiag;
 
