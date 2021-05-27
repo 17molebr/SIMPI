@@ -171,7 +171,7 @@ class matrix  // similar stuff for vector
   void adjoint(double* A, double* adj, int order, int par_id, int par_count);
   void getCofactor(double* A, double* temp, int p, int q, int n, int order);
   double get_algbera(int pos) { return arr[pos]; }
-  void set(int pos, int val) { arr[pos] = val; }
+  void set(int pos, double val) { arr[pos] = val; }
   void inverse_old(matrix *inverse);
   void luDecomposition(matrix* lower, matrix* upper);
   void newluDecomposition(matrix lower, matrix upper);

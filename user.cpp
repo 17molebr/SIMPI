@@ -74,8 +74,8 @@ int main(int argc, char* argv[])
   std::cout << A;
   std::cout << "starting LU decomp\n";
   A.newluDecomposition(B, C);
-  std::cout << B;
-  std::cout << C;
+  // std::cout << B;
+  // std::cout << C;
   //SIMPI_SYNCH();
   //end=clock();
   // std::cout << C;
