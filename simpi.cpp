@@ -64,7 +64,7 @@ void run_client(matrix &m, int s){
     r = send(s, &is_luDecomp, sizeof(is_luDecomp), 0);
     std::cout << m.arr[6*xdim + 4];
     if(is_luDecomp == 1){
-       for (int a = start; a < end; a++){
+       for (int a = start; a <= end; a++){
             for (int b = 0; b < ydim; b++){
                 double element = m.arr[a*ydim +b];
                 r = send(s, &element, sizeof(element), 0);
