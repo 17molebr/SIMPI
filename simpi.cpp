@@ -985,7 +985,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             std::cout << "\n";
             for (int j = 0; j < 10; j++)
             {
-                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
+                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * numRows];
                 std::cout << ", ";
             }
         }
@@ -1004,7 +1004,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             std::cout << "\n";
             for (int j = 0; j < 10; j++)
             {
-                std::cout << std::fixed << std::setprecision(2) << upper.arr[i + j * xdim];
+                std::cout << std::fixed << std::setprecision(2) << upper.arr[i + j * numRows];
                 std::cout << ", ";
             }
         }
@@ -1017,6 +1017,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
+            printf("row = %d\n", row);
             // x*currDiag + upper[currRow, col] = 0
             double multVal = -upper.get(row + parId, col) / currDiag;
 
@@ -1034,6 +1035,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         if(workstationid == number_of_workstations-1){
             for(int row = (col +1) +chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
+                printf("leftover row = %d\n", row);
                 double multVal = -upper.get(row + parId, col) / currDiag;
 
                 // add {col} row multiplied by {multVal} to current row
