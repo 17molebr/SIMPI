@@ -991,7 +991,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         }
         main_simpi->set_start(chunkSize * workstationid);
-        main_simpi->set_end(chunkSize * (workstationid + 1));
+        main_simpi->set_end(chunkSize * (workstationid + 1)-1);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(lower, lower, flag);
         main_simpi->synch();
