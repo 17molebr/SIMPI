@@ -1017,7 +1017,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
         for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
         {
-            printf("row = %d\n", row + parId);
+            printf("row = %d; col = %d\n", row + parId, col);
             printf("chunksize = %d\n", chunkSize);
 
             // x*currDiag + upper[currRow, col] = 0
@@ -1036,19 +1036,21 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             
         }
         if(workstationid == number_of_workstations-1){
-            for(int row = (col +1) +chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
-                printf("leftover row = %d\n", row);
-                double multVal = -upper.get(row + parId, col) / currDiag;
+            for(int row = (col +1) + chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
+                printf("leftover row = %d\n", row + parId);
+                if (row + parId < numRows) {
+                    double multVal = -upper.get(row + parId, col) / currDiag;
 
-                // add {col} row multiplied by {multVal} to current row
-                upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
-                for (int i = col + 1; i < numCols; i++)
-                {
-                    double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                    upper.set((row + parId) + numRows * i , new_val);
+                    // add {col} row multiplied by {multVal} to current row
+                    upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                    for (int i = col + 1; i < numCols; i++)
+                    {
+                        double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+                        upper.set((row + parId) + numRows * i , new_val);
+                    }
+
+                    lower.set((row + parId) + numRows * col, -multVal);
                 }
-
-                lower.set((row + parId) + numRows * col, -multVal);
             }
         }
 
