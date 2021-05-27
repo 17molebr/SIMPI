@@ -291,7 +291,7 @@ void new_connection(int sock, server s) {
             //*end synch*
             if(is_luDecomp == 1){
                 //iterate by rows 
-                for (int a = start; a < end; a++){
+                for (int a = start; a <= end; a++){
                     for (int b = 0; b < ydim; b++){
                         double element = 0;
                         r = read(sock, &element, sizeof(element));
