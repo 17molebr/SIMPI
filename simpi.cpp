@@ -1020,15 +1020,15 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             double multVal = -upper.get(row + parId, col) / currDiag;
 
             // add {col} row multiplied by {multVal} to current row
-            upper.set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+            upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
             for (int i = col + 1; i < numCols; i++)
             {
                 // double or float???
                 double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                upper.set((row + parId) * numRows + i, new_val);
+                upper.set((row + parId) + numRows * i, new_val);
             }
 
-            lower.set((row + parId) * numRows + col, -multVal);
+            lower.set((row + parId) + numRows * col, -multVal);
         }
 
         // leftovers
@@ -1040,14 +1040,14 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
                 double multVal = -upper.get(row + parId, col) / currDiag;
 
                 // add {col} row multiplied by {multVal} to current row
-                upper.set((row + parId) * numRows + col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
                 for (int i = col + 1; i < numCols; i++)
                 {
                     double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                    upper.set((row + parId) * numRows + i , new_val);
+                    upper.set((row + parId) + numRows * i , new_val);
                 }
 
-                lower.set((row + parId) * numRows + col, -multVal);
+                lower.set((row + parId) + numRows * col, -multVal);
             }
         }
 
