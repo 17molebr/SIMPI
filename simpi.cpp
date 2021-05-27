@@ -931,6 +931,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         exit(EXIT_FAILURE);
     }
     is_luDecomp = 1;
+    int flag = 1;
     // difference between main_simpi->get_synch_info()->par_count; and main_simpi->get_num_workers(); ?????
 
     int number_of_processes = main_simpi->get_synch_info()->par_count;
@@ -969,10 +970,32 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
     }
     */
 
+    printf("Lu decomp start = %d\n", (0 + 1) + chunkSize * workstationid);
+    printf("Lu decom end = %d\n", (0 + 1) + chunkSize * (workstationid + 1));
+    main_simpi->set_start((0 + 1) + chunkSize * workstationid);
+    main_simpi->set_end((0 + 1) + chunkSize * (workstationid + 1));
+
     main_simpi->synch();
 
     for (int col = 0; col < numCols - 1; col++)
     {
+        if(main_simpi->get_id() == 0){
+        for (int i = 0; i < 10; i++)
+        {
+            std::cout << "\n";
+            for (int j = 0; j < 10; j++)
+            {
+                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
+                std::cout << ", ";
+            }
+        }
+        }
+
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(lower, lower, flag);
+        main_simpi->synch();
+        ::SIMPI_DISTRIBUTE(upper, upper, flag);
+
         double currDiag = upper.get(col, col);
         chunkSize = (numRows - (col + 1)) / number_of_workstations;
 
@@ -987,7 +1010,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             {
                 // double or float???
                 double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                upper.get((row + parId) * numRows + i , new_val);
+                upper.set((row + parId) * numRows + i, new_val);
             }
 
             lower.set((row + parId) * numRows + col, -multVal);
@@ -1017,27 +1040,26 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         main_simpi->synch();
         
         // distribubte evvery iteration of for loop
-        printf("Lu decomp start = %d\n", (col + 1) + chunkSize * workstationid);
-        printf("Lu decom end = %d\n", (col + 1) + chunkSize * (workstationid + 1));
-        main_simpi->set_start((col + 1) + chunkSize * workstationid);
-        main_simpi->set_end((col + 1) + chunkSize * (workstationid + 1));
-        if(main_simpi->get_id() == 0){
-        for (int i = 0; i < 10; i++)
-        {
-            std::cout << "\n";
-            for (int j = 0; j < 10; j++)
-            {
-                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
-                std::cout << ", ";
-            }
-        }
-        }
-        main_simpi->synch();
-        int flag = 1;
-        ::SIMPI_DISTRIBUTE(lower, lower, flag);
-        main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(upper, upper, flag);
-        main_simpi->synch();
+        // printf("Lu decomp start = %d\n", (col + 1) + chunkSize * workstationid);
+        // printf("Lu decom end = %d\n", (col + 1) + chunkSize * (workstationid + 1));
+        // main_simpi->set_start((col + 1) + chunkSize * workstationid);
+        // main_simpi->set_end((col + 1) + chunkSize * (workstationid + 1));
+        // if(main_simpi->get_id() == 0){
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     std::cout << "\n";
+        //     for (int j = 0; j < 10; j++)
+        //     {
+        //         std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
+        //         std::cout << ", ";
+        //     }
+        // }
+        // }
+        // main_simpi->synch();
+        // ::SIMPI_DISTRIBUTE(lower, lower, flag);
+        // main_simpi->synch();
+        // ::SIMPI_DISTRIBUTE(upper, upper, flag);
+        // main_simpi->synch();
     }
     is_luDecomp = 0;
     main_simpi->synch(); // shouldn't be necessary here; but added just in case
