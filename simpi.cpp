@@ -1003,7 +1003,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             std::cout << "\n";
             for (int j = 0; j < 10; j++)
             {
-                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
+                std::cout << std::fixed << std::setprecision(2) << upper.arr[i + j * xdim];
                 std::cout << ", ";
             }
         }
