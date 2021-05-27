@@ -974,7 +974,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
     printf("Lu decom end = %d\n", (0 + 1) + chunkSize * (workstationid + 1));
     main_simpi->set_start(chunkSize * workstationid);
     if (workstationid == number_of_workstations - 1) {
-        main_simpi->set_end(numRows);
+        main_simpi->set_end(numRows - 1);
     } else {
         main_simpi->set_end((chunkSize * (workstationid + 1))-1);
     }
