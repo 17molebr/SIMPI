@@ -265,7 +265,7 @@ void new_connection(int sock, server s) {
                 current_x = xdim;
                 current_y = ydim;
             }
-            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 1 &&is_luDecomp == 1){
+            else if(xdim * ydim != s.defualt_size && s.num_runs == 0 && start == 0 &&is_luDecomp == 1){
                 double *array = new double[xdim*ydim];
                 delete [] temp;
                 temp = array;
