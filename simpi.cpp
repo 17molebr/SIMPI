@@ -996,6 +996,19 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         ::SIMPI_DISTRIBUTE(lower, lower, flag);
         main_simpi->synch();
         ::SIMPI_DISTRIBUTE(upper, upper, flag);
+        if(main_simpi->get_id() == 0){
+        for (int i = 0; i < 10; i++)
+        {
+            std::cout << "\n";
+            for (int j = 0; j < 10; j++)
+            {
+                std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * xdim];
+                std::cout << ", ";
+            }
+        }
+        }
+
+
 
         double currDiag = upper.get(col, col);
         chunkSize = (numRows - (col + 1)) / number_of_workstations;
