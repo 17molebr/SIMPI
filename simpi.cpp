@@ -1030,10 +1030,27 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
             }
 
             lower.set((row + parId) + numRows * col, -multVal);
+            
+        }
+        if(workstationid == number_of_workstations-1){
+            for(int row = (col +1) +chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
+                double multVal = -upper.get(row + parId, col) / currDiag;
+
+                // add {col} row multiplied by {multVal} to current row
+                upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                for (int i = col + 1; i < numCols; i++)
+                {
+                    double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+                    upper.set((row + parId) + numRows * i , new_val);
+                }
+
+                lower.set((row + parId) + numRows * col, -multVal);
+            }
         }
 
         // leftovers
         // COULD OPTIMIZE THIS LATER TO WORK ON MORE THAN JUST WORKSTATION 0
+        /*
         for (int row = (col + 1) + chunkSize * (workstationid + number_of_workstations); row < numRows; row += number_of_processes)
         {
             if (row + parId < numRows) {
@@ -1051,6 +1068,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
                 lower.set((row + parId) + numRows * col, -multVal);
             }
         }
+        */
 
         // sync after every column is completed, since the rows are overwritten and thus values will be diff in the next column iteration
         main_simpi->synch();
