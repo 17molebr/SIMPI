@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
   //time_t start,end;
   //start=clock();
   std::cout << A;
-  printf("starting LU decomp\n");
+  std::cout << "starting LU decomp\n";
   A.newluDecomposition(B, C);
   std::cout << B;
   std::cout << C;
