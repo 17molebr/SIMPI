@@ -77,16 +77,16 @@ int main(int argc, char* argv[])
   std::cout << "starting LU decomp\n";
   A.newluDecomposition(B, C);
 
-  if (par_id == 0) {
-    FILE *file = fopen("file.txt", "w");
-    for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
-      for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
-        fprintf(file, "%d, ", A.get(x, y));
-      }
-      fprintf(file, "\n");
-    }
-    fclose(file);
-  }
+  // if (par_id == 0) {
+  //   FILE *file = fopen("file.txt", "w");
+  //   for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
+  //     for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
+  //       fprintf(file, "%d, ", A.get(x, y));
+  //     }
+  //     fprintf(file, "\n");
+  //   }
+  //   fclose(file);
+  // }
   // E = B*C;
   // SIMPI_DISTRIBUTE(E,E,1);
 
