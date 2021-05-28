@@ -76,22 +76,28 @@ int main(int argc, char* argv[])
   std::cout << A;
   std::cout << "starting LU decomp\n";
   A.newluDecomposition(B, C);
-  E = B*C;
-  SIMPI_DISTRIBUTE(E,E,1);
 
-  int num_errors = 0;
-
-  for (int i = 0; i < MATRIX_DIMENSION_X; i++) {
-    for (int j = 0; j < MATRIX_DIMENSION_Y; j++) {
-      if (abs(A.get(i, j) - E.get(i, j)) > 0.001) {
-        num_errors++;
-      }
-    }
+  if (par_id == 0) {
+    FILE file = fopen("file.txt", "w");
+    file << A;
+    fclose(file);
   }
-  printf("errors: %d\n", num_errors);
+  // E = B*C;
+  // SIMPI_DISTRIBUTE(E,E,1);
 
-  std::cout << A;
-  std::cout << E;
+  // int num_errors = 0;
+
+  // for (int i = 0; i < MATRIX_DIMENSION_X; i++) {
+  //   for (int j = 0; j < MATRIX_DIMENSION_Y; j++) {
+  //     if (abs(A.get(i, j) - E.get(i, j)) > 0.001) {
+  //       num_errors++;
+  //     }
+  //   }
+  // }
+  // printf("errors: %d\n", num_errors);
+
+  // std::cout << A;
+  // std::cout << E;
   // std::cout << B;
   // std::cout << C;
   //SIMPI_SYNCH();
