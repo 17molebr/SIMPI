@@ -79,7 +79,12 @@ int main(int argc, char* argv[])
 
   if (par_id == 0) {
     FILE *file = fopen("file.txt", "w");
-    file << A;
+    for (int y = 0; y < MATRIX_DIMENSION_Y; y++) {
+      for (int x = 0; x < MATRIX_DIMENSION_X; x++) {
+        fprintf(file, "%d, ", A.get(x, y));
+      }
+      fprintf(file, "\n");
+    }
     fclose(file);
   }
   // E = B*C;
