@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
   A.newluDecomposition(B, C);
 
   if (par_id == 0) {
-    FILE file = fopen("file.txt", "w");
+    FILE *file = fopen("file.txt", "w");
     file << A;
     fclose(file);
   }
