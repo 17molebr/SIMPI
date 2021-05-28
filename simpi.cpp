@@ -984,10 +984,10 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
     for (int col = 0; col < numCols - 1; col++)
     {
         if(main_simpi->get_id() == 0){
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < numRows; i++)
         {
             std::cout << "\n";
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < numCols; j++)
             {
                 std::cout << std::fixed << std::setprecision(2) << lower.arr[i + j * numRows];
                 std::cout << ", ";
@@ -996,10 +996,10 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         }
         printf("\n");
         if(main_simpi->get_id() == 0){
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < numRows; i++)
         {
             std::cout << "\n";
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < numCols; j++)
             {
                 std::cout << std::fixed << std::setprecision(2) << upper.arr[i + j * numRows];
                 std::cout << ", ";
