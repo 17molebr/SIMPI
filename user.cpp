@@ -29,9 +29,10 @@ int main(int argc, char* argv[])
   matrix B(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix C(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix D(10, 10);
-  matrix E(10, 10);
+  matrix E(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
   matrix F(10,10);
   matrix G(MATRIX_DIMENSION_X, MATRIX_DIMENSION_Y);
+
   matrix out(10, 10);
   //vector D(10);
   SIMPI_SYNCH();
@@ -49,11 +50,11 @@ int main(int argc, char* argv[])
       C.get(x,y) = A.get(x,y);
     }
   }
-  for (int y = 0; y < 10; y++) {
-    for (int x = 0; x < 10; x++) {
-      E.get(x, y) = rand()%10 + 1;
-    }
-  }
+  // for (int y = 0; y < 10; y++) {
+  //   for (int x = 0; x < 10; x++) {
+  //     E.get(x, y) = rand()%10 + 1;
+  //   }
+  // }
 
   SIMPI_SYNCH();
 
@@ -74,6 +75,10 @@ int main(int argc, char* argv[])
   std::cout << A;
   std::cout << "starting LU decomp\n";
   A.newluDecomposition(B, C);
+  E = B*C;
+
+  std::cout << A;
+  std::cout << E;
   // std::cout << B;
   // std::cout << C;
   //SIMPI_SYNCH();
