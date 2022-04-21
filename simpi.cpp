@@ -923,28 +923,28 @@ void matrix::luDecomposition(matrix *lower, matrix *upper)
 // It requires an input of 2 empty nxn matrices that are modified
 // A = LU
 // */
-void matrix::newluDecomposition(matrix lower, matrix upper)
-{
+//void matrix::newluDecomposition(matrix lower, matrix upper)
+//{
     // not square
-    if (get_x() != get_y()) {
-        printf("Invalid matrix\n");
-        exit(EXIT_FAILURE);
-    }
-    is_luDecomp = 1;
-    int flag = 1;
+    //if (get_x() != get_y()) {
+       // printf("Invalid matrix\n");
+       // exit(EXIT_FAILURE);
+   // }
+   // is_luDecomp = 1;
+   // int flag = 1;
     // difference between main_simpi->get_synch_info()->par_count; and main_simpi->get_num_workers(); ?????
 
-    int number_of_processes = main_simpi->get_synch_info()->par_count;
-    int number_of_workstations = main_simpi->get_num_workstations();
+  //  int number_of_processes = main_simpi->get_synch_info()->par_count;
+    //int number_of_workstations = main_simpi->get_num_workstations();
     // std::cout << "Number of processes = " << number_of_processes << std::endl;
     // std::cout << "Number of workstations = " << number_of_workstations << std::endl;
-    int parId = main_simpi->get_id();
-    int workstationid = main_simpi->get_workstation_id() - 1 ;
+    //int parId = main_simpi->get_id();
+    //int workstationid = main_simpi->get_workstation_id() - 1 ;
 
-    int numRows = get_x();
-    int numCols = get_y();
+    //int numRows = get_x();
+    //int numCols = get_y();
 
-    int chunkSize = numRows / number_of_workstations;
+    //int chunkSize = numRows / number_of_workstations;
 
     // init
     /*
@@ -972,14 +972,14 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
     // printf("Lu decomp start = %d\n", (0 + 1) + chunkSize * workstationid);
     // printf("Lu decom end = %d\n", (0 + 1) + chunkSize * (workstationid + 1));
-    main_simpi->set_start(chunkSize * workstationid);
-    if (workstationid == number_of_workstations - 1) {
-        main_simpi->set_end(numRows - 1);
-    } else {
-        main_simpi->set_end((chunkSize * (workstationid + 1))-1);
-    }
+    //main_simpi->set_start(chunkSize * workstationid);
+//    if (workstationid == number_of_workstations - 1) {
+  //      main_simpi->set_end(numRows - 1);
+   // } else {
+    //    main_simpi->set_end((chunkSize * (workstationid + 1))-1);
+   // }
 
-    main_simpi->synch();
+   // main_simpi->synch();
 
     // for (int col = 0; col < numCols - 1; col++)
     // {
@@ -1008,11 +1008,11 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
     //     }
         //main_simpi->set_start(chunkSize * workstationid);
         //main_simpi->set_end(chunkSize * (workstationid + 1)-1);
-        main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(lower, lower, flag);
-        main_simpi->synch();
-        ::SIMPI_DISTRIBUTE(upper, upper, flag);
-        main_simpi->synch();
+        //main_simpi->synch();
+        //::SIMPI_DISTRIBUTE(lower, lower, flag);
+        //main_simpi->synch();
+        //::SIMPI_DISTRIBUTE(upper, upper, flag);
+        //main_simpi->synch();
         // if(main_simpi->get_id() == 0){
         // for (int i = 0; i < 10; i++)
         // {
@@ -1027,47 +1027,47 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
 
 
 
-        double currDiag = upper.get(col, col);
-        chunkSize = (numRows - (col + 1)) / number_of_workstations;
+        //double currDiag = upper.get(col, col);
+        //chunkSize = (numRows - (col + 1)) / number_of_workstations;
 
-        for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
-        {
+        //for (int row = (col + 1) + chunkSize * workstationid; row < (col + 1) + chunkSize * (workstationid + 1); row += number_of_processes)
+       // {
             // printf("chunksize = %d\n", chunkSize);
 
             // x*currDiag + upper[currRow, col] = 0
-            double multVal = -upper.get(row + parId, col) / currDiag;
+            //double multVal = -upper.get(row + parId, col) / currDiag;
             // printf("row = %d; col = %d; multVal = %f\n", row + parId, col, multVal);
 
             // add {col} row multiplied by {multVal} to current row
-            upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
-            for (int i = col + 1; i < numCols; i++)
-            {
+          //  upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+           // for (int i = col + 1; i < numCols; i++)
+          //  {
                 // double or float???
-                double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                upper.set((row + parId) + numRows * i, new_val);
-            }
+              //  double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+               // upper.set((row + parId) + numRows * i, new_val);
+           // }
 
-            lower.set((row + parId) + numRows * col, -multVal);
+           // lower.set((row + parId) + numRows * col, -multVal);
             
-        }
-        if(workstationid == number_of_workstations-1){
-            for(int row = (col +1) + chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
+        //}
+       // if(workstationid == number_of_workstations-1){
+            //for(int row = (col +1) + chunkSize * (workstationid+1); row < numRows; row += number_of_processes){
                 // printf("leftover row = %d; col = %d\n", row + parId, col);
-                if (row + parId < numRows) {
-                    double multVal = -upper.get(row + parId, col) / currDiag;
+                //if (row + parId < numRows) {
+                    //double multVal = -upper.get(row + parId, col) / currDiag;
 
                     // add {col} row multiplied by {multVal} to current row
-                    upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
-                    for (int i = col + 1; i < numCols; i++)
-                    {
-                        double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
-                        upper.set((row + parId) + numRows * i , new_val);
-                    }
+                    //upper.set((row + parId) + numRows * col , 0); // not in for loop to make sure it's 0 and prevent precision errors
+                    //for (int i = col + 1; i < numCols; i++)
+                   // {
+                        //double new_val = multVal * upper.get(col, i) + upper.get(row + parId, i);
+                        //upper.set((row + parId) + numRows * i , new_val);
+                    //}
 
-                    lower.set((row + parId) + numRows * col, -multVal);
-                }
-            }
-        }
+                    //lower.set((row + parId) + numRows * col, -multVal);
+                //}
+            //}
+        //}
 
         // leftovers
         // COULD OPTIMIZE THIS LATER TO WORK ON MORE THAN JUST WORKSTATION 0
@@ -1092,7 +1092,7 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         */
 
         // sync after every column is completed, since the rows are overwritten and thus values will be diff in the next column iteration
-        main_simpi->synch();
+        //main_simpi->synch();
         
         // distribubte evvery iteration of for loop
         // printf("Lu decomp start = %d\n", (col + 1) + chunkSize * workstationid);
@@ -1115,10 +1115,11 @@ void matrix::newluDecomposition(matrix lower, matrix upper)
         // main_simpi->synch();
         // ::SIMPI_DISTRIBUTE(upper, upper, flag);
         // main_simpi->synch();
-    }
-    is_luDecomp = 0;
-    main_simpi->synch(); // shouldn't be necessary here; but added just in case
-}
+    //}
+    //is_luDecomp = 0;
+    //main_simpi->synch(); // shouldn't be necessary here; but added just in case
+
+//}
  
 
 /*
